@@ -1,0 +1,69 @@
+//****************************************************
+//Vertex shader for Fog+Shadow calculation
+//Most code is the same as in FogTest.cg - for fog calculation
+//Additional code contain texture coordinate calculations for shadow map (instead of calc in fixed pipeline)
+//****************************************************
+
+struct appdata
+{
+    float4 position : POSITION;
+	float2 Tex0 : TEXCOORD0;
+};
+
+struct vfconn
+{
+    float4 HPOS : POSITION;
+    float4 COL0 : COLOR0;
+    float2 TEX0 : TEXCOORD0;    //fog texture
+
+	//Attention: we assume that will be used hardware shadow map support, so Tex(s/q, t/q) will be compared with r/q
+    float4 TEX1 : TEXCOORD2;    //shadow map texture - !!!NEW    
+//    float4 TEX2 : TEXCOORD2;    //land texture - !!!NEW    
+};
+
+vfconn main(appdata IN,
+			uniform float3 LightDir,
+
+#ifndef PROFILE_ARBVP1
+            uniform float4x4 ModelViewProj : _GL_MVP
+			,uniform float4x4 halTextureMatrix0
+#endif
+			,uniform float4x4 ShadowMapProjTexMatrix   //shadow map texture - !!!NEW
+			,uniform float4x4 MatrixObjectToWorld
+			)                //tex gen vector for main land texture  - !!!NEW
+{
+    vfconn OUT;
+
+#ifdef PROFILE_ARBVP1
+   float4x4 ModelViewProj = glstate.matrix.mvp;
+   float4x4 halTextureMatrix0 = glstate.matrix.texture[0];
+#endif
+
+   
+    //pos = mul(ModelViewProj, pos);
+	//---transform vertex to camera space---
+    //OUT.HPOS = pos;
+    OUT.HPOS = mul(ModelViewProj, IN.position);
+	float2 NewTexCoord = mul(halTextureMatrix0, float4(IN.Tex0,0,1)).xy;
+	OUT.TEX0 = NewTexCoord;
+	//OUT.TEX0 = halTextureMatrix0[1].xy;
+
+	float4 pos = IN.position;
+
+	//float4 LD = mul(MatrixObjectToWorld, float4(LightDir,1));
+	//float4 pos = IN.position;
+	float4 LD = float4(LightDir,1);
+	const float cLvShift = 0.3;  //[m]
+	pos += float4(LD.xyz * cLvShift, 0.0);
+
+	pos = mul(MatrixObjectToWorld, pos);
+
+	//-----------calc OUT.TEX1 (NEW)------------	
+    float4 PSM_coord = mul(ShadowMapProjTexMatrix, pos);
+
+	OUT.TEX1 = PSM_coord;
+//	OUT.TEX2 = PSM_coord;
+	//------------------------------------------
+
+    return OUT;
+} 

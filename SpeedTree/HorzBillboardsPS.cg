@@ -1,0 +1,127 @@
+///////////////////////////////////////////////////////////////////////  
+//  Leaf Shaders
+//
+//  *** INTERACTIVE DATA VISUALIZATION (IDV) CONFIDENTIAL AND PROPRIETARY INFORMATION ***
+//
+//  This software is supplied under the terms of a license agreement or
+//  nondisclosure agreement with Interactive Data Visualization, Inc. and
+//  may not be copied, disclosed, or exploited except in accordance with 
+//  the terms of that agreement.
+//
+//      Copyright (c) 2003-2007 IDV, Inc.
+//      All rights reserved in all media.
+//
+//      IDV, Inc.
+//      Web: http://www.idvinc.com
+//
+//  *** Release Version 4.1 ***
+
+#ifdef SHADER_TEST
+#include "defines.cg"
+#endif
+
+#define IDV_OPENGL
+
+
+//-----------------------------------------------------------------------------
+//	global parameters
+//-----------------------------------------------------------------------------
+
+// lighting & materials
+uniform float4      g_vLightDiffuse;                    // light's diffuse color
+uniform float4      g_vMaterialDiffuse;                 // active material's diffuse color (set differently for branches, fronds, leaves, and billboards)
+uniform float       g_fDiffuseScale;                    // mirrors the diffuse scalar value in CAD, used to help combat the darkening effect of multiple texture layers
+uniform float4      g_vMaterialAmbient;                 // active material's ambient color (set differently for branches, fronds, leaves, and billboards)
+uniform float       g_fAmbientScale;                    // mirrors the ambient scalar value in CAD, used to help combat the darkening effect of multiple texture layers
+
+// other
+uniform float4      g_vFogColor;                        // fog color
+uniform float3      g_vFogParams;                       // used for fog distance calcs: .x = fog start, .y = fog end, .z = end - start
+
+// ps
+uniform float       g_fBillboardLightAdjust;		       // used to assist in accuracy of normal map lit bb's matching the 3D tree
+#ifdef HORZ_BILLBOARDS
+uniform float       g_fBillboardFadeValue;                   // [0,1], 0 = transparent, 1 = opaque
+#endif
+
+//----------------------------------------------------------------------------- 
+//  SBillboardOutput structure
+
+struct SBillboardOutput
+{
+    float4  vPosition         : POSITION;
+    float2  vDiffuseTexCoords : TEXCOORD0;
+    float2  vNormalTexCoords  : TEXCOORD1;
+#ifdef BILLBOARD_NORMAL_MAPPING
+    float4  vNormal           : TEXCOORD2;
+#else
+    float   fNormal           : TEXCOORD2;
+#endif
+
+#ifdef USE_FOG
+    float4  vLightAdjusts     : TEXCOORD3;
+#else
+    float3  vLightAdjusts     : TEXCOORD3; 
+#endif
+};
+
+
+///////////////////////////////////////////////////////////////////////  
+//  BillboardPS
+//
+//  Billboard geometry pixel shader
+//
+//  Not having BILLBOARD_NORMAL_MAPPING #define'd makes for a much shorter
+//  pixel shader - one that should be used on lower compile targets
+
+float4 main(SBillboardOutput In
+			, uniform sampler2D samBillboardDiffuseMap : TEXUNIT0 
+			, uniform sampler2D samBillboardNormalMap : TEXUNIT1  
+			) : COLOR
+{
+#ifndef BILLBOARD_NORMAL_MAPPING
+    float4 texDiffuse = tex2D(samBillboardDiffuseMap, In.vDiffuseTexCoords.xy);
+    texDiffuse.a *= In.fNormal;
+
+#ifdef USE_FOG
+    // calc fog (cheap in vertex shader, relatively expensive later in the pixel shader)
+    texDiffuse.xyz = lerp(g_vFogColor.xyz, texDiffuse.xyz, In.vLightAdjusts.w);
+#endif
+    
+    return texDiffuse;
+    
+#else // BILLBOARD_NORMAL_MAPPING
+
+    // look up the diffuse and normal-map layers
+    float4 texDiffuse = tex2D(samBillboardDiffuseMap, In.vDiffuseTexCoords.xy);
+    float4 texNormal = tex2D(samBillboardNormalMap, In.vNormalTexCoords.xy);
+
+    // compute the ambient value
+    const float4 vecNoiseOffset = { -0.32f, -0.32f, -0.32f, 0.0f };
+    float4 vecAmbient = (texNormal.aaaa + vecNoiseOffset) * In.vLightAdjusts.z;
+    vecAmbient = vecAmbient * texDiffuse;
+    
+    // since the normal map normal values (normally ranged [-1,1]) are store
+    // as a color value (ranged [0,1]), they must be uncompressed.  a dot product 
+    // is used to compute the diffuse lighting contribution.
+    const float3 vecHalves = { 0.5f, 0.5f, 0.5f };
+    float fDot = saturate(dot(texNormal.rgb - vecHalves, In.vNormal.rgb)) * 2.0f;
+
+    // lighting adjustment to use SpeedTreeCAD parameters to help make the bb
+    // match the 3D geometry
+    float fLightAdjust = lerp(In.vLightAdjusts.x, In.vLightAdjusts.y, g_fBillboardLightAdjust);
+    float4 vColor = (fDot * texDiffuse * fLightAdjust) + vecAmbient;
+
+    // use an alpha value that is the diffuse map's noisy alpha channel multiplied
+    // against the faded alpha color from the vertex shader
+    vColor.a = texDiffuse.a * In.vNormal.w;
+
+#ifdef USE_FOG
+    // calc fog (cheap in vertex shader, relatively expensive later in the pixel shader)
+    vColor.xyz = lerp(g_vFogColor.xyz, vColor.xyz, In.vLightAdjusts.w);
+#endif
+
+    return vColor;
+#endif // BILLBOARD_NORMAL_MAPPING
+}
+

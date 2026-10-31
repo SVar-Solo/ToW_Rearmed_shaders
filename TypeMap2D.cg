@@ -1,0 +1,84 @@
+//********* Options for Custom Build step ************
+//for vertex program
+//"E:\Program Files\NVIDIA Corporation\Cg\bin\cgc.exe"  -profile vp20 -posinv -o $(InputName).txt $(InputPath)
+//for fragment program
+//"E:\Program Files\NVIDIA Corporation\Cg\bin\cgc.exe"  -profile fp20 -o $(InputName).txt $(InputPath)
+//****************************************************
+
+//****************************************************
+//Fragment shader for Render Type Map - uses compound 2D texture for noise
+//****************************************************
+
+//-----------------FP30----------------------
+
+struct VertexOut {
+//  float4 Color0    : COLOR0;      //common for all vertexes color (maybe need ???)
+  float2 texCoord0 : TEXCOORD0;    //dsdt 
+  float2 texCoord1 : TEXCOORD1;    //Mask             
+  float2 texCoord2 : TEXCOORD2;    //Noise     //changes in range [0...nTile] on block
+};
+
+float4 main(VertexOut IN,
+			uniform float4 ScaleDsDtMatrix,
+            uniform sampler2D DsDtMap : TEXUNIT0,
+            uniform sampler2D MaskMap : TEXUNIT1,          
+            uniform sampler2D Noise2DMap : TEXUNIT2
+			) : COLOR
+{
+
+  float4 DsDtLookup = tex2D(DsDtMap, IN.texCoord0.xy);
+
+  //For FP30 and ARBFP1  - expanded form
+  float2 newst = IN.texCoord1.xy + ScaleDsDtMatrix.xy * DsDtLookup.xx + ScaleDsDtMatrix.zw * DsDtLookup.yy;
+  float4 NewMask = tex2D(MaskMap, newst);
+
+  //---------calc TexCoord2D using IN.texCoord2.xy and NewMask.a----------
+/*
+  float IntRow;  //row of noise [0,1]
+  modf(2.0 * NewMask.a, IntRow);
+  float t0 = 0.25 * IntRow;                           //vertical shift
+  float IntCol;  //colomn of noise [0,1,2,3]
+  modf(8.0 * (NewMask.a - 0.5 * IntRow), IntCol);     //horizontal shift
+  float s0 = 0.25 * IntCol;
+  float2 Origin = float2(s0, t0);
+  
+  float2 IntPart2;
+  IN.texCoord2.xy = modf(IN.texCoord2.xy, IntPart2.xy);  //here IntPart - dummy
+  float2 TexCoord2D = Origin + IN.texCoord2.xy  * 0.25;
+
+  float4  color = tex2D(Noise2DMap, TexCoord2D);
+*/
+
+
+  float IntRow;  //row of noise [0,1]
+  float IntCol = modf(2.0 * NewMask.a, IntRow);
+  float t0 = 0.25 * IntRow;                           //vertical shift
+  float s0 = IntCol;
+  float2 Origin = float2(s0, t0);
+  
+  float2 IntPart2;
+  IN.texCoord2.xy = modf(IN.texCoord2.xy, IntPart2.xy);  //here IntPart - dummy
+  float2 TexCoord2D = Origin + IN.texCoord2.xy  * 0.25;
+
+  float4  color = tex2D(Noise2DMap, TexCoord2D);
+
+  //----------------------------------------------------------------------
+
+//  color.a = 1.0;
+//  half4 color = half4(0.9, 0.1, 0.1, 1.0);
+//  float4  color = half4(NewMask.a, NewMask.a, NewMask.a, 1.0);
+//  float4  color = tex2D(Noise2DMap, IN.texCoord2.xy);
+
+  return color;
+
+}
+
+
+
+
+
+
+
+
+
+

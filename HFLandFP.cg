@@ -1,0 +1,190 @@
+//Land pixel shader.
+//This shader: 1. calc land luminance (ambient + diffuse)
+//             2. modulate result with common noise
+//             3. apply shadows
+//Attention: ??? land noises are rendered after shadow applying (may be inconsistent to some extent) ???
+
+//Have 3 modifications:
+// - normal shader for land (noise modulation + lighting + shadow) - define macros FULL
+// - shader for 3 lod (lighting)
+// - shader for land reflection (lighting)  
+
+//#define FULL
+//#define SHADOW //internal to FULL
+//#define COMPAREZ  //used for Radeon
+#define PSSM
+
+
+struct VertexOut
+{	
+  half2 TexCoord0 : TEXCOORD0;  //Land base texture
+#ifdef FULL
+  half2 TexCoord1 : TEXCOORD1;  //Land common noise texture
+#ifdef SHADOW
+  half4 TexCoord2 : TEXCOORD2;  //Shadow map
+#endif  //SHADOW
+#endif //FULL
+};
+
+#ifdef SHADOW
+	uniform sampler2D ShadowMap : TEXUNIT2;           //shadow map
+#endif  //SHADOW
+
+
+#ifdef PSSM
+// PSSM implemetation
+// matrix array
+uniform float4x4 PSSMProjTexMatrix0;
+uniform float4x4 PSSMProjTexMatrix1;
+uniform float4x4 PSSMProjTexMatrix2;
+uniform float4x4 PSSMProjTexMatrix3;
+
+uniform float PSSMSplit0;
+uniform float PSSMSplit1;
+uniform float PSSMSplit2;
+uniform float PSSMSplit3;
+
+uniform float PSSMWidth;
+
+uniform float3 koeffNdotL;
+
+float getPSSMPixel3 (float4 world_coords)
+{
+    float4 shad_coord;
+	float4 shadow_sample;
+
+	// 0 level	
+	float4 shad_coord0 = mul(PSSMProjTexMatrix0, float4(world_coords.xyz, 1));
+	float4 shad_coord1 = mul(PSSMProjTexMatrix1, float4(world_coords.xyz, 1));
+	float4 shad_coord2 = mul(PSSMProjTexMatrix2, float4(world_coords.xyz, 1));
+	float4 shad_coord3 = mul(PSSMProjTexMatrix3, float4(world_coords.xyz, 1));
+
+	float4 sm_k;
+	
+	if (shad_coord0.x > 0.0 && shad_coord0.x < 1.0 && shad_coord0.y > 0.0 && shad_coord0.y < 1.0)
+	{
+		sm_k.x = 1.0; // float4 (1.0, 0.0, 0.0, 0.0);
+	}
+	else
+	{
+		sm_k.x = 0.0;
+		if (shad_coord1.x > 0.0 && shad_coord1.x < 1.0 && shad_coord1.y > 0.0 && shad_coord1.y < 1.0)
+		{
+			sm_k.y = 1.0;
+		}
+		else
+		{
+			sm_k.y = 0.0;
+			if (shad_coord2.x > 0.0 && shad_coord2.x < 1.0 && shad_coord2.y > 0.0 && shad_coord2.y < 1.0)
+			{
+				sm_k.z = 1.0;
+			}
+			else
+			{
+				// sm_k.w = 1.0;
+				if (shad_coord3.x > 0.0 && shad_coord3.x < 1.0 && shad_coord3.y > 0.0 && shad_coord3.y < 1.0)
+				{
+					sm_k.w = 1.0;
+				}
+				else
+				{
+					return 1;
+				}
+			}
+		}
+		
+	}
+
+	//float sm_k_none = 1 - (dot(sm_k, sm_k));
+	
+	shad_coord = 
+		sm_k.x*shad_coord0 + 
+		sm_k.y*shad_coord1 + 
+		sm_k.z*shad_coord2 + 
+		sm_k.w*shad_coord3;
+
+	//shad_coord = mul(sh_m, float4(world_coords.xyz, 1));
+
+	shad_coord.xyz /= shad_coord.w;
+
+	float2 sm_offs = sm_k.x*float2(0, 0.5) +
+		sm_k.y*float2(0.5, 0.5) + 
+		sm_k.z*float2(0, 0) + 
+		sm_k.w*float2(0.5, 0);
+
+	float2 sm_scale = sm_k.x*0.8 + sm_k.y*0.6 + sm_k.z*0.4 + sm_k.w*0.2;
+
+	shadow_sample = tex2D(ShadowMap, float2(sm_offs.x + 0.5*shad_coord.x, sm_offs.y + 0.5*shad_coord.y));
+
+	float shadow_factor = 1.0;
+
+#ifndef COMPAREZ  
+	shadow_factor = shadow_sample.r;   // 0 or 1
+#else  //COMPAREZ
+	shadow_factor = (shad_coord.z > shadow_sample.r) ? 0 : 1;
+	shadow_factor = shadow_sample.r > 0 ? shadow_factor : 1;
+#endif //COMPAREZ
+	
+	//return sm_scale*shadow_factor;
+	return shadow_factor; //  + sm_k_none;
+}
+
+#endif // PSSM
+
+
+
+half4 main(in VertexOut IN, 
+			uniform half4 Ka, //Ambient color
+			uniform half4 Kd, //Diffuse color
+			uniform sampler2D LandTex: TEXUNIT0              //Land base texture
+#ifdef FULL
+			,uniform sampler2D LandCommonNoiseTex: TEXUNIT1  //Land common noise texture
+#endif  //FULL
+			) : COLOR
+{
+//    Ka = float4(0.2, 0.2, 0.2, 0.0);  //???????????? - test only
+
+	fixed4 Land = tex2D(LandTex, IN.TexCoord0);
+	fixed4 diffuse_light;
+    diffuse_light.rgb = (Kd).rgb;
+    float ndl = Land.a;
+
+#ifdef FULL
+	//--modulate with common noise--
+	fixed4 Noise = tex2D(LandCommonNoiseTex, IN.TexCoord1);
+    Land.rgb = (Land.rgb * Noise.rgb) * 2.0f;
+
+#ifdef SHADOW
+	fixed ShadowFactor = 1;
+
+#ifdef PSSM
+	ShadowFactor = getPSSMPixel3(IN.TexCoord2);
+
+#else
+    //---shadows---
+	fixed4 Shadow = fixed4(1,0,0,1);
+    Shadow = tex2Dproj(ShadowMap, IN.TexCoord2.xyzw);
+
+#ifndef COMPAREZ  
+	ShadowFactor = Shadow.r;   //0 or 1
+#else  //COMPAREZ
+	float zProj = IN.TexCoord2.z/IN.TexCoord2.w;
+	ShadowFactor = (zProj > Shadow.r)?0:1;
+	ShadowFactor = (Shadow.r>0)?ShadowFactor:1;
+#endif //COMPAREZ
+#endif // PSSM
+
+	ndl *= ShadowFactor;
+	//-------------
+#endif  //SHADOW
+
+#endif //FULL
+
+	//Land.rgb = clamp(Ka.rgb + diffuse_light.rgb, 0.0, 1.0) * Land.rgb;
+	ndl = clamp(ndl*koeffNdotL.x+koeffNdotL.y, 0, 1);
+	Land.rgb *= lerp(Ka.rgb, diffuse_light.rgb*koeffNdotL.z, ndl);
+
+	return Land; 
+}
+
+

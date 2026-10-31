@@ -1,0 +1,42 @@
+// Попытка сделать быстрый вариант particles для листьев дерева
+// VertexShader
+
+struct InVPStruct
+{
+  float4 position : POSITION;
+  float4 color0   : COLOR0;
+  float4 color1   : COLOR1;
+  
+  float2 tcoords0 : TEXCOORD0;
+  float2 tcoords1 : TEXCOORD1;
+};
+
+struct OutVPStruct
+{
+  float4 position : POSITION;
+  float4 color    : COLOR0;
+   
+  float2 tcoords0 : TEXCOORD0;
+  float2 tcoords1 : TEXCOORD1;
+};
+
+//---------------------------------------------------------------------------------
+OutVPStruct main(in InVPStruct IN,
+                 uniform float4 lightVector,
+                 uniform float4 diffuseColor,
+                 uniform float4 ambientColor) {
+
+  OutVPStruct OUT;
+  
+  float4x4 ModelView = glstate.matrix.modelview[0];
+  float4x4 Proj      = glstate.matrix.projection;  
+  
+
+  // todo: use normal here
+  OUT.color    = ambientColor + diffuseColor;
+  OUT.position = mul(Proj, mul(ModelView, IN.position));
+  OUT.tcoords0 = IN.tcoords0;
+  OUT.tcoords1 = IN.tcoords1;
+  
+  return OUT;
+}

@@ -1,0 +1,59 @@
+//****************************************************
+//Vertex shader for Build Shadow Map - support for Perspective Shadow Map.
+//This vertex shader convert vertex from WCS to camera HCS.
+//Camera transformation is given by uniform parameter ModelViewProjCamera matrix.
+//During rendering ModelViewProj matrix correspond to light mvp matrix.
+//****************************************************
+
+struct appdata
+{
+    float4 position : POSITION;
+};
+
+struct vfconn
+{
+    float4 HPOS : POSITION;
+//    float4 COL0 : COLOR0;      //??? - temp for debug
+};
+
+
+vfconn main(appdata IN //,
+
+#ifndef PROFILE_ARBVP1
+            uniform float4x4 ModelViewProj : _GL_MVP  //,
+#endif
+//            uniform float4x4 ModelViewProjCamera
+			)
+{
+    vfconn OUT;
+
+#ifdef PROFILE_ARBVP1
+   float4x4 ModelViewProj = glstate.matrix.mvp;     
+#endif
+
+/*
+	//---transform vertex from WCS to camera HCS---
+    float4 VertexInCameraHCS = mul(ModelViewProjCamera,IN.position);
+//    float4 VertexInCameraHCS = mul(IN.position, ModelViewProjCamera);
+    VertexInCameraHCS /= VertexInCameraHCS.w;
+*/
+   //---test - generate random vertexes in [-1...1]**3 space---
+/*
+   float4 VertexInCameraHCS = 0.2*(IN.position/2048.0);
+   VertexInCameraHCS.z = 0.0;
+   VertexInCameraHCS.w = 1.0;
+
+   //----------------------------------------------------------
+
+	//---transform vertex to current camera(light) space---
+    OUT.HPOS = mul(ModelViewProj, VertexInCameraHCS);
+//    OUT.HPOS = mul(VertexInCameraHCS, ModelViewProj);
+//    OUT.COL0 = float4(1.0, 1.0, 1.0, 1.0);  //??? - temp for debug
+*/
+
+
+//OUT.HPOS = IN.position;  //?????????
+OUT.HPOS = mul(ModelViewProj, IN.position);
+
+    return OUT;
+} 

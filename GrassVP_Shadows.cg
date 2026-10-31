@@ -1,0 +1,58 @@
+//****************************************************
+//Vertex shader for Far grass: pass2 - shadows
+//****************************************************
+
+#define PSSM
+
+
+struct VertexIn
+{
+  float4 position : POSITION;
+};
+
+struct VertexOut
+{
+  float4 HPOS : POSITION;
+  float4 texCoord0 : TEXCOORD0;    //ShadowMap
+  float2 texCoord1 : TEXCOORD1;    //Mask          
+  float2 texCoord2 : TEXCOORD2;    //Land
+  float2 texCoord3 : TEXCOORD3;    //Grass
+};
+
+VertexOut main(VertexIn IN,
+#ifndef PROFILE_ARBVP1
+            uniform float4x4 ModelViewProj : _GL_MVP,
+#endif
+            uniform float4x4 ShadowMapProjTexMatrix,
+//			  uniform float  dH,                              //layer dh
+			uniform float4 S_TexGenVecMain,                 //tex gen vector for main land texture 
+			uniform float4 T_TexGenVecMain,                 //tex gen vector for main land texture 
+			uniform float4 S_TexGenVecNoise,                //tex gen vector for noise texture 
+			uniform float4 T_TexGenVecNoise                 //tex gen vector for noise texture 
+			)
+{
+    VertexOut OUT;
+
+#ifdef PROFILE_ARBVP1
+   float4x4 ModelViewProj = glstate.matrix.mvp;
+#endif
+
+	//---transform vertex to camera space---
+    float4 position = IN.position;
+
+//    position.z += dH;
+    OUT.HPOS = mul(ModelViewProj, position);
+
+    OUT.texCoord2 = float2( dot(IN.position, S_TexGenVecMain),  dot(IN.position, T_TexGenVecMain));
+	OUT.texCoord1 = OUT.texCoord2;
+
+	OUT.texCoord3 = float2( dot(IN.position, S_TexGenVecNoise),  dot(IN.position, T_TexGenVecNoise));
+
+#ifdef PSSM
+    OUT.texCoord0 = position;
+#else
+	OUT.texCoord0 = mul(ShadowMapProjTexMatrix, position);
+#endif
+
+    return OUT;
+} 

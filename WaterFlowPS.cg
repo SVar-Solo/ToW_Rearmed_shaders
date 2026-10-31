@@ -1,0 +1,20 @@
+//****************************************************
+//Pixel shader for Water Flow render pass
+//****************************************************
+
+struct VertexOut
+{
+    float4 pos : POSITION;
+    float2 tex0 : TEXCOORD0;    //Flow texture 
+};
+
+half4 main(VertexOut IN,
+           uniform sampler2D CurrentFlowTex: TEXUNIT0              //current flow texture
+			) : COLOR                
+{	
+    fixed4 tex0 = tex2D(CurrentFlowTex, IN.tex0);
+
+    fixed4 color = tex0;
+
+    return color; 
+} 

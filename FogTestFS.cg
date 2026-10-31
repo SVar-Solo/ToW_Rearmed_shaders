@@ -1,0 +1,20 @@
+// From vertex shader
+struct vfconn
+{
+	float4 Color0    : COLOR0;
+	float3 fogCoord : TEXCOORD0;
+};
+
+uniform float fSkyMultiplier;
+
+float4 main(in vfconn IN // From vertex shader
+			,uniform samplerCUBE SkyMap: TEXUNIT0 // Base texture
+			) : COLOR
+{
+	// Base
+	float4 decalColor = texCUBE(SkyMap, IN.fogCoord);
+	decalColor.rgb = lerp(decalColor.rgb, decalColor.rgb*fSkyMultiplier, decalColor.a);
+	return float4(decalColor.xyz,IN.Color0.a);
+}
+
+

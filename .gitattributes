@@ -1,0 +1,15 @@
+# Текстовые файлы: LF в репозитории, CRLF в рабочей копии Windows
+* text=auto eol=crlf
+
+# .bat критичны к CRLF — фиксируем
+*.bat  text eol=crlf
+
+# Шейдеры и скрипты — обычный текст
+*.cg   text
+*.hlsl text
+*.fx   text
+*.txt  text
+
+# Бинарники — без преобразований
+*.dds  binary
+*.exe  binary

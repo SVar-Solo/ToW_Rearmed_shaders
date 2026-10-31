@@ -1,0 +1,24 @@
+// From vertex shader
+
+struct vfconn
+{
+    float4 HPOS : POSITION;
+    float4 TEX0 : TEXCOORD0;
+    float4 COL0 : TEXCOORD1;
+};
+
+float4 main(in vfconn IN // From vertex shader
+			,uniform sampler2D TexMap: TEXUNIT0 // Base texture
+			) : COLOR
+{
+	float4 decalColor = tex2D(TexMap, IN.TEX0.xy);
+	return decalColor * IN.COL0;
+
+	//float4 decalColor = float4(1,1,1,1);
+	//return decalColor;
+	//return float4(IN.COL0.rgb, 1);
+
+	//return float4(IN.TEX0.xy, 0, 1);
+}
+
+

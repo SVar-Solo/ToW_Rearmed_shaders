@@ -1,0 +1,58 @@
+//****************************************************
+//Pixel shader for preparing current Water Flow texture (obtain by rendering pass)
+//****************************************************
+//#define INITPASS
+
+struct VertexOut
+{
+    float4 pos : POSITION;
+    float2 tex0 : TEXCOORD0;    //Flow texture 
+};
+
+half4 main(VertexOut IN,
+           uniform float Frame,  //need for moving External source texture 
+           uniform sampler2D CurrentFlowTex: TEXUNIT0,  //current flow texture (also used as init texture)
+           uniform sampler2D FlowMapTex: TEXUNIT1,       //static flow velocity map texture
+           uniform sampler2D ExtSourceTex: TEXUNIT2     //External source texture 
+			) : COLOR                
+{
+    fixed4 tex0;
+	fixed4 color;
+
+#ifdef INITPASS
+    tex0 = tex2D(CurrentFlowTex, IN.tex0);
+	color = tex0;
+    color.a = 1.0;
+
+#else //INITPASS
+
+/*
+    const float Shift = 1.0/256.0;
+    float4 tex1 = tex2D(FlowMapTex, IN.tex0);    
+	float2 new_tex_coord = IN.tex0 + tex1.xy * Shift;
+*/
+//------test-------
+	const float aaa = -1.0;
+	const float bbb = 512.0;
+    const float TShift = aaa/bbb;
+//    const float TShift = -1.0/2048.0; //-1.0/256.0;   //-1.0/217.0;  //-0.01; //-0.001;
+    float2 new_tex_coord = IN.tex0;
+	new_tex_coord.x += TShift;
+
+//-----------------
+
+	if(new_tex_coord.x > 0) {
+	  color = tex2D(CurrentFlowTex, new_tex_coord);
+      color.a = 1.0;
+	}
+	else {
+      new_tex_coord.x += 1.0;
+	  new_tex_coord.x += (TShift*Frame);
+	  color = tex2D(ExtSourceTex, new_tex_coord);
+      color.a = 1.0;
+	}
+
+#endif //INITPASS
+
+    return color; 
+} 

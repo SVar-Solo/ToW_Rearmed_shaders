@@ -1,0 +1,28 @@
+#define MAX_SAMPLES 16
+
+// From vertex shader
+struct VertexOUT
+{
+	float2 texCoord : TEXCOORD0;
+};
+
+uniform sampler2D TexMap: register(s0); // Base texture
+uniform float2 avSampleOffsets[MAX_SAMPLES];
+
+float4 main(in VertexOUT IN // From vertex shader
+			) : COLOR
+{
+	float fResampleSum = 0.0; 
+	float maxLum = 0;
+	for(int iSample = 0; iSample < 16; iSample++)
+	{
+		// Compute the sum of luminance throughout the sample points
+		float4 lum = tex2D(TexMap, IN.texCoord + avSampleOffsets[iSample]);
+		maxLum = max(maxLum, lum.g);
+		fResampleSum += lum.r;
+	}
+	// Divide the sum to complete the average
+	fResampleSum = exp(fResampleSum*(1.f/16));
+
+	return float4(fResampleSum, maxLum, 0.0 ,1.0);
+}

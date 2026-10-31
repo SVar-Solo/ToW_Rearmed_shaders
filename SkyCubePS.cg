@@ -1,0 +1,24 @@
+// From vertex shader
+struct VertexOUT
+{
+	float3 TEX0 : TEXCOORD0;
+};
+
+static const float3 LUMINANCE_WEIGHT = float3( 0.299f, 0.587f, 0.114f );
+
+float4 main(in VertexOUT IN // From vertex shader
+			,uniform samplerCUBE SkyMap: TEXUNIT0 // Base texture
+			,uniform float fSkyMultiplier
+			) : COLOR
+{
+	float3 texcoord = normalize(IN.TEX0.xyz);
+	float4 decalColor = texCUBE(SkyMap, texcoord);
+	//float lum = dot(decalColor, LUMINANCE_WEIGHT);
+	//decalColor.rgb *= 1+lum;
+	//return float4(1,0,0,1);//decalColor;
+	decalColor.rgb = lerp(decalColor.rgb, decalColor.rgb*fSkyMultiplier, decalColor.a);
+	//decalColor.rgb = decalColor.aaa;
+	return float4(decalColor.rgb, 1.0);
+}
+
+

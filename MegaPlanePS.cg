@@ -1,0 +1,647 @@
+// defines
+#define PSSM 1
+
+// From vertex shader
+struct VertexOUT
+{
+#ifdef USE_FOG
+	float4 FogColor: COLOR0;
+#endif
+	float3 coord : TEXCOORD0;
+	float4 spos : TEXCOORD1;
+#ifdef SHADOW
+  #ifdef PSSM
+	float4 worldCoord : TEXCOORD2;
+  #else
+	float4 shadCoord : TEXCOORD2;
+  #endif	
+  #ifdef USE_FOG
+	float3 fogCoord : TEXCOORD3;
+  #endif
+#else
+  #ifdef USE_FOG
+	float3 fogCoord : TEXCOORD2;
+  #endif
+#endif
+};
+uniform sampler2D IndirTex: TEXUNIT0; // Base texture
+uniform sampler2D MegaCacheTex: TEXUNIT1; // Base texture
+uniform float3 MGT_TILE_SIZE; // MegaTexSize + TileSize + (MegaTexSize / TileSize)
+#ifdef SHADOW
+      uniform sampler2D ShadowMap : TEXUNIT2;           //shadow map
+#endif  //SHADOW
+uniform sampler2D typeMap: TEXUNIT3; 
+uniform sampler2D megaNoise: TEXUNIT4;
+uniform sampler2D maskDSDT: TEXUNIT5;
+#ifdef USE_FOG
+uniform samplerCUBE SkyMap: TEXUNIT6; // Fog texture
+#endif
+uniform sampler2D NormalMap: TEXUNIT7; // bump texture
+uniform float3 SunDir;
+uniform sampler2D CommonNoise: TEXUNIT8; // bump texture
+uniform float commonNoiseTile;
+uniform float3 koeffNdotL;
+uniform float fSkyMultiplier;
+
+//-----------------------------------------------------------------------------
+// PSSM
+//-----------------------------------------------------------------------------
+
+// matrix array
+uniform float4x4 PSSMProjTexMatrix0;
+uniform float4x4 PSSMProjTexMatrix1;
+uniform float4x4 PSSMProjTexMatrix2;
+uniform float4x4 PSSMProjTexMatrix3;
+
+uniform float PSSMSplit0;
+uniform float PSSMSplit1;
+uniform float PSSMSplit2;
+uniform float PSSMSplit3;
+
+uniform float PSSMWidth;
+
+// sample shadow map
+float getShadowPixel(float3 projcoord)
+{
+    float ShadowFactor = 1;
+#ifdef SHADOW
+	float4 Shadow = tex2D(ShadowMap, projcoord.xy);
+#ifndef COMPAREZ  
+	ShadowFactor = Shadow.r;   //0 or 1
+#else  //COMPAREZ
+	float zProj = projcoord.z;
+	ShadowFactor = (zProj > Shadow.r)?0:1;
+	ShadowFactor = Shadow.r>0?ShadowFactor:1;
+#endif //COMPAREZ
+#endif  //SHADOW
+	return ShadowFactor;
+}
+
+float getPSSMPixel2 (float4 world_coords)
+{
+    float4 shad_coord;
+	float4 shadow_sample;
+
+	// 0 level	
+	//float4 shad_coord0 = mul(PSSMProjTexMatrix0, float4(world_coords.xyz, 1));
+	//float4 shad_coord1 = mul(PSSMProjTexMatrix1, float4(world_coords.xyz, 1));
+	//float4 shad_coord2 = mul(PSSMProjTexMatrix2, float4(world_coords.xyz, 1));
+	//float4 shad_coord3 = mul(PSSMProjTexMatrix3, float4(world_coords.xyz, 1));
+
+	float4 sm_k;
+	
+
+	//sm_k.x = step(0, world_coords.w) - step(10, world_coords.w);
+	//sm_k.y = step(10, world_coords.w) - step(50, world_coords.w);
+	//sm_k.z = step(50, world_coords.w) - step(220, world_coords.w);
+	//sm_k.w = step(220, world_coords.w) - step(1200, world_coords.w);
+
+	sm_k.x = world_coords.w > 0 ? (world_coords.w < PSSMSplit0 ? 1.0 : 0.0) : 0.0;
+	sm_k.y = world_coords.w > PSSMSplit0 ? (world_coords.w < PSSMSplit1 ? 1.0 : 0.0) : 0.0;
+	sm_k.z = world_coords.w > PSSMSplit1 ? (world_coords.w < PSSMSplit2 ? 1.0 : 0.0) : 0.0;
+	sm_k.w = world_coords.w > PSSMSplit2 ? (world_coords.w < PSSMSplit3 ? 1.0 : 0.0) : 0.0;
+
+	float sm_k_none = 1 - (dot(sm_k, sm_k)); // step(PSSMSplit3, world_coords.w); //  ? 1 : 0;
+
+	float4x4 sh_m = sm_k.x*PSSMProjTexMatrix0 +
+					sm_k.y*PSSMProjTexMatrix1 + 
+					sm_k.z*PSSMProjTexMatrix2 + 
+					sm_k.w*PSSMProjTexMatrix3;
+
+	//shad_coord = sm_k.x*shad_coord0 + sm_k.y*shad_coord1 + sm_k.z*shad_coord2 + 
+	//	sm_k.w*shad_coord3;
+	shad_coord = mul(sh_m, float4(world_coords.xyz, 1));
+
+	shad_coord.xyz /= shad_coord.w;
+
+	float3 sm_offs =	sm_k.x * float3(0.0, 0.5, 0.0) +
+						sm_k.y * float3(0.5, 0.5, 0.0) + 
+						sm_k.z * float3(0.0, 0.0, 0.0) + 
+						sm_k.w * float3(0.5, 0.0, 0.0);
+
+	//float2 sm_scale = sm_k.x*0.8 + sm_k.y*0.6 + sm_k.z*0.4 + sm_k.w*0.2;
+
+	float shadow_factor = 1.0;
+
+	//if (0)
+	//{
+	//	return 1;
+	//}
+	//else if (0)
+	//{
+	//	//shadow_sample = tex2D(ShadowMap, float2(sm_offs.x + 0.5*shad_coord.x, sm_offs.y + 0.5*shad_coord.y));
+	//	shadow_factor = getShadowPixel(sm_offs + float3(0.5*shad_coord.xy, shad_coord.z));
+	//}
+	//else
+	{
+		float3 uvz = shad_coord.xyz; // clamp(shad_coord.xy, 0.0, 1.0);
+		uvz.xy = clamp(shad_coord.xy, 0.0, 1.0); 
+		float mgs = PSSMWidth;
+		uvz.x *= 0.5*PSSMWidth;
+		uvz.y *= 0.5*PSSMWidth;
+		float x = floor(uvz.x);
+		float y = floor(uvz.y);
+		float z = uvz.z * mgs;
+		float u_ratio = uvz.x - x;
+		float v_ratio = uvz.y - y;
+		float u_opposite = 1 - u_ratio;
+		float v_opposite = 1 - v_ratio;
+
+		//shadow_sample = tex2D(ShadowMap, float2(sm_offs.x + 0.5*shad_coord.x, sm_offs.y + 0.5*shad_coord.y));
+
+		shadow_factor =
+			(getShadowPixel(sm_offs + float3(x, y, z)/mgs)*u_opposite + 
+			 getShadowPixel(sm_offs + float3(x+1,y,z)/mgs)*u_ratio) * v_opposite + 
+
+			(getShadowPixel(sm_offs + float3(x,y+1,z)/mgs) * u_opposite + 
+			 getShadowPixel(sm_offs + float3(x+1,y+1,z)/mgs)*u_ratio) * v_ratio;
+	}
+	
+	//return sm_scale*shadow_factor;
+	return shadow_factor; //  + sm_k_none;
+}
+
+float getPSSMPixel3 (float4 world_coords)
+{
+    float4 shad_coord;
+	float4 shadow_sample;
+
+	// 0 level	
+	float4 shad_coord0 = mul(PSSMProjTexMatrix0, float4(world_coords.xyz, 1));
+	float4 shad_coord1 = mul(PSSMProjTexMatrix1, float4(world_coords.xyz, 1));
+	float4 shad_coord2 = mul(PSSMProjTexMatrix2, float4(world_coords.xyz, 1));
+	float4 shad_coord3 = mul(PSSMProjTexMatrix3, float4(world_coords.xyz, 1));
+
+	float4 sm_k; // = float4(0, 0, 0, 1);
+	
+	if (shad_coord0.x > 0.0 && shad_coord0.x < 1.0 && shad_coord0.y > 0.0 && shad_coord0.y < 1.0)
+	{
+		sm_k.x = 1.0; // float4 (1.0, 0.0, 0.0, 0.0);
+	}
+	else
+	{
+		sm_k.x = 0.0;
+		if (shad_coord1.x > 0.0 && shad_coord1.x < 1.0 && shad_coord1.y > 0.0 && shad_coord1.y < 1.0)
+		{
+			sm_k.y = 1.0;
+		}
+		else
+		{
+			sm_k.y = 0.0;
+			if (shad_coord2.x > 0.0 && shad_coord2.x < 1.0 && shad_coord2.y > 0.0 && shad_coord2.y < 1.0)
+			{
+				sm_k.z = 1.0;
+			}
+			else
+			{
+				sm_k.w = 1.0;
+				if (shad_coord3.x > 0.0 && shad_coord3.x < 1.0 && shad_coord3.y > 0.0 && shad_coord3.y < 1.0)
+				{
+					sm_k.w = 1.0;
+				}
+				else
+				{
+					return 1;
+					//sm_k.w = 0.0;
+				}
+			}
+		}
+	}
+	//sm_k.x = step(0, world_coords.w) - step(10, world_coords.w);
+	//sm_k.y = step(10, world_coords.w) - step(50, world_coords.w);
+	//sm_k.z = step(50, world_coords.w) - step(220, world_coords.w);
+	//sm_k.w = step(220, world_coords.w) - step(1200, world_coords.w);
+
+	//sm_k.x = (shad_coord0.x > 0.0 && shad_coord0.x < 1.0 && shad_coord0.y > 0.0 && shad_coord0.y < 1.0) ? 1.0 : 0.0;	
+	//sm_k.y = (sm_k.x < 1 && shad_coord1.x > 0.0 && shad_coord1.x < 1.0 && shad_coord1.y > 0.0 && shad_coord1.y < 1.0) ? 1.0 : 0.0;
+	//sm_k.y = sm_k.x > 0 ? 0.0 : sm_k.y;
+	//sm_k.z = (sm_k.y < 1 && shad_coord2.x > 0.0 && shad_coord2.x < 1.0 && shad_coord2.y > 0.0 && shad_coord2.y < 1.0) ? 1.0 : 0.0;
+	//sm_k.z = sm_k.y > 0 ? 0.0 : sm_k.z;
+
+	//sm_k.y =(shad_coord1.xy > float2(0.0, 0.0) && shad_coord1.xy < float2(1.0, 1.0) ? 1.0 : 0.0);
+	
+
+	//sm_k.z = (shad_coord2.xy > float2(0.0, 0.0) && shad_coord2.xy < float2(1.0, 1.0) ? 1.0 : 0.0);
+	//sm_k.z = sm_k.y > 0 ? 0.0 : sm_k.z;
+
+	//sm_k.w = (shad_coord3.xy > float2(0.0, 0.0) && shad_coord3.xy < float2(1.0, 1.0) ? 1.0 : 0.0);
+	//sm_k.w = sm_k.z > 0 ? 0.0 : sm_k.w;
+
+	//sm_k = float4 (1, 0, 0, 0);
+
+
+	//float sm_k_none = 1 - (dot(sm_k, sm_k));
+	
+	//sm_k.y = shad_coord1.xy > float2(0.0, 0.0) ? shad_coord1.xy < float2(1.0, 1.0) ? 1.0 : 0.0;
+	//sm_k.z = shad_coord2.xy > float2(0.0, 0.0) ? shad_coord2.xy < float2(1.0, 1.0) ? 1.0 : 0.0;
+	//sm_k.w = shad_coord3.xy > float2(0.0, 0.0) ? shad_coord3.xy < float2(1.0, 1.0) ? 1.0 : 0.0;
+
+	//float4x4 sh_m = sm_k.x*PSSMProjTexMatrix0 +
+	//				sm_k.y*PSSMProjTexMatrix1 + 
+	//				sm_k.z*PSSMProjTexMatrix2 + 
+	//				sm_k.w*PSSMProjTexMatrix3;
+
+	shad_coord = 
+		sm_k.x*shad_coord0 + 
+		sm_k.y*shad_coord1 + 
+		sm_k.z*shad_coord2 + 
+		sm_k.w*shad_coord3;
+
+	//shad_coord = mul(sh_m, float4(world_coords.xyz, 1));
+
+	shad_coord.xyz /= shad_coord.w;
+
+	float2 sm_offs = sm_k.x*float2(0, 0.5) +
+		sm_k.y*float2(0.5, 0.5) + 
+		sm_k.z*float2(0, 0) + 
+		sm_k.w*float2(0.5, 0);
+
+	//float2 sm_scale = sm_k.x*0.8 + sm_k.y*0.6 + sm_k.z*0.4 + sm_k.w*0.2;
+
+	
+
+	shadow_sample = tex2D(ShadowMap, float2(sm_offs.x + 0.5*shad_coord.x, sm_offs.y + 0.5*shad_coord.y));
+
+	float shadow_factor = 1.0;
+
+#ifndef COMPAREZ  
+	shadow_factor = shadow_sample.r;   // 0 or 1
+#else  //COMPAREZ
+	shadow_factor = (shad_coord.z > shadow_sample.r + 0.0) ? 0 : 1;
+	shadow_factor = shadow_sample.r > 0 ? shadow_factor : 1;
+#endif //COMPAREZ
+	
+	//return sm_scale*shadow_factor;
+	return shadow_factor; /// + sm_k_none;
+}
+
+
+float getShadowFactor(float ref_depth, float4 sm_sample)
+{
+	float shadow_factor = 1.0;
+
+#ifndef COMPAREZ  
+	shadow_factor = sm_sample.r;   // 0 or 1
+#else  //COMPAREZ
+	shadow_factor = (ref_depth > sm_sample.r) ? 0 : 1;
+	shadow_factor = sm_sample.r > 0 ? shadow_factor : 1;
+#endif //COMPAREZ
+
+	return shadow_factor;
+}
+
+// 10, 50, 220, 1200
+float getPSSMPixel(float4 world_coords)
+{
+    float4 shad_coord;
+	float4 shadow_sample;
+
+	// 0 level
+	//world_coords.w = 1;
+	
+	float4 shad_coord0 = mul(PSSMProjTexMatrix0, float4(world_coords.xyz, 1));
+	//shad_coord0.xyz = shad_coord0.xyz/shad_coord0.w;
+	//float4 shadow0 = tex2D(ShadowMap, float2(0.5*shad_coord0.x, 0.5 + 0.5*shad_coord0.y));
+
+	float4 shad_coord1 = mul(PSSMProjTexMatrix1, float4(world_coords.xyz, 1));
+	//shad_coord1.xyz = shad_coord1.xyz/shad_coord1.w;
+	//float4 shadow1 = tex2D(ShadowMap, float2(0.5 + 0.5*shad_coord1.x, 0.5 + 0.5*shad_coord1.y));
+
+	float4 shad_coord2 = mul(PSSMProjTexMatrix2, float4(world_coords.xyz, 1));
+	//shad_coord2.xyz = shad_coord2.xyz/shad_coord2.w;
+	//float4 shadow2 = tex2D(ShadowMap, float2(0.5*shad_coord2.x, 0.5*shad_coord2.y));
+
+	float4 shad_coord3 = mul(PSSMProjTexMatrix3, float4(world_coords.xyz, 1));
+	//shad_coord3.xyz = shad_coord3.xyz/shad_coord3.w;
+	//float4 shadow3 = tex2D(ShadowMap, float2(0.5 + 0.5*shad_coord3.x, 0.5*shad_coord3.y));
+
+	float4 sm_k;
+	
+	sm_k.x = step(0, world_coords.w) - step(10, world_coords.w);
+	sm_k.y = step(10, world_coords.w) - step(50, world_coords.w);
+	sm_k.z = step(50, world_coords.w) - step(220, world_coords.w);
+	sm_k.w = step(220, world_coords.w) - step(1200, world_coords.w);
+
+	shad_coord = sm_k.x*shad_coord0 + sm_k.y*shad_coord1 + sm_k.z*shad_coord2 + 
+		sm_k.w*shad_coord3;
+
+	shad_coord.xyz /= shad_coord.w;
+
+	float2 sm_offs = sm_k.x*float2(0, 0.5) +
+		sm_k.y*float2(0.5, 0.5) + 
+		sm_k.z*float2(0, 0) + 
+		sm_k.w*float2(0.5, 0);
+
+	float sm_scale = sm_k.x*0.8 + sm_k.y*0.6 + sm_k.z*0.4 + sm_k.w*0.2;
+
+	shadow_sample = tex2D(ShadowMap, float2(sm_offs.x + 0.5*shad_coord.x, sm_offs.y + 0.5*shad_coord.y));
+
+	float shadow_factor = 1.0;
+
+#ifndef COMPAREZ  
+	shadow_factor = shadow_sample.r;   // 0 or 1
+#else  //COMPAREZ
+	shadow_factor = (shad_coord.z > shadow_sample.r) ? 0 : 1;
+	shadow_factor = shadow_sample.r > 0 ? shadow_factor : 1;
+#endif //COMPAREZ
+	
+	return sm_scale*shadow_factor;
+	//return shadow_factor;
+	/*
+	if (world_coords.w < 10) 
+	{
+		//return 0.8;
+		shadow_sample = shadow0;
+		shad_coord = shad_coord0;
+		return 0.8*getShadowFactor(shad_coord.z, shadow_sample);
+	}
+	
+	if (world_coords.w < 50)
+	{
+		//return 0.6;
+		shadow_sample = shadow1;
+		shad_coord = shad_coord1;
+		return 0.6*getShadowFactor(shad_coord.z, shadow_sample);
+	}
+	
+	if (world_coords.w < 220)
+	{
+		//return 0.3;
+		shadow_sample = shadow2;
+		shad_coord = shad_coord2;
+		return 0.4*getShadowFactor(shad_coord.z, shadow_sample);
+	}
+
+	if (world_coords.w < 1200)
+	{
+		//return 0.3;
+		shadow_sample = shadow3;
+		shad_coord = shad_coord3;
+		return 0.2*getShadowFactor(shad_coord.z, shadow_sample);
+	}
+
+	return 1;
+*/
+
+/*
+	shadow_sample = shadow0;
+	shad_coord = shad_coord0;
+
+	if (shad_coord.x < 0 || shad_coord.x > 1 || shad_coord.y < 0 || shad_coord.y > 1 )
+		//|| shad_coord.z < 0 || shad_coord.z > 1)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0.5*getShadowFactor(shad_coord.z, shadow_sample);
+	}
+*/		
+
+	/*
+	if (shad_coord0.x < 0 || shad_coord0.x > 1 || shad_coord0.y < 0 || shad_coord0.y > 1)
+	{
+		// 1 level
+		
+		if (shad_coord1.x < 0 || shad_coord1.x > 1 || shad_coord1.y < 0 || shad_coord1.y > 1)
+		{
+			//return 1;
+			
+			// 2 level
+			
+			if (shad_coord2.x < 0 || shad_coord2.x > 1 || shad_coord2.y < 0 || shad_coord2.y > 1)
+			{
+				return 1;
+				// 3 level
+				
+				//if (shad_coord3.x < 0 || shad_coord3.x > 1 || shad_coord3.y < 0 || shad_coord3.y > 1)
+				//{
+				//	return 1;
+				//}
+				//else 
+				//{				
+				//	shadow_sample = shadow3;
+				//	shad_coord = shad_coord3;
+				//}
+				
+			}
+			else
+			{
+				shadow_sample = shadow2;
+				shad_coord = shad_coord2;
+				//return 0.3*getShadowFactor(shad_coord.z, shadow_sample);
+				//return getShadowFactor(shad_coord.z, shadow_sample);
+			}
+			
+		}
+		else
+		{
+
+			shadow_sample = shadow1;
+			shad_coord = shad_coord1;
+			//return 0.5*getShadowFactor(shad_coord.z, shadow_sample);
+			//return getShadowFactor(shad_coord.z, shadow_sample);
+		}
+	}
+	else
+	{
+		shadow_sample = shadow0;
+		shad_coord = shad_coord0;
+		//return 0.7*getShadowFactor(shad_coord.z, shadow_sample);
+		//return getShadowFactor(shad_coord.z, shadow_sample);
+	}
+	
+	*/
+
+	//shad_coord = mul(PSSMProjTexMatrix[1], world_coords);
+	//float4 Shadow1 = tex2D(ShadowMap, float2(0.5 + 0.5*shad_coord.x, 0.5+0.5*shad_coord.y));
+
+	//shad_coord = mul(PSSMProjTexMatrix[2], world_coords);	
+	//float4 Shadow2 = tex2D(ShadowMap, float2(0.5 + 0.5*shad_coord.x, 0.5+0.5*shad_coord.y));
+
+	//shad_coord = mul(PSSMProjTexMatrix[3], world_coords);	
+	//float4 Shadow3 = tex2D(ShadowMap, float2(0.5 + 0.5*shad_coord.x, 0.5+0.5*shad_coord.y));
+
+	//return getShadowFactor(shad_coord.z, shadow_sample);
+}
+
+
+
+
+
+float getBilinearFilteredShadowPixel(float3 uvz)
+{
+  float mgs = 1024.f;
+  uvz.x *= mgs;
+  uvz.y *= mgs;
+  float x = floor(uvz.x);
+  float y = floor(uvz.y);
+  float z = uvz.z * mgs;
+  float u_ratio = uvz.x - x;
+  float v_ratio = uvz.y - y;
+  float u_opposite = 1 - u_ratio;
+  float v_opposite = 1 - v_ratio;
+  float result = (getShadowPixel(float3(x,y,z)/mgs) * u_opposite  + getShadowPixel(float3(x+1,y,z)/mgs) * u_ratio) * v_opposite + 
+                  (getShadowPixel(float3(x,y+1,z)/mgs) * u_opposite  + getShadowPixel(float3(x+1,y+1,z)/mgs) * u_ratio) * v_ratio;
+  return result;
+}
+
+float4 getMegaNumberPixel(float2 coord)
+{
+	float mgSize = 128*256;//MGT_TILE_SIZE.x;
+	float tileSize = 256;//MGT_TILE_SIZE.y;
+	float scaleDSDT = 4.0f/mgSize;
+	float tablesize = 8;
+	float4 DsDtLookup = 2*tex2D(maskDSDT, 128*coord.xy)-1;
+	float2 newst = float2(coord.x + scaleDSDT * DsDtLookup.x, coord.y + scaleDSDT * DsDtLookup.y);
+	float4 col = tex2D(typeMap, newst);
+	float lod = round(col.r*255);
+	float tileY = floor(lod/tablesize);
+	float tileX = lod - tileY*tablesize;
+	float2 tileUV = float2(tileX, tileY);
+	float2 offsetUV = frac(coord * (mgSize / tileSize));
+	float2 megaUV = (tileUV+offsetUV)/tablesize;
+	col.rgb = tex2D(megaNoise, megaUV).rgb;
+	return col;
+}
+
+float4 getBilinearFilteredMegaNoise(float2 uv)
+{
+
+  //float4 col = tex2D(IndirTex, uv);
+  //float lod = floor(col.a*255);
+  //float mgs = MGT_TILE_SIZE.x/pow(2,lod);
+  float mgs = 128*256;
+
+  uv.x *= mgs;
+  uv.y *= mgs;
+  float x = floor(uv.x);
+  float y = floor(uv.y);
+  float u_ratio = uv.x - x;
+  float v_ratio = uv.y - y;
+  float u_opposite = 1 - u_ratio;
+  float v_opposite = 1 - v_ratio;
+  float4 result = (getMegaNumberPixel(float2(x,y)/mgs) * u_opposite  + getMegaNumberPixel(float2(x+1,y)/mgs) * u_ratio) * v_opposite + 
+                  (getMegaNumberPixel(float2(x,y+1)/mgs) * u_opposite  + getMegaNumberPixel(float2(x+1,y+1)/mgs) * u_ratio) * v_ratio;
+  return result;
+}
+
+float4 getMegaPixel(float2 coord)
+{
+	float mgSize = MGT_TILE_SIZE.x;
+	float tileSize = MGT_TILE_SIZE.y;
+	float tileCount = MGT_TILE_SIZE.z;
+	float cache_sidesize = 64;
+	float4 col = tex2D(IndirTex, float2(coord.x, coord.y));
+	float lod = (col.a*255);
+	float tileY = (col.g*255);
+	float tileX = (col.r*255);
+	float2 tileUV = float2(round(tileX), round(tileY));
+	float2 offsetUV = frac(coord * tileCount / pow(2,lod) );
+	float2 megaUV = (tileUV+offsetUV)/cache_sidesize;
+	float4 pix = tex2D(MegaCacheTex, megaUV);
+	return pix;
+}
+
+float4 getBilinearFilteredMegaPixel(float2 uv)
+{
+  float mgs = MGT_TILE_SIZE.x;
+
+  uv.x *= mgs;
+  uv.y *= mgs;
+  float x = floor(uv.x);
+  float y = floor(uv.y);
+  float u_ratio = uv.x - x;
+  float v_ratio = uv.y - y;
+  float u_opposite = 1 - u_ratio;
+  float v_opposite = 1 - v_ratio;
+
+  float4 result = (getMegaPixel(float2(x,y)/mgs) * u_opposite  + getMegaPixel(float2(x+1,y)/mgs) * u_ratio) * v_opposite + 
+                  (getMegaPixel(float2(x,y+1)/mgs) * u_opposite  + getMegaPixel(float2(x+1,y+1)/mgs) * u_ratio) * v_ratio;
+  return result;
+}
+
+float4 main(in VertexOUT IN // From vertex shader
+	,uniform float3 SunDiffuse
+	,uniform float3 SunAmbient
+#ifdef CLIPPING
+	,uniform float fClipPlaneZ
+#endif
+	   ) : COLOR
+{
+	float4 result;
+	
+#ifdef CLIPPING
+	if (IN.coord.z<fClipPlaneZ)
+		discard;
+#endif
+	//result =  getMegaPixel(IN.coord.xy);
+	result =  getBilinearFilteredMegaPixel(IN.coord.xy);
+	//float4 CommonNoisePixel = float4(IN.coord.xy*commonNoiseTile, 0, 0);//tex2D(CommonNoise, IN.coord.xy*commonNoiseTile);
+	float4 CommonNoisePixel = tex2D(CommonNoise, IN.coord.xy*commonNoiseTile);
+	result.rgb *= CommonNoisePixel.rgb*2;
+	float ndl = result.a;//clamp(result.a, 0, 1);
+	float4 TMColor = tex2D(typeMap, IN.coord.xy);
+	result.a = TMColor.a;
+#ifdef USE_BUMP
+/*
+	float3 normPixel = tex2D(NormalMap, float2(IN.coord.x, 1-IN.coord.y)).rgb;
+	normPixel = float3(normPixel.r,1-normPixel.g,normPixel.b);
+	float3 normal = (2*normPixel-1);
+	//float sx = normal.x;
+	//float sy = normal.y;
+	//float sz = sqrt(1.0f-(sx*sx+sy*sy))/4;
+	//normal = normalize(float3(sx, sy, sz));
+*/
+	float4 normPixel = tex2D(NormalMap, float2(IN.coord.x, 1-IN.coord.y));
+	float3 normal = 2*float3(normPixel.a, 1-normPixel.g, 0)-1;
+	float sx = normal.x;
+	float sy = normal.y;
+	float sz = sqrt(1.0f-(sx*sx+sy*sy));
+	normal = normalize(float3(sx, sy, sz));
+	ndl *= saturate(dot(SunDir, normal));
+#endif
+
+#ifdef SHADOW
+
+#ifdef PSSM
+	float ShadowFactor = getPSSMPixel3(IN.worldCoord);
+#else
+	float3 projcoord = IN.shadCoord.xyz/IN.shadCoord.w;
+
+	#ifdef SM30
+		float ShadowFactor = getBilinearFilteredShadowPixel(projcoord);
+	#else
+		float ShadowFactor = getShadowPixel(projcoord);
+	#endif
+#endif // PSSM
+    
+    ndl *= ShadowFactor;
+#endif  //SHADOW
+
+	//result.rgb *= (ndl*(SunDiffuse+SunAmbient)+SunAmbient);
+	ndl = clamp(ndl*koeffNdotL.x + koeffNdotL.y, 0, 1);
+	result.rgb *= lerp(SunAmbient, (SunDiffuse*koeffNdotL.z), ndl);
+#ifdef USE_NOISE
+	float R1 = 10.f;
+	float R2 = 400.f;
+#ifdef SM30
+	result.rgb = lerp(result.rgb*getBilinearFilteredMegaNoise(IN.coord.xy).rgb*2, result.rgb, clamp((IN.spos.z-R1)/(R2-R1),0,1));
+#else
+	result.rgb = lerp(result.rgb*getMegaNumberPixel(IN.coord.xy).rgb*2, result.rgb, clamp((IN.spos.z-R1)/(R2-R1),0,1));
+#endif
+#endif
+
+#ifdef USE_FOG
+  float4 fogColor = texCUBE(SkyMap, IN.fogCoord);
+  fogColor.rgb = lerp(fogColor.rgb, fogColor.rgb*fSkyMultiplier, fogColor.a);
+  // compute final color
+  //result.rgb = fogColor.rgb;//lerp(result.rgb, fogColor.rgb, IN.FogColor.a);
+  result.rgb = lerp(result.rgb, fogColor.rgb, IN.FogColor.a);
+  //result.rgb = float3(IN.fogCoord.xy,0);
+#endif
+#ifdef USE_BUMP
+	//result.rgb = normal.rgb;
+#endif
+	return result;			
+}

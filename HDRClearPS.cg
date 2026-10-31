@@ -1,0 +1,16 @@
+// From vertex shader
+struct VertexOUT
+{
+	float2 TEX0 : TEXCOORD0;
+};
+
+uniform sampler2D TexMap: TEXUNIT0; // Base texture
+uniform float4 color;
+
+float4 main(in VertexOUT IN // From vertex shader
+			) : COLOR
+{
+	return color;
+}
+
+

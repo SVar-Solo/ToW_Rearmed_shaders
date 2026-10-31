@@ -1,0 +1,24 @@
+struct VertexIN
+{
+    float4 position : POSITION;
+    float2 texcoord : TEXCOORD0;
+    float4 color: COLOR0;
+};
+
+struct VertexOUT
+{
+	float4 HPOS : POSITION;
+	float2 TEX0 : TEXCOORD0;
+	float4 color: COLOR0;
+};
+
+uniform float4x4 ModelViewProj : _GL_MVP;
+
+VertexOUT main(in VertexIN IN) 
+{
+	VertexOUT OUT;
+	OUT.HPOS = mul(ModelViewProj, float4(IN.position.xyz, 1.0));
+	OUT.TEX0 = IN.texcoord;
+	OUT.color = IN.color;
+	return OUT;
+} 

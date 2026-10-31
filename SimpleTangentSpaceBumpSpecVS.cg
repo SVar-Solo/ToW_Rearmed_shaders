@@ -1,0 +1,87 @@
+struct vertexInputs
+{
+    float4 position     : POSITION;
+	//float4 color        : COLOR0;
+    float3 normal       : NORMAL;
+	
+    float2 texcoords0   : TEXCOORD0;
+	float3 texcoords1   : TEXCOORD1;
+	float3 texcoords2   : TEXCOORD2;
+	float3 texcoords3   : TEXCOORD3;
+	
+};
+
+struct vfconn
+{
+    float4 HPos : POSITION;
+	//float4 Color : COLOR0;
+    float4 LightDirUnsigned : COLOR1;
+    float2 Tex0 : TEXCOORD0;
+	float2 Tex1 : TEXCOORD1;
+#ifdef USE_SPECULAR
+	float3 Tex2 : TEXCOORD2;
+	float3 Tex3 : TEXCOORD3;
+#endif
+};
+
+// vertex program
+vfconn main(in vertexInputs IN
+			,uniform float3 LightDir
+#ifdef USE_SPECULAR
+			,uniform float3 ViewDir
+#endif
+//            uniform float4x4 modelViewProj//:_GL_MVP
+#ifndef PROFILE_ARBVP1
+			,uniform float4x4 ModelViewProj : _GL_MVP
+			,uniform float4x4 halTextureMatrix0
+#endif
+			)
+{
+  vfconn OUT;
+
+  //float4 fogRGBA = float4(0,0,0,0);
+  //float4x4 modelViewProj = float4x4(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
+  //float4x4 Texmatrix = modelViewProj;
+
+#ifdef PROFILE_ARBVP1
+  float4x4 ModelViewProj = glstate.matrix.mvp;
+  //fogRGBA = glstate.fog.color;
+  float4x4 halTextureMatrix0 = glstate.matrix.texture[0];
+#endif
+
+  // Compute position
+  float4 pos = mul(ModelViewProj, IN.position);
+  OUT.HPos = pos;
+  float2 NewTexCoord = mul(halTextureMatrix0, float4(IN.texcoords0,0,1)).xy;
+
+  OUT.Tex0 = NewTexCoord;
+  OUT.Tex1 = NewTexCoord;
+  
+  // compute the 3x3 transform from
+  // tangent space to object space
+  float3x3 objToTangentSpace;
+  objToTangentSpace[0] = normalize(IN.texcoords1);
+  objToTangentSpace[1] = normalize(IN.texcoords2);
+  objToTangentSpace[2] = normalize(IN.texcoords3);
+//objToTangentSpace[2] = normalize(IN.normal);
+//objToTangentSpace[1] = normalize(cross(objToTangentSpace[0], objToTangentSpace[2]));
+//objToTangentSpace[0] = normalize(cross(objToTangentSpace[1], objToTangentSpace[2]));
+  
+  // Convert light direction to tangent space
+  float3 LocalLight;
+
+  LocalLight = normalize(mul(objToTangentSpace, LightDir));
+
+  OUT.LightDirUnsigned.rgb = 0.5 * (LocalLight) + 0.5;
+  //OUT.Color = float4(1,1,1,1);//IN.color;
+  
+#ifdef USE_SPECULAR
+  // Compute half vector
+  float3 H = normalize(normalize(LightDir)+normalize(ViewDir - IN.position.xyz));
+  // Convert half vector to tangent space
+  OUT.Tex2 =  (mul(objToTangentSpace, H));
+  OUT.Tex3 = LocalLight;
+#endif
+    
+  return OUT;
+}

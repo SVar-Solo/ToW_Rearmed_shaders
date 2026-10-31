@@ -1,0 +1,70 @@
+//********* Options for Custom Build step ************
+//for vertex program
+//"E:\Program Files\NVIDIA Corporation\Cg\bin\cgc.exe"  -profile vp20 -posinv -o $(InputName).txt $(InputPath)
+//for fragment program
+//"E:\Program Files\NVIDIA Corporation\Cg\bin\cgc.exe"  -profile fp20 -o $(InputName).txt $(InputPath)
+//****************************************************
+
+//****************************************************
+//Fragment shader for Far grass: pass1 - without shadows
+//calc ambient + diffuse light
+//****************************************************
+
+//-----------------FP20----------------------
+struct VertexOut {
+  float2 texCoord0 : TEXCOORD0;    //RoundMask  
+  float2 texCoord1 : TEXCOORD1;    //Mask
+  float2 texCoord2 : TEXCOORD2;    //Land
+  float2 texCoord3 : TEXCOORD3;    //Grass
+};
+
+
+float4 main(VertexOut IN,
+			uniform half kBlend, //Additional blending factor for smooth turn off near to max vizible height
+			uniform half4 Ka, //Ambient color
+			uniform half4 Kd, //Diffuse color
+            uniform sampler2D RoundMaskTex : TEXUNIT0,
+            uniform sampler2D MaskMap : TEXUNIT1,
+            uniform sampler2D LandMap : TEXUNIT2,
+            uniform sampler2D GrassMap : TEXUNIT3
+			) : COLOR
+{
+  fixed4 RoundMask = tex2D(RoundMaskTex, IN.texCoord0.xy);
+  fixed4 Land = tex2D(LandMap, IN.texCoord2.xy);
+  fixed4 Grass = tex2D(GrassMap, IN.texCoord3.xy);  
+  //---------------------
+  //Attention: Use simple modulation: color.a = Grass.a * NewMask.a;  
+  float4 NewMask = tex2D(MaskMap, IN.texCoord1.xy);  //without dependent read
+  //---------------------
+
+  fixed3 diffuse_light;
+  diffuse_light.rgb = Land.a * Kd.rgb;   
+
+  fixed4 color;
+  color.rgb = (Grass.rgb * Land.rgb) * 2.0f;  
+  //2-nd modulation step
+  color.rgb = (color.rgb * NewMask.rgb) * 2.0f;  //!!!!!!
+
+  //---Masking by TypeMap---
+  color.a = Grass.a * NewMask.a;  
+
+  //---Masking by RoundMap for smoothing---
+  color.a *= RoundMask.a;
+
+  //---Smooth turn of near to max vizible height---
+  color.a *= kBlend;
+
+#ifdef PROFILE_FP20
+	color.rgb = saturate(Ka.rgb + diffuse_light.rgb) * color.rgb;
+#else
+	color.rgb = clamp(Ka.rgb + diffuse_light.rgb, 0.0, 1.0) * color.rgb;
+#endif
+
+  return color;
+}
+
+
+
+
+
+

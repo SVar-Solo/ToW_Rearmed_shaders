@@ -1,0 +1,17 @@
+// From vertex shader
+struct VertexOUT
+{
+	float2 TEX0 : TEXCOORD0;
+};
+
+float4 main(in VertexOUT IN // From vertex shader
+			,uniform sampler2D DiffuseMap: TEXUNIT0 // Base texture
+			) : COLOR
+{
+	float4 decalColor = tex2D(DiffuseMap, IN.TEX0);
+	return decalColor;//*float4(0.47f, 0, 0, 0.2f);
+	//return float4(decalColor.rgb*decalColor.a, decalColor.a);
+	//return float4(IN.TEX0.xy, 0, 1);
+}
+
+

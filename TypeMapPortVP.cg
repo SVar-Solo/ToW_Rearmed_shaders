@@ -1,0 +1,57 @@
+struct VertexOut
+{
+  float4 position : POSITION;
+};
+
+struct PixelOut
+{
+    float4 HPOS : POSITION;
+    float4 COL0 : COLOR0;
+
+  float2 texCoord0 : TEXCOORD0;    //dsdt 
+  float2 texCoord1 : TEXCOORD1;    //Mask             
+  float2 texCoord2 : TEXCOORD2;    //Noise1     //changes in range [0...nTile1] on block
+  float2 texCoord3 : TEXCOORD3;    //Noise2     //changes in range [0...nTile2] on block
+};
+
+//DistMinMax.x = DistMin
+//DistMinMax.y = DistMax
+//DistMinMax.z = DistMax - DistMin
+PixelOut main(VertexOut IN,
+              uniform float4x4 ModelViewProj : _GL_MVP,
+			  uniform float3 CamPos,
+			  uniform float3 DistMinMax
+			 ,uniform float4 S_TexGenVecNoise0
+			 ,uniform float4 T_TexGenVecNoise0
+			 ,uniform float4 S_TexGenVecMain
+			 ,uniform float4 T_TexGenVecMain
+			 ,uniform float4 S_TexGenVecNoise2
+			 ,uniform float4 T_TexGenVecNoise2
+			 ,uniform float4 S_TexGenVecNoise3
+			 ,uniform float4 T_TexGenVecNoise3
+)
+{
+#ifdef PROFILE_ARBVP1
+   ModelViewProj = glstate.matrix.mvp;
+#endif
+
+    PixelOut OUT;
+
+	//---transform vertex to camera space---
+    OUT.HPOS = mul(ModelViewProj, IN.position);
+
+    float3 dP = IN.position.xyz-CamPos;
+    float dist = length(dP);
+	dist = clamp(dist, DistMinMax.x, DistMinMax.y);
+	float a = 1.0 - (dist-DistMinMax.x)/DistMinMax.z;
+
+    float4 pos = float4(IN.position.xyz,1);
+    OUT.texCoord0 = float2(dot(pos,S_TexGenVecNoise0),dot(pos,T_TexGenVecNoise0));
+    OUT.texCoord1 = float2(dot(pos,S_TexGenVecMain),dot(pos,T_TexGenVecMain));
+    OUT.texCoord2 = float2(dot(pos,S_TexGenVecNoise0),dot(pos,T_TexGenVecNoise0));
+    OUT.texCoord3 = float2(dot(pos,S_TexGenVecNoise0),dot(pos,T_TexGenVecNoise0));
+
+    OUT.COL0 = float4(0.0, 0.0, 0.0, a);
+
+    return OUT;
+} 

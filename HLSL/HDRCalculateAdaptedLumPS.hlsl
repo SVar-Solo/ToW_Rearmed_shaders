@@ -1,0 +1,35 @@
+// From vertex shader
+struct VertexOUT
+{
+	float2 texCoord : TEXCOORD0;
+};
+
+uniform sampler2D TexMap1: register(s0); // Base texture
+uniform sampler2D TexMap2: register(s1); // Base texture
+uniform float3 fElapsedTimeEyeLimit;
+
+float EyeLimit(float lum)
+{
+  float res;
+  res = saturate(lum);
+  res = clamp(res, fElapsedTimeEyeLimit.y, fElapsedTimeEyeLimit.z);
+  return res;
+}
+
+float4 main(in VertexOUT IN // From vertex shader
+			) : COLOR
+{
+	float2 fAdaptedLum = tex2D(TexMap1, float2(0.5, 0.5)).xy;
+	float2 fCurrentLum = tex2D(TexMap2, float2(0.5, 0.5)).xy;
+
+	fCurrentLum.x = EyeLimit(fCurrentLum.x);
+    
+    // The user's adapted luminance level is simulated by closing the gap between
+    // adapted luminance and current luminance by 2% every frame, based on a
+    // 30 fps rate. This is not an accurate model of human adaptation, which can
+    // take longer than half an hour.
+	float2 fNewAdaptation = fAdaptedLum + (fCurrentLum - fAdaptedLum) * ( 1.0 - pow( 0.98, 100.0 * fElapsedTimeEyeLimit.x ) );
+	//float2 fNewAdaptation.xy = fCurrentLum.xy;
+
+	return float4(fNewAdaptation.xy,0.0,1.0);
+}

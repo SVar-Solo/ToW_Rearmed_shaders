@@ -1,0 +1,23 @@
+struct VertexIN
+{
+    float4 position : POSITION;
+    float3 texcoord : TEXCOORD0;
+};
+
+struct VertexOUT
+{
+	float4 HPOS : POSITION;
+	float2 TEX0 : TEXCOORD0;
+	float2 TEX1 : TEXCOORD1;
+};
+
+VertexOUT main(VertexIN IN
+	,uniform float2 pixelSize
+			) 
+{
+	VertexOUT OUT;
+	OUT.HPOS = IN.position;
+	OUT.TEX0 = IN.texcoord+0.5*pixelSize;
+	OUT.TEX1 = IN.texcoord+0.5*pixelSize/8;
+	return OUT;
+} 

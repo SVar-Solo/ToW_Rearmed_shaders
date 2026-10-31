@@ -1,0 +1,22 @@
+// From vertex shader
+struct VertexOUT
+{
+	float2 texCoord : TEXCOORD0;
+};
+
+#define MAX_SAMPLES 16
+
+uniform float2 avSampleOffsets[MAX_SAMPLES];
+uniform float4 avSampleWeights[MAX_SAMPLES];
+uniform sampler2D TexMap: TEXUNIT0; // Base texture
+
+float4 main(in VertexOUT IN // From vertex shader
+			) : COLOR
+{
+	float4 sample = float4(0.0, 0.0, 0.0, 0.0);
+	for( int i=0; i < MAX_SAMPLES; i++ )
+	{
+		sample += avSampleWeights[i] * tex2D(TexMap, IN.texCoord + avSampleOffsets[i]);
+	}
+	return float4(sample.rgb,1.0);
+}

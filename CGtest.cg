@@ -1,0 +1,118 @@
+/*********************************************************************NVMH3****
+Path:  SDK\MEDIA\programs\cg_dot_product_depth
+File:  depth_replace.cg
+
+Copyright NVIDIA Corporation 2002
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THIS SOFTWARE IS PROVIDED
+*AS IS* AND NVIDIA AND ITS SUPPLIERS DISCLAIM ALL WARRANTIES, EITHER EXPRESS
+OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE.  IN NO EVENT SHALL NVIDIA OR ITS SUPPLIERS
+BE LIABLE FOR ANY SPECIAL, INCIDENTAL, INDIRECT, OR CONSEQUENTIAL DAMAGES
+WHATSOEVER (INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF BUSINESS PROFITS,
+BUSINESS INTERRUPTION, LOSS OF BUSINESS INFORMATION, OR ANY OTHER PECUNIARY LOSS)
+ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF NVIDIA HAS
+BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+
+Comments:
+    jallen@nvidia.com: fragment portion of dot product depth replace shader
+
+******************************************************************************/
+
+struct inputs
+{
+    float3 diffuseColor     : COLOR0;
+    float3 eyeLightVec      : COLOR1;
+    float4 TexCoord0        : TEXCOORD0;
+    float4 TexCoord1        : TEXCOORD1;
+    float4 TexCoord2        : TEXCOORD2;
+    float4 TexCoord3        : TEXCOORD3;
+};
+
+#ifdef REPLACE_DEPTH
+    static const bool bReplaceDepth = true;
+#else
+    static const bool bReplaceDepth = false;
+#endif
+
+#ifdef NORMALIZE_LIGHT_VEC
+    static const bool bNormalizeLightVec = true;
+#else
+    static const bool bNormalizeLightVec = false;
+#endif
+
+#ifdef CALCULATE_SPECULAR
+    static const bool bCalculateSpecular = true;
+#else
+    static const bool bCalculateSpecular = false;
+#endif
+
+const float3 ambient = float3(0.1, 0.1, 0.1);
+
+float3 expand(float3 vector)
+{
+    return 2.0 * (vector - 0.5);
+}
+
+// register combiner vector normalization function
+float3 normalize(float3 vector) // vector is in [0,1] range
+{
+    float3 VdotV = dot(expand(vector), expand(vector));
+    return expand(vector) + ((vector-0.5) * (1-VdotV));
+}
+
+float4 main(inputs IN,
+            out float depth : DEPTH,
+
+            uniform sampler2D depthMap,
+            uniform sampler2D normalMap
+            ) : COLOR
+{
+    if (bReplaceDepth)
+    {
+        float3 depthVal = tex2D(depthMap, IN.TexCoord0.xy).rgb;
+        float z = dot(IN.TexCoord1.xyz, depthVal);
+        float w = dot(IN.TexCoord2.xyz, depthVal);
+        depth = z / w;        
+    }
+
+    float3 eyeLightVec;
+
+    if (bNormalizeLightVec)
+        eyeLightVec = normalize(IN.eyeLightVec); 
+    else 
+        eyeLightVec = expand(IN.eyeLightVec);
+
+    // fetch normal from normal map and expand to [-1, 1] range
+    float4 normal = 2.0 * (tex2D(normalMap, IN.TexCoord3.xy) - 0.5);
+
+    // calculate diffuse lighting
+    float3 NdotL = dot(normal.rgb, eyeLightVec);
+    float3 diffuse = IN.diffuseColor * (saturate(NdotL.rgb) + ambient);
+
+    float3 finalColor = diffuse;
+
+    // calculate specular if required
+    if (bCalculateSpecular)
+    {
+        // calculate reflection vector
+        // R = 2 * (N * (N dot L) - L/2)
+        //   = 2 * N * (N dot L) - L
+        float3 reflectVec = ((NdotL * normal.rgb) + (-0.5 * eyeLightVec)) * 2.0;
+
+        // eye vector E = (0, 0, 1)
+        // R dot E = (R.r*0 + R.g*0 + 1*R.b) = R.b
+        float RdotE = saturate(reflectVec.b);   // max(0, RdotE);
+
+        // calculate specular as pow(RdotE, 16)
+        float specular = RdotE * RdotE;         // RdotE^2
+        specular = specular * specular;         // RdotE^4 
+        specular = specular * specular;         // RdotE^8
+        specular = specular * specular;         // RdotE^16
+
+        // add specular light contribution to final color
+        finalColor += specular;
+    }
+    
+    return float4(finalColor, normal.a);
+}

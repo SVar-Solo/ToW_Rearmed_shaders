@@ -1,0 +1,71 @@
+//********* Options for Custom Build step ************
+//for vertex program
+//"E:\Program Files\NVIDIA Corporation\Cg\bin\cgc.exe"  -profile vp20 -posinv -o $(InputName).txt $(InputPath)
+//for fragment program
+//"E:\Program Files\NVIDIA Corporation\Cg\bin\cgc.exe"  -profile fp20 -o $(InputName).txt $(InputPath)
+//****************************************************
+
+//****************************************************
+//Fragment shader for support Shadow map in Land (in Fog pass)
+//****************************************************
+
+struct VertexOut
+{
+    //Attention: below is output from vertex shader
+    float4 HPOS : POSITION;
+    float4 COL0 : COLOR0;
+    float2 TEX0 : TEXCOORD0;
+    float4 TEX1 : TEXCOORD2;
+};
+
+
+//----------Reduced version for test------------
+float4 main(VertexOut IN,
+			uniform float4 AmbientColor,
+			uniform float2 AlphaRef,
+            uniform sampler2D DiffuseMap : TEXUNIT0,
+            uniform sampler2D ShadowMap : TEXUNIT2
+			) : COLOR
+{
+  //--move to const--
+  float ShadowFactor = 0.5;
+  float4 Diffuse = tex2D(DiffuseMap, IN.TEX0.xy);
+  //float4 Diffuse = float4(IN.TEX0.xy,0,1);
+
+  float4 Shadow = tex2Dproj(ShadowMap, IN.TEX1.xyzw);
+
+#ifndef COMPAREZ
+  ShadowFactor = Shadow.r;   //0 or 1
+#else
+  float zProj = IN.TEX1.z/IN.TEX1.w; 
+  ShadowFactor = (zProj /*- 0.0001f*/ > Shadow.r)?0:1;
+  ShadowFactor = (Shadow.r>0)?ShadowFactor:1;
+#endif
+
+  // [GavrilenkoD] This line helps to solve artifact:
+  // [GavrilenkoD] dark strips on NVIDIA-cards on non-shadowed fields of models.
+  // [GavrilenkoD] I've no idea, why 8-/ 
+  Diffuse.a = Diffuse.a + 0.0001; 
+  
+  float alpha2 = AlphaRef.y>0.5?(Diffuse.a>AlphaRef.x?Diffuse.a:0):1;
+
+  float3 zer = (0,0,0);
+  float4 ShadowColor = float4(Diffuse.rgb*AmbientColor.rgb, (alpha2)*(1.0 - ShadowFactor));
+
+  return ShadowColor;
+  //return float4(ShadowColor.rgb,1);
+  //return 0;
+  
+  //return float4( ((Diffuse.a>alpha2?Diffuse.a:alpha2)), 0, 0, 1);
+  //return float4(Diffuse.a,0,0,1);
+  //return float4(alpha2,0,0,1);
+  //return float4(AlphaRef,0,1);
+  //return float4(AlphaRef.x,0,0,1);
+  //return float4(AlphaRef.y,0,0,1);
+
+
+}
+
+
+
+

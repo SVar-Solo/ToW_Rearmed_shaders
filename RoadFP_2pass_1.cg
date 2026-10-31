@@ -1,0 +1,109 @@
+//This is version of shader for 2 pass implementation (for card that support PS1.1 - GeForec3,4 and so on)
+//1-st pass: Ambient + Diffuse + Specular (no shadows)
+//2-nd pass: Ambient (only shadow region)
+//Road pixel shader.
+
+#define PASS1
+//#define PASS2
+
+//#define COMPAREZ  //used for Radeon
+
+struct VertexOut
+{	
+  half2 TexCoord0 : TEXCOORD0;  //Road texture
+  half2 TexCoord1 : TEXCOORD1;  //Bump map           //really duplicate TexCoord0 - need for fp20 profile only
+  float4 Color : COLOR0;        //contain Land.a
+
+#ifdef PASS1
+  float3 Color1 : COLOR1;       //Normal here for specular
+  float3 tex3 : TEXCOORD3;      //contain Half vector for given vertex (need for specular)
+#endif //PASS1
+
+#ifdef PASS2
+  half4 TexCoord2 : TEXCOORD2;  //Shadow map
+#endif //PASS2
+};
+
+half4 main(in VertexOut IN, 
+			uniform half4 Ka, //Ambient color
+			uniform half4 Kd, //Diffuse color
+			uniform sampler2D RoadTex: TEXUNIT0,              //Road texture
+            uniform sampler2D BumpMap : TEXUNIT1              //Bump texture
+#ifdef PASS1
+			,uniform half3 LightDir                           //Dir to sun
+            ,uniform sampler2D SpecLevelMap: TEXUNIT2         //Specular map (emulate pow)
+#endif //PASS1
+
+#ifdef PASS2
+            ,uniform sampler2D ShadowMap : TEXUNIT2           //shadow map
+#endif //PASS2
+			) : COLOR
+{
+    //read bump vector
+	fixed4 Bump = tex2D(BumpMap, IN.TexCoord1);
+	Bump.rgb = 2.0f*(Bump.rgb-0.5f);  //blue component after this conversion will be the same
+
+    //---diffuse---
+	fixed LandA = IN.Color.r;
+	fixed3 diffuse_light;       //Attention: under arbfp1 and fp30 profile I have a compilation error if use fixed4 instead of fixed3 (?????)
+    diffuse_light.rgb = LandA * Kd.rgb;
+	fixed scalar_product = dot(Bump.rgb, LightDir);
+	diffuse_light.rgb *= scalar_product;
+
+#ifdef PASS1
+	//---specular---
+	fixed3 specular_light;
+    float3 normal = 2.0*(IN.Color1-0.5);
+	const float BumpAmount = 1.0;     //???????????????
+    float3 Norm = lerp(normal.rgb, Bump.rgb, BumpAmount);    //!!!!! normalize() - desiarable to be normalized
+
+	const float SpecularAmount = 16; //16.0;     //???????????????
+
+	float3 HalfVec = IN.tex3;   ////!!!!! normalize() - desiarable to be normalized
+    float spec = dot(HalfVec, Norm);
+//    spec = pow(spec,SpecularAmount);   //!!!!!!!!!!!!
+
+	float2 spec_coord = float2( dot(NormTex.rgb, IN.H.rgb), dot(NormTex.rgb, IN.LightDir.rgb) );
+	float4 specLev = tex2D(SpecLevelMap, spec_coord);
+
+
+	float gloss = Bump.a;
+	specular_light = fixed3(0.9, 0.2, 0.2);   //?????????
+	specular_light = specular_light * spec * gloss;
+	//--------------
+#endif //PASS1
+
+	fixed4 Road = tex2D(RoadTex, IN.TexCoord0);   
+
+#ifdef PASS2
+    //---shadows---
+	fixed4 Shadow = fixed4(1,0,0,1);
+    fixed ShadowFactor = 0;
+
+	Shadow = tex2Dproj(ShadowMap, IN.TexCoord2.xyzw);
+
+#ifndef COMPAREZ  
+	ShadowFactor = Shadow.r;   //0 or 1
+#else  //COMPAREZ
+	float zProj = IN.TexCoord2.z/IN.TexCoord2.w;
+	ShadowFactor = (zProj > Shadow.r)?0:1;
+	ShadowFactor = (Shadow.r>0)?ShadowFactor:1;
+#endif //COMPAREZ
+
+	diffuse_light.rgb = ShadowFactor * diffuse_light.rgb;
+	specular_light = ShadowFactor * specular_light;
+	//-------------
+#endif //PASS2
+
+
+#ifdef PROFILE_FP20
+	Road.rgb = saturate(Ka.rgb + diffuse_light.rgb) * Road.rgb + saturate(specular_light);
+#else
+	Road.rgb = clamp(Ka.rgb + diffuse_light.rgb, 0.0, 1.0) * Road.rgb + clamp(specular_light, 0.0, 1.0);
+#endif
+
+
+    return Road; 
+}
+
+

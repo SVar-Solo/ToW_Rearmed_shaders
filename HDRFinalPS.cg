@@ -1,0 +1,108 @@
+// From vertex shader
+struct VertexOUT
+{
+	float2 texCoord : TEXCOORD0;
+	float2 texCoord2 : TEXCOORD1;
+};
+
+uniform sampler2D TexMap1: TEXUNIT0; // Base texture
+uniform sampler2D TexMap2: TEXUNIT1; // Base texture
+uniform sampler2D BloomMap: TEXUNIT2; // Base texture
+
+static const float fExposure = 0.8f;
+static const float fGaussianScalar = 0.0;
+static const float3 LUMINANCE_WEIGHT = float3( 0.299f, 0.587f, 0.114f );
+uniform float4 dataHDR;
+
+float3 getBloomPixel(float2 t)
+{
+	return tex2D(BloomMap, t).rgb;
+}
+
+float3 getBloomFilteredPixel(float2 t)
+{
+	float g_rcp_bloom_tex_w = 1.f/(1024/8);
+	float g_rcp_bloom_tex_h = 1.f/(768/8);
+    // Compute the blur value using a bilinear filter
+    // It is worth noting that if the hardware supports linear filtering of a
+    // floating point render target that this step can probably be skipped.
+        float xWeight = frac( t.x / g_rcp_bloom_tex_w ) - 0.5;
+        float xDir = xWeight;
+        xWeight = abs( xWeight );
+        xDir /= xWeight;
+        xDir *= g_rcp_bloom_tex_w;
+
+        float yWeight = frac( t.y / g_rcp_bloom_tex_h ) - 0.5;
+        float yDir = yWeight;
+        yWeight = abs( yWeight );
+        yDir /= yWeight;
+        yDir *= g_rcp_bloom_tex_h;
+
+    // sample the blur texture for the 4 relevant pixels, weighted accordingly
+        float4 b = ((1.0f - xWeight) * (1.0f - yWeight))    * tex2D( BloomMap, t );        
+        b +=       (xWeight * (1.0f - yWeight))             * tex2D( BloomMap, t + float2( xDir, 0.0f ) );
+        b +=       (yWeight * (1.0f - xWeight))             * tex2D( BloomMap, t + float2( 0.0f, yDir ) );
+        b +=       (xWeight * yWeight)                      * tex2D( BloomMap, t + float2( xDir, yDir ) );
+	return b.rgb;
+}
+
+float3 calcTonemap(float4 l, float3 final)
+{
+	float Lp = (fExposure / l.r) * max( final.r, max( final.g, final.b ) );
+	//float Lp = (fExposure / l.r) * dot(final, LUMINANCE_WEIGHT);
+	float LmSqr = (l.g + fGaussianScalar * l.g) * (l.g + fGaussianScalar * l.g);
+	float toneScalar = ( Lp * ( 1.0f + ( Lp / ( LmSqr ) ) ) ) / ( 1.0f + Lp );
+	return final * toneScalar;
+}
+float3 calcTonemap2(float4 l, float3 final)
+{
+  // Reinhard with White Point
+  // todo: combine fTargetAvgLum into fAdaptedLumDest
+
+	float fWhitePoint = dataHDR.x;
+	float g_fMiddleGray = dataHDR.y;	
+
+	float fTargetAvgLum = g_fMiddleGray;
+
+	float fInvWhitePoint2 = 1.0/(fWhitePoint*fWhitePoint);
+	//float fInvWhitePoint2 = 1.0/(l.y*l.y);
+
+	float fAdaptedLumDest = l.x;//EyeAdaption(fAdaptedLum);		// RangeReducedAdaptedLum
+	  
+	//float fLum = dot(final,LUMINANCE_WEIGHT);		// add small value to avoid division by 0
+	float fLum = max(final.x, max(final.y, final.z));
+
+  	// lerp between night adaption (desaturated, blue shifted but same brightness level) and colored scene (can be put in texture)
+	// to have same brightness the noise is multiplied by 2(average 0.5)
+	//vSample.rgb = lerp((tex2D(noiseMap,IN.baseTCRnd.xy).xyz) * fLum * float3(0.8f,0.8f,1.4f)*2.0f, vSample.rgb, saturate(5.0f*fLum));
+
+	// hack to test without noise
+	//final.rgb = lerp(0.5 * fLum * float3(1.4,0.8,0.8)*2.0, final.rgb, clamp(6.5*fLum, 0.0, 1.0));
+
+	//float3 shiftColor = float3(0.5, 0.5, 0.5);
+	//final.rgb = lerp((shiftColor) * fLum * float3(0.8f,0.8f,1.4f)*2.0f, final.rgb, saturate(5.0f*fLum));
+
+	float Ls = fTargetAvgLum * fLum / fAdaptedLumDest;
+	float Ld = Ls * (1.0+Ls*fInvWhitePoint2) / (1.0+Ls);
+//gl_FragColor = vec4(fAdaptedLum, fAdaptedLum, fAdaptedLum, 1);
+//gl_FragColor = vec4(vSample.rgb, 1);
+//return;
+	  	
+	final.rgb *= Ld/fLum;
+	return final;
+}
+
+float4 main(in VertexOUT IN // From vertex shader
+			) : COLOR
+{
+ 	float3 c = tex2D(TexMap1, IN.texCoord),rgb;
+	float4 l = tex2D(TexMap2, float2(0.5, 0.5));
+
+	//float3 bloom = getBloomFilteredPixel(IN.texCoord);
+	float3 bloom = getBloomPixel(IN.texCoord);
+	
+	float3 final = c;
+	float3 result = calcTonemap2(l, final) + bloom*dataHDR.z;
+
+	return float4(result,1.0);
+}

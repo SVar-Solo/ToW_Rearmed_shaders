@@ -1,0 +1,136 @@
+//****************************************************
+//Vertex shader for Fog calculation
+//See function prototype - float TLandscape::_Fogf(TPoint3D &P)
+//****************************************************
+
+//Attention: USE_CUSTOM_MATRIX - need for additional vertex conversion to WCS
+
+struct appdata
+{
+    float4 position : POSITION;
+	float2 TEX0 : TEXCOORD0;
+};
+
+struct vfconn
+{
+    float4 outPOS : POSITION;
+    float4 COL0 : COLOR0;
+    float2 TEX0 : TEXCOORD0;
+	float2 TEX1 : TEXCOORD1;
+//	float ppp : PSIZE;
+};
+
+/*      
+//see TLandBase::SetFogRange() for MinFogH, MaxFogH, AFog, BFog calculation
+float IntegralHDense(in float H0, in float H1,              //min and max height for camera and vertex
+					 in float MinFogH, in float MaxFogH,    //min and max height for fog layer
+					 in float AFog, in float BFog)          //linear interpolation coeff for fog density
+{
+  float h0=clamp(H0,MinFogH, MaxFogH);
+  float h1=clamp(H1,MinFogH, MaxFogH);
+
+	return ((h1-h0)*(AFog*(h1+h0)*0.5 + BFog));
+	
+}
+*/
+
+//Calculate integral fog density throw 2 fog layers
+//Attention: Note!!! A*=0.5
+float IntegralHDense2(in float4 cFogHBounds,       //cMinFogH1 cMaxFogH1 cMinFogH2 cMaxFogH2
+                      in float4 cFogABAB,          //xy=A1B1, zw=A2B2
+                      in float H0, in float H1)    //height for camera and vertex				 
+{
+
+  float4 HH = float4(H0, H1, H0, H1);
+  HH = clamp(HH, cFogHBounds.xxzz, cFogHBounds.yyww);   //here HH=(hMin1,hMax1,hMin2,hMax2)
+  float4 ff = HH*(HH*cFogABAB.xxzz + cFogABAB.yyww);
+  return dot(ff, float4(-1.0f, 1.0f, -1.0f, 1.0f)); 
+}
+
+vfconn main(appdata IN,
+
+#ifndef PROFILE_ARBVP1
+            uniform float4x4 ModelViewProj : _GL_MVP,
+			uniform float4x4 halTextureMatrix0,
+#endif
+#ifdef USE_CUSTOM_MATRIX
+			uniform float4x4 CustomMatrix,
+#endif
+#ifdef SIMPLE_FOG
+			uniform float cSimpleDensity,
+#endif //SIMPLE_FOG
+			uniform float3 CamPos,
+            //helper const 
+            uniform float cTexScale,       //for calc texture coordinate in texture with fog RGB color
+			uniform float4 cFogHBounds,    //cMinFogH1 cMaxFogH1 cMinFogH2 cMaxFogH2
+            uniform float4 cFogABAB)       //A1,B1,A2,B2
+{
+    vfconn OUT;
+
+#ifdef PROFILE_ARBVP1
+   float4x4 ModelViewProj = glstate.matrix.mvp;
+   float4x4 halTextureMatrix0 = glstate.matrix.texture[0];
+#endif
+
+	//---transform vertex to camera space---
+    OUT.outPOS = mul(ModelViewProj, IN.position);
+	float2 NewTexCoord = mul(halTextureMatrix0, float4(IN.TEX0,0,1)).xy;
+	OUT.TEX0 = NewTexCoord;
+
+	//**************************************************************************
+	//Attention: calculation logic must be the same, see TLandscape::GetFogRGBA()
+	//**************************************************************************
+
+
+	
+#ifdef USE_CUSTOM_MATRIX
+	float3 VertexPosition = mul(CustomMatrix, IN.position).xyz;
+#else
+	float3 VertexPosition = IN.position.xyz;
+#endif
+
+	float3 dP = VertexPosition - CamPos;
+    float dist = length(dP);
+
+#ifdef SIMPLE_FOG
+
+	float II = cSimpleDensity*dist;
+	float fog=1.0-exp(-II);
+
+#else //SIMPLE_FOG
+
+	//--main fog calculation--
+	float H0 = CamPos.z;
+	float H1 = VertexPosition.z;
+	float DH = H1-H0;
+
+	//--work around singularity - (devizion by 0)--
+	//!!! correct slightly H1 !!!
+	//const float eps = 1.0E-1;   //[m]
+	//if(abs(DH) < eps) {
+	//	H1 += 2.0*eps;
+	//	DH = H1-H0;
+	//}
+	//const float eps = -0.01f;
+	//DH -= 2*clamp(abs(DH)+eps,eps,0);
+	//---------------------------------------------
+
+	float InvSinAlfa=dist/DH;
+	float II = InvSinAlfa*IntegralHDense2(cFogHBounds, cFogABAB, H0, H1);  
+	float fog=1.0-exp(-abs(II));
+
+#endif //SIMPLE_FOG
+
+	//--select fog RGB color from fog support texture--   
+    OUT.COL0 = float4(1.0, 1.0, 1.0, fog);  
+//	OUT.TEX0 = float4(cTexScale*dP + 0.5, 1.0); 
+	OUT.TEX1 = (cTexScale*dP + 0.5).xy; 
+
+//	OUT.ppp = fog;
+
+/*
+    OUT.COL0 = float4(1.0, 1.0, 1.0, 0.6);  
+	OUT.TEX0 = 0.5; 
+*/
+    return OUT;
+} 

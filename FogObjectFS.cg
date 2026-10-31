@@ -1,0 +1,27 @@
+// From vertex shader
+struct vfconn
+{
+	float4 Color0    : COLOR0;
+	float2 TexCoord0 : TEXCOORD0;
+	// Texcoord for fog texture
+	float2 TexCoord1 : TEXCOORD1;
+};
+
+float4 main(in vfconn IN // From vertex shader
+			,uniform float2 AlphaRef
+			,uniform sampler2D DiffuseMap: TEXUNIT0 // Base texture
+			,uniform sampler2D FogMap: TEXUNIT1 // Fog texture
+			) : COLOR
+{
+	// Base
+	float4 DiffuseColor = tex2D(DiffuseMap, IN.TexCoord0.xy);
+	float4 fogColor = tex2D(FogMap, IN.TexCoord1.xy);
+
+	// compute final color
+	float4 finalColor = fogColor * IN.Color0;
+	float alpha2 = AlphaRef.y>0.5?(DiffuseColor.a>(AlphaRef.x)?1:0):1;
+	finalColor.a *= alpha2;
+	return finalColor;
+}
+
+

@@ -1,0 +1,26 @@
+// From vertex shader
+struct vfconn
+{
+	// Texcoord for base texture
+	float2 TexCoord0 : TEXCOORD0;
+        float4 zCoord : TEXCOORD1;
+};
+
+float4 main(in vfconn IN // From vertex shader			
+			,uniform sampler2D decal: TEXUNIT0 // Base texture
+			//,out float depth : DEPTH
+			) : COLOR
+{
+	// Base
+	float4 decalColor = tex2D(decal, IN.TexCoord0.xy);
+	float rz = 0.5*((IN.zCoord.z)/IN.zCoord.w)+0.5;
+	decalColor.rgb = rz.xxx;
+	if (decalColor.a < 0.4)
+	{
+		//depth = 0.0;
+		discard;
+	}
+	return decalColor;
+}
+
+

@@ -1,0 +1,97 @@
+/*************************************************************************
+// Complex Water fragment shader with Cube map and EMBM mixing and per pixel freshel
+******************************************************************************/
+
+
+arbfp1 float4 main(
+            uniform float4 c0, 
+			uniform float4 c1, 
+			uniform float4 c2, 
+			uniform float4 c3, 
+			uniform float4 c4, 
+           
+            in float4 Col0              : COLOR0,
+            in float4 Col1              : COLOR1,
+            
+            in float2 vCoast            : TEXCOORD0,
+            in float2 vFoam0            : TEXCOORD1,
+            in float2 vFoam1            : TEXCOORD2,
+            in float2 vSin              : TEXCOORD3,
+          // in float2 vN                : TEXCOORD4,
+            in float2 vSinB             : TEXCOORD4,
+
+            uniform sampler2D   sCoast,
+            uniform sampler2D   sFoam0,
+            uniform sampler2D   sFoam1,
+            uniform sampler2D   sSin,
+            uniform sampler2D   sNoise
+           // uniform sampler2D   sSinB
+            
+           ) : COLOR
+{
+//  float4 c0 = cc[0], c1 = cc[1], c2 = cc[2], c3 = cc[3];
+//  float4 c4 = cc[4];
+
+  float4 Foam0 = tex2D(sFoam0, vFoam0);
+  float4 Foam1 = tex2D(sFoam1, vFoam1);
+  float4 SinA01  = tex2D(sSin, vSin);
+//  float2 vSintex = vSin.xy + 0.2;
+  float4 SinB01  = tex2D(sSin, vSinB);
+//  float2 vSinBtex = vSinB.xy + 0.2;
+
+//  float4 _SinA01  = tex2D(sSin, vSintex);
+//  float4 _SinB01   = tex2D(sSin, vSintex);
+    float4 _SinA01  = tex2D(sSin, vSin.xy);
+    float4 _SinB01   = tex2D(sSin, vSinB.xy);
+
+
+  float4 dn = (tex2D(sNoise, vCoast/**c4.z*/));//-0.5)*c4.w;
+  //vCoast.xy+=dn.xy;
+  
+
+  float4 Coast = tex2D(sCoast, vCoast);
+
+  float4 Dissolve = SinA01.zwzw; Dissolve.zw = SinB01.zw;
+  float4 SinA = SinA01; SinA.zw = SinB01.xy; 
+  //SinA = SinA * 2-1 -inside constant
+  float4 A = Coast.a+SinA*c4.x+c4.y;
+
+
+  
+  float4 _Dissolve = SinA01.zwzw; _Dissolve.zw = SinB01.zw;
+  float4  _SinA = _SinA01; _SinA.zw = _SinB01.xy; 
+  //SinA = SinA * 2-1 -inside constant
+  float4 _A = Coast.a+_SinA*c4.x+c4.y;
+  _A = saturate(_A*c0+c1)*saturate(_A*c2+c3); //0.52-0.47
+
+  float SeaFactor = Col1.w;
+  
+  
+  //A = saturate((A-0.47)/0.05)*saturate((0.52-A)/0.01); //0.52-0.47
+  A = saturate(A*c0+c1)*saturate(A*c2+c3); //0.52-0.47
+
+ 
+  float4 FoamC = Foam0*Foam1;
+  
+  //FoamC.a = max(max(A.x, A.y),max(A.z, A.w));
+  FoamC.a *= saturate(dot(A, Dissolve*SeaFactor));//A.x+A.y+A.z+A.w;
+  
+  //float Dry = saturate(Coast.a*10-0.45*10)*saturate(0.60*20+Coast.a*(-20))*0.25;
+  float2 DryXY = saturate(Coast.aa*float2(10,-20)+float2(-0.45*10,+0.55*20));
+  float Dry = /*DryXY.x*DryXY.y*0.5**/saturate(dot(_A, _Dissolve*SeaFactor));
+  //float Dry = saturate((Coast.a-0.45)*10)*saturate((0.60-Coast.a)*20)*0.25;
+  float4 DryC = FoamC*0.25; DryC.a = Dry;
+  // (Fragment*(1-DryC.a)+DryC.rgb*DryC.a)*(1-FoamC.a)+FoamC.rgb*FoamC.a;
+  
+//  FoamC.rgb = FoamC.rgb*FoamC.a+DryC.rgb*DryC.a*One_FoamCa;
+  float One_Ca = (1-FoamC.a);
+  FoamC.rgb = lerp(FoamC.rgb, DryC.rgb*DryC.a, One_Ca);
+  FoamC.a=One_Ca*(1-DryC.a);
+
+  //Fog
+  // (Alpha*Fragment+(RGB*(1-Af)+Cf*Af)*(1-Alpha)
+  // (Alpha*Fragment+RGB*(1-Alpha)*(1-Af)+Cf*Af*(1-Alpha)
+  FoamC.rgb = FoamC.rgb*(1.0-Col0.a)+Col1.rgb*(1-FoamC.a);
+  return FoamC;
+  
+}

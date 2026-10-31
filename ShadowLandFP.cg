@@ -1,0 +1,209 @@
+//********* Options for Custom Build step ************
+//for vertex program
+//"E:\Program Files\NVIDIA Corporation\Cg\bin\cgc.exe"  -profile vp20 -posinv -o $(InputName).txt $(InputPath)
+//for fragment program
+//"E:\Program Files\NVIDIA Corporation\Cg\bin\cgc.exe"  -profile fp20 -o $(InputName).txt $(InputPath)
+//****************************************************
+
+//****************************************************
+//Fragment shader for support Shadow map in Land (in Fog pass)
+//****************************************************
+
+//Attention: !!! reset DIVIDE_ENABLE if GPU can't do divide in pixel shader !!!
+//#define DIVIDE_ENABLE
+
+#ifndef PROFILE_FP20
+  #define DIVIDE_ENABLE
+#endif
+
+#ifdef XXX
+struct VertexOut
+{
+    //Attention: below is output from vertex shader
+//    float4 HPOS : POSITION;
+    float4 COL0 : COLOR0;
+    float2 TEX0 : TEXCOORD0;
+
+    float4 TEX1 : TEXCOORD1;
+    float2 TEX2 : TEXCOORD2;
+};
+
+
+//----------Reduced version for test------------
+float4 main(VertexOut IN,
+            uniform sampler2D FogMap : TEXUNIT0,
+            uniform sampler2D ShadowMap : TEXUNIT1,
+            uniform sampler2D LandMap : TEXUNIT2
+			) : COLOR
+{
+  //--move to const--
+  float ShadowFactor = 0.5;
+
+  //Fog.rgb - fog color
+  //Fog.a - fog factor
+  float4 Fog = tex2D(FogMap, IN.TEX0.xy);
+  Fog.a = IN.COL0.a;
+
+  //Attention: we assume that will be used hardware shadow map support, so Tex(s/q, t/q) will be compared with r/q
+  //           automatically without devide in pixel shader
+//  float4 Shadow = tex2Dproj(ShadowMap, IN.TEX1.xyw);   //2D proj no depth compare
+//  float4 Shadow = tex2Dproj(ShadowMap, IN.TEX1.xyzw);  //2D proj depth compare
+/*
+  float4 NewFog;
+  NewFog.a = 1.0 - ShadowFactor * (1.0 - Fog.a);
+  NewFog.rgb = Fog.rgb * Fog.a / NewFog.a;
+//  float4 color = NewFog;
+*/
+
+
+
+
+  float4 color;
+
+/*
+//test - custom texture projection and depth compare
+  float xProj = IN.TEX1.x/IN.TEX1.w;
+  float yProj = IN.TEX1.y/IN.TEX1.w;
+  float zProj = IN.TEX1.z/IN.TEX1.w;
+  float4 Shadow = tex2Dproj(ShadowMap, IN.TEX1.xyw);
+//  float4 Shadow = tex2D(ShadowMap, float2(xProj,yProj));
+
+  if(zProj-0.005 > Shadow.r) color.rgb = float3(0.1, 0.1, 0.1);
+  else                       color.rgb = float3(0.9, 0.9, 0.9);
+  color.a = 1.0;
+*/
+
+/*
+//test - vizualization of shadow map
+  float4 Shadow = tex2Dproj(ShadowMap, IN.TEX1.xyw);
+//  float4 Shadow = tex2D(ShadowMap, IN.TEX1.xy);   //used only if devide in vertex shader
+  color.rgb = Shadow.rgb;
+  color.a = 1.0; //0.5;
+*/
+
+/*
+//shadow vizualization only
+  float4 Shadow = tex2Dproj(ShadowMap, IN.TEX1.xyzw);
+  color.rgb = Shadow.r;
+  color.a = 0.5;
+*/
+
+//shadow + fog vizualization 
+  float4 Shadow = tex2Dproj(ShadowMap, IN.TEX1.xyzw);
+  ShadowFactor = Shadow.r;   //0 or 1
+
+//&&&&&&&&&&&&&&&&&&
+/*
+//made smooth shadows boundary (!!! decrease perfomance !!!)
+  float dtc = 0.006; //0.004; //0.01;
+  float w = IN.TEX1.w;
+  float dTexCoord = dtc*w; 
+  float4 TexCoord;
+
+  TexCoord = IN.TEX1.xyzw;
+  TexCoord.x += dTexCoord;
+  float4 Shadow1 = tex2Dproj(ShadowMap, TexCoord);
+
+  TexCoord = IN.TEX1.xyzw;
+  TexCoord.x -= dTexCoord;
+  float4 Shadow2 = tex2Dproj(ShadowMap, TexCoord);
+
+  TexCoord = IN.TEX1.xyzw;
+  TexCoord.y += dTexCoord;
+  float4 Shadow3 = tex2Dproj(ShadowMap, TexCoord);
+
+  TexCoord = IN.TEX1.xyzw;
+  TexCoord.y -= dTexCoord;
+  float4 Shadow4 = tex2Dproj(ShadowMap, TexCoord);
+
+  ShadowFactor = (Shadow.r + Shadow1.b + Shadow2.b + Shadow3.b + Shadow4.b)/5.0;   //now continies range [0...1]
+*/
+//&&&&&&&&&&&&&&&&&&  
+
+  //-----------
+  //correct self-shadowing with helper land texture
+  float4 LandTex = tex2D(LandMap, IN.TEX2.xy);  //LandTex.a is 0 or 1
+//LandTex.a = 1.0;
+//  if(LandTex.a < 0.5) LandTex.a = 0.0;
+  ShadowFactor *= LandTex.a;
+  //-----------
+
+  //modulate
+  float ShadowAtt = 0.7; //0.4; //0.6; //0.5;
+  ShadowFactor = lerp(ShadowFactor,1.0,ShadowAtt);  //ShadowFactor = ShadowFactor*(1.0-ShadowAtt) + ShadowAtt;  
+
+
+  float4 NewFog;
+
+#ifdef DIVIDE_ENABLE
+  NewFog.a = 1.0 - ShadowFactor * (1.0 - Fog.a);
+  NewFog.rgb = Fog.rgb * Fog.a / NewFog.a;
+#else
+  NewFog = float4(0,0,0, 1.0 - ShadowFactor);
+#endif
+
+  color = NewFog;
+
+  return color;
+}
+#endif
+
+
+//******************************************************************************************
+struct VertexOut
+{
+    //Attention: below is output from vertex shader
+//    half4 HPOS : POSITION;
+    fixed4 COL0 : COLOR0;
+    half2 TEX0 : TEXCOORD0;
+
+    half4 TEX1 : TEXCOORD1;
+    half2 TEX2 : TEXCOORD2;
+};
+
+
+//----------Reduced version for test------------
+half4 main(VertexOut IN,
+            uniform sampler2D FogMap : TEXUNIT0,
+            uniform sampler2D ShadowMap : TEXUNIT1,
+            uniform sampler2D LandMap : TEXUNIT2
+			) : COLOR
+{
+  //--move to const--
+  fixed ShadowFactor = 0.5;
+
+  //Fog.rgb - fog color
+  //Fog.a - fog factor
+  fixed4 Fog = tex2D(FogMap, IN.TEX0.xy);
+  Fog.a = IN.COL0.a;
+
+  fixed4 color;
+
+  //shadow + fog vizualization 
+  fixed4 Shadow = tex2Dproj(ShadowMap, IN.TEX1.xyzw);
+  ShadowFactor = Shadow.r;   //0 or 1
+
+  //-----------
+  //correct self-shadowing with helper land texture
+  fixed4 LandTex = tex2D(LandMap, IN.TEX2.xy);  //LandTex.a is 0 or 1
+  ShadowFactor *= LandTex.a;   
+  //-----------
+
+  //modulate
+  fixed ShadowAtt = 0.2; //0.7; //0.4; //0.6; //0.5;
+  ShadowFactor = lerp(ShadowFactor,1.0,ShadowAtt);  //ShadowFactor = ShadowFactor*(1.0-ShadowAtt) + ShadowAtt;  
+
+  fixed4 NewFog;
+
+#ifdef DIVIDE_ENABLE
+  NewFog.a = 1.0 - ShadowFactor * (1.0 - Fog.a);
+  NewFog.rgb = Fog.rgb * Fog.a / NewFog.a;
+#else
+  NewFog = fixed4(0,0,0, 1.0 - ShadowFactor);
+#endif
+
+  color = NewFog;
+
+  return color;
+}
+

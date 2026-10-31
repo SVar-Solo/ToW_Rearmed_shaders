@@ -1,0 +1,80 @@
+//****************************************************
+//Road vertex shader.
+//****************************************************
+//This is version of shader for 2 pass implementation (for card that support PS1.1 - GeForec3,4 and so on)
+//1-st pass: Ambient + Diffuse + Specular (no shadows)
+//2-nd pass: Ambient (only shadow region)
+
+#define PASS1
+//#define PASS2
+
+
+struct VertexIn
+{
+    float4 position : POSITION;
+	float2 RoadTexCoord : TEXCOORD0;
+    float4 Color : COLOR0;            //Color.r contain Land.a (Color.rgb - don't used now - temp - future pack to float)
+	float3 Normal : NORMAL;
+};
+
+struct VertexOut
+{
+    float4 pos : POSITION;
+    float2 tex0 : TEXCOORD0;    //Road texture
+    float2 tex1 : TEXCOORD1;    //Bump map           //really duplicate TexCoord0 - need for fp20 profile only
+    float4 Color : COLOR0;
+
+#ifdef PASS1
+    float3 Color1 : COLOR1;     //Normal here for specular
+	float3 tex3 : TEXCOORD3;    //contain Half vector for given vertex (need for specular)
+#endif //PASS1
+
+#ifdef PASS2
+	//Attention: we assume that will be used hardware shadow map support, so Tex(s/q, t/q) will be compared with r/q
+    float4 tex2 : TEXCOORD2;    //shadow map texture - !!!NEW    
+#endif //PASS2
+
+};
+
+VertexOut main(VertexIn IN,
+			uniform float3 CamPos,     //for specular
+			uniform float3 LightDir    //dir to sun - for specular (must be normirated)
+
+#ifndef PROFILE_ARBVP1
+            ,uniform float4x4 ModelViewProj : _GL_MVP
+#endif
+#ifdef PASS2
+			,uniform float4x4 ShadowMapProjTexMatrix         //shadow map texture - !!!NEW
+#endif //PASS2
+            )
+{
+    VertexOut OUT;
+
+#ifdef PROFILE_ARBVP1
+   float4x4 ModelViewProj = glstate.matrix.mvp;
+#endif
+ 
+	//---transform vertex to camera space---
+    OUT.pos = mul(ModelViewProj, IN.position);
+
+	//Pass throw 
+	OUT.tex0 = IN.RoadTexCoord;
+	OUT.tex1 = OUT.tex0; //IN.RoadTexCoord;  //really duplicate TexCoord0 - need for fp20 profile only
+	OUT.Color = IN.Color;
+
+#ifdef PASS1
+	//calc Half vector
+	float3 ViewDir = normalize(CamPos - IN.position);
+	float3 HalfVec = ViewDir + LightDir; //will be normirate in pixel shader
+
+    OUT.Color1.rgb = 0.5*IN.Normal + 0.5;
+    OUT.tex3 = HalfVec;
+#endif //PASS1
+
+#ifdef PASS2
+	//shadows	
+    OUT.tex2 = mul(ShadowMapProjTexMatrix, IN.position);
+#endif //PASS2
+
+    return OUT;
+} 

@@ -1,0 +1,50 @@
+//****************************************************
+//Vertex shader for Shadow calculation for Water
+//****************************************************
+
+#define PSSM
+
+struct appdata
+{
+    float4 position : POSITION;
+};
+
+struct vfconn
+{
+    float4 HPOS : POSITION;
+
+	//Attention: we assume that will be used hardware shadow map support, so Tex(s/q, t/q) will be compared with r/q
+    float4 TEX0 : TEXCOORD0;    //shadow map texture - !!!NEW    
+};
+
+vfconn main(appdata IN,
+
+#ifndef PROFILE_ARBVP1
+            uniform float4x4 ModelViewProj : _GL_MVP,
+#endif
+			uniform float4x4 ShadowMapProjTexMatrix)   //shadow map texture - !!!NEW
+{
+    vfconn OUT;
+
+#ifdef PROFILE_ARBVP1
+   float4x4 ModelViewProj = glstate.matrix.mvp;
+#endif
+
+#ifdef PSSM
+    OUT.TEX0 = IN.position;
+#else
+   //-----------calc OUT.TEX0 (NEW)------------	
+    OUT.TEX0 = mul(ShadowMapProjTexMatrix, IN.position);
+#endif // PSSM
+
+	//---transform vertex to camera space---
+    OUT.HPOS = mul(ModelViewProj, IN.position);
+
+/*
+    float4 texcoord = mul(ShadowMapProjTexMatrix, IN.position);
+    texcoord.xyz = texcoord.xyz/texcoord.w;
+    texcoord.w = 1.0;
+    OUT.TEX0 = texcoord;
+*/
+    return OUT;
+} 

@@ -1,0 +1,57 @@
+//********* Options for Custom Build step ************
+//for vertex program
+//"E:\Program Files\NVIDIA Corporation\Cg\bin\cgc.exe"  -profile vp20 -posinv -o $(InputName).txt $(InputPath)
+//for fragment program
+//"E:\Program Files\NVIDIA Corporation\Cg\bin\cgc.exe"  -profile fp20 -o $(InputName).txt $(InputPath)
+//****************************************************
+
+//****************************************************
+//Fragment shader for Render Type Map
+//****************************************************
+
+//-----------------FP30----------------------
+
+struct VertexOut {
+//  float4 Color0    : COLOR0;      //common for all vertexes color (maybe need ???)
+  half2 texCoord0 : TEXCOORD0;    //dsdt 
+  half2 texCoord1 : TEXCOORD1;    //Mask
+  half2 texCoord2 : TEXCOORD2;    //Noise
+};
+
+half4 main(VertexOut IN,
+			uniform half4 ScaleDsDtMatrix,
+            uniform sampler2D DsDtMap : TEXUNIT0,
+            uniform sampler2D MaskMap : TEXUNIT1,
+            uniform sampler3D Noise3DMap : TEXUNIT2
+			) : COLOR
+{
+
+  fixed4 DsDtLookup = tex2D(DsDtMap, IN.texCoord0.xy);
+
+  //For FP30 and ARBFP1  - expanded form
+  half2 newst = IN.texCoord1.xy + ScaleDsDtMatrix.xy * DsDtLookup.xx + ScaleDsDtMatrix.zw * DsDtLookup.yy;
+  fixed4 NewMask = tex2D(MaskMap, newst);
+//  fixed4 NewMask = tex2D(MaskMap, IN.texCoord1.xy);
+
+  float3 TexCoord3D = float3(IN.texCoord2.xy, NewMask.a);
+//  float3 TexCoord3D = float3(0.3, 0.5, NewMask.a);
+  half4  color = tex3D(Noise3DMap, TexCoord3D);
+
+//  color.a = 1.0;
+//  half4 color = half4(0.9, 0.1, 0.1, 1.0);
+
+//  half4  color = half4(NewMask.a, NewMask.a, NewMask.a, 1.0);
+
+  return color;
+
+}
+
+
+
+
+
+
+
+
+
+

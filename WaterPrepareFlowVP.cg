@@ -1,0 +1,42 @@
+//****************************************************
+//Vertex shader for preparing current Water Flow texture (obtain by rendering pass with quad)
+//****************************************************
+
+struct VertexIn
+{
+    float4 position : POSITION;
+};
+
+struct VertexOut
+{
+    float4 pos : POSITION;
+    float2 tex0 : TEXCOORD0;    //Flow texture 
+    float2 tex1 : TEXCOORD1;    //Flow map texture 
+//    float2 tex2 : TEXCOORD2;    //External source texture  - texture coord. calculated in Pixel Shader
+};
+
+VertexOut main(VertexIn IN
+/*
+#ifndef PROFILE_ARBVP1
+            uniform float4x4 ModelViewProj : _GL_MVP,
+#endif
+*/
+			)                
+{
+    VertexOut OUT;
+/*
+#ifdef PROFILE_ARBVP1
+   float4x4 ModelViewProj = glstate.matrix.mvp;
+#endif
+	//---transform vertex to camera space---
+    OUT.pos = mul(ModelViewProj, IN.position);
+*/
+
+    OUT.pos = IN.position;  //Attention: we assume that vertex already in HCS, so there is no transformation.
+
+	float2 texc = 0.5*IN.position.xy + 0.5;  //map to texture coord [0...1]
+	OUT.tex0.xy = texc;
+	OUT.tex1.xy = texc;
+
+    return OUT;
+} 

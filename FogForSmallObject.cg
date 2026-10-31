@@ -1,0 +1,66 @@
+//****************************************************
+//Vertex shader for Fog calculation
+//See function prototype - float TLandscape::_Fogf(TPoint3D &P)
+//****************************************************
+
+struct appdata
+{
+    float4 position : POSITION;
+    float4 COL0 :     COLOR0;   //new for small object
+};
+
+struct vfconn
+{
+    float4 HPOS : POSITION;
+    float4 COL0 : COLOR0;
+    float4 COL1 : COLOR1;       //new for small object
+    float4 TEX0 : TEXCOORD0;
+};
+
+//Calculate integral fog density throw 2 fog layers
+//Attention: Note!!! A*=0.5
+float IntegralHDense2(in float4 cFogHBounds,       //cMinFogH1 cMaxFogH1 cMinFogH2 cMaxFogH2
+                      in float4 cFogABAB,          //xy=A1B1, zw=A2B2
+                      in float H0, in float H1)    //height for camera and vertex				 
+{
+
+  float4 HH = float4(H0, H1, H0, H1);
+  HH = clamp(HH, cFogHBounds.xxzz, cFogHBounds.yyww);   //here HH=(hMin1,hMax1,hMin2,hMax2)
+  float4 ff = HH*(HH*cFogABAB.xxzz + cFogABAB.yyww);
+  return dot(ff, float4(-1.0f, 1.0f, -1.0f, 1.0f)); 
+}
+
+vfconn main(appdata IN,
+            uniform float4x4 ModelViewProj : _GL_MVP,
+			uniform float3 CamPos,
+            //helper const 
+            uniform float cTexScale,       //for calc texture coordinate in texture with fog RGB color
+			uniform float4 cFogHBounds,    //cMinFogH1 cMaxFogH1 cMinFogH2 cMaxFogH2
+            uniform float4 cFogABAB)       //A1,B1,A2,B2
+{
+    vfconn OUT;
+
+	//---transform vertex to camera space---
+    OUT.HPOS = mul(ModelViewProj, IN.position);
+
+
+	//**************************************************************************
+	//Attention: calculation logic must be the same, see TLandscape::GetFogRGBA()
+	//**************************************************************************
+
+    float3 dP = IN.position.xyz-CamPos;
+    float dist = length(dP);
+
+    //--main fog calculation--
+  	float H0 = CamPos.z;
+    float H1 = IN.position.z;
+    float InvSinAlfa=dist/(H1-H0);
+    float II=InvSinAlfa*IntegralHDense2(cFogHBounds, cFogABAB, H0, H1);  
+    float fog=1.0-exp(-abs(II));
+
+	//--select fog RGB color from fog support texture--   
+    OUT.COL0 = float4(1.0, 1.0, 1.0, fog);  
+	OUT.TEX0 = float4(cTexScale*dP + 0.5, 1.0); 
+
+    return OUT;
+} 

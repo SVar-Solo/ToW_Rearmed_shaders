@@ -1,0 +1,70 @@
+//****************************************************
+//Vertex shader for Fog calculation
+//See function prototype - float TLandscape::_Fogf(TPoint3D &P)
+//****************************************************
+
+//#define NUMBER_OF_MATRICES 4
+#define NUMBER_OF_VECTORS 16 //NUMBER_OF_MATRICES*4
+
+//#define SIMPLE_MUL
+
+struct appdata
+{
+    float4 position : POSITION;
+	float weight: BLENDWEIGHT;
+	float4 Color0 : COLOR0;
+	float4 Color1 : COLOR1;
+	float4 Tex0 : TEXCOORD0;
+};
+
+struct vfconn
+{
+    float4 HPOS : POSITION;
+    float4 COL0 : COLOR0;
+    float4 TEX0 : TEXCOORD0;
+};
+
+vfconn main(appdata IN,
+            uniform float4x4 ModelViewProj : _GL_MVP,
+#ifndef SIMPLE_MUL
+			uniform float4 MyMatrix[NUMBER_OF_VECTORS],
+#endif
+			uniform float3 CamPos,
+            //helper const 
+            uniform float cTexScale,       //for calc texture coordinate in texture with fog RGB color
+			uniform float4 cFogHBounds,    //cMinFogH1 cMaxFogH1 cMinFogH2 cMaxFogH2
+            uniform float4 cFogABAB)       //A1,B1,A2,B2
+{
+    vfconn OUT;
+
+	//---transform vertex to camera space---
+#ifdef SIMPLE_MUL
+	OUT.HPOS = mul(ModelViewProj, IN.position);
+#else
+	float4x4 Mat = float4x4( MyMatrix[IN.weight], MyMatrix[IN.weight+1], MyMatrix[IN.weight+2], MyMatrix[IN.weight+3]);
+    OUT.HPOS = mul(Mat/*ModelViewProj*/, IN.position);
+#endif
+	//OUT.HPOS = float4(IN.position,1);
+
+
+	//**************************************************************************
+	//Attention: calculation logic must be the same, see TLandscape::GetFogRGBA()
+	//**************************************************************************
+/*
+    float3 dP = IN.position.xyz-CamPos;
+    float dist = length(dP);
+
+    //--main fog calculation--
+  	float H0 = CamPos.z;
+    float H1 = IN.position.z;
+    float InvSinAlfa=dist/(H1-H0);
+    float II=InvSinAlfa*IntegralHDense2(cFogHBounds, cFogABAB, H0, H1);  
+    float fog=1.0-exp(-abs(II));
+*/
+	//--select fog RGB color from fog support texture--   
+    //OUT.COL0 = float4(1.0, 1.0, 1.0, fog);  
+	OUT.COL0 = IN.Color0;//;float4(1.0, 0.0, 1.0, 1.0);  
+	OUT.TEX0 = IN.Tex0;
+
+    return OUT;
+} 

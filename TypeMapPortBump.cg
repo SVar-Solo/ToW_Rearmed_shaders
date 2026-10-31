@@ -1,0 +1,126 @@
+//********* Options for Custom Build step ************
+//for vertex program
+//"E:\Program Files\NVIDIA Corporation\Cg\bin\cgc.exe"  -profile vp20 -posinv -o $(InputName).txt $(InputPath)
+//for fragment program
+//"E:\Program Files\NVIDIA Corporation\Cg\bin\cgc.exe"  -profile fp20 -o $(InputName).txt $(InputPath)
+//****************************************************
+
+//****************************************************
+//Fragment shader for Render Type Map - uses GeForce3 alhoritm but on cg implementations
+//Bump implementation
+//****************************************************
+
+//-----------------FP30----------------------
+struct VertexOut {
+//  half4 Color0    : COLOR0;       //light direction and others here for bump
+  half2 texCoord0 : TEXCOORD0;    //dsdt 
+  half2 texCoord1 : TEXCOORD1;    //Mask             
+  half2 texCoord2 : TEXCOORD2;    //Noise1     //changes in range [0...nTile1] on block
+  half2 texCoord3 : TEXCOORD3;    //Noise2     //changes in range [0...nTile2] on block
+};
+
+half4 main(VertexOut IN,
+			uniform half4 ScaleDsDtMatrix,
+			uniform half4 CC,
+			uniform half4 BumpDirNoise,
+            uniform sampler2D DsDtMap : TEXUNIT0,
+            uniform sampler2D MaskMap : TEXUNIT1,          
+            uniform sampler2D Noise1 : TEXUNIT2,
+            uniform sampler2D Noise2 : TEXUNIT3
+			) : COLOR
+{
+  //---------------------------------------------------------------------
+  fixed4 DsDtLookup = tex2D(DsDtMap, IN.texCoord0.xy);
+
+//  fixed4 NewMask = tex2D(MaskMap, IN.texCoord1.xy);
+
+#ifdef PROFILE_FP20
+  //For FP20 - brief form
+  float4 NewMask = offsettex2D(MaskMap, IN.texCoord1.xy, DsDtLookup, ScaleDsDtMatrix);   //offsettex2D - valid only for fp20
+#else
+  //For FP30 and ARBFP1  - expanded form
+  half2 newst = IN.texCoord1.xy + ScaleDsDtMatrix.xy * DsDtLookup.xx + ScaleDsDtMatrix.zw * DsDtLookup.yy;
+  fixed4 NewMask = tex2D(MaskMap, newst);
+#endif
+
+  //----------------------------------------------------------------------
+
+  //@@@@@@@@@@@ special code for FP30 @@@@@@@@@@@@@@
+
+  fixed4 TexNoise1 = tex2D(Noise1, IN.texCoord2);
+  fixed4 TexNoise2 = tex2D(Noise2, IN.texCoord3);
+
+  //----noise1 selection----
+  half delta1 = abs(NewMask.a - CC.x);  
+  half3 Col1 = dot(TexNoise1.rgb-0.5h, BumpDirNoise.rgb-0.5h);
+  half3 out1 = (delta1 >= 0.0078125h) ? 0.0 : 2*Col1 - 0.5;    //0.5/64
+
+  //----noise2 selection----
+  half delta2 = abs(NewMask.a - CC.y);
+  half3 Col2 = dot(TexNoise2.rgb-0.5h, BumpDirNoise.rgb-0.5h);
+  half3 out2 = (delta2 >= 0.0078125h) ? 0.0 : 2*Col2 - 0.5;    //0.5/64
+
+  //----adding noise----
+  half3 res = out1 + out2 + 0.5h;
+
+  //---attenuation using fog---
+  //?????????
+
+  //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+  half4  color = half4(res, 1.0);
+
+  return color;
+}
+
+//Attention: don't remove commented code
+/*
+  //@@@@@@@@@@@ One to one translation from FP20 @@@@@@@@@@@@@@
+  fixed4 TexNoise1 = tex2D(Noise1, IN.texCoord2);
+  fixed4 TexNoise2 = tex2D(Noise2, IN.texCoord3);
+
+  half4 Spare0 = 0.0;
+  half4 Spare1 = 0.0;
+  half4 Color1 = 0.0;
+
+  //----noise1 selection----
+  //comb1
+  Spare0.a = 4*(2*(NewMask.a-0.5) - 2*(C0.a-0.5));  
+  Color1.rgb = 0.5*dot(2h*(TexNoise1.rgb-0.5), 2h*(IN.Color0.rgb-0.5));
+  //comb2
+  Spare0.a = 4*(Spare0.a*Spare0.a + Spare0.a*Spare0.a); 
+  Color1.rgb = Color1.rgb - 0.5;
+  //comb3
+  Spare1.rgb = (Spare0.a >= 0.5) ? 0.0 : Color1.rgb;
+
+  //----noise2 selection----
+  //comb4
+  Spare0.a = 4*(2*(NewMask.a-0.5) - 2*(C1.a-0.5));  
+  Color1.rgb = 0.5*dot(2h*(TexNoise2.rgb-0.5), 2h*(IN.Color0.rgb-0.5));
+  //comb5
+  Spare0.a = 4*(Spare0.a*Spare0.a + Spare0.a*Spare0.a); 
+  Color1.rgb = Color1.rgb - 0.5;
+  //comb6
+  Spare0.rgb = (Spare0.a >= 0.5) ? 0.0 : Color1.rgb;
+
+  //----adding noise----
+
+  //comb7(RGB)
+  Spare0.rgb = Spare0.rgb + Spare1.rgb;
+  //comb8(RGB)
+  Spare0.rgb = Spare0.rgb + 0.5;
+
+  //---attenuation using fog---
+  //?????????
+
+  //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+*/
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,150 @@
+///////////////////////////////////////////////////////////////////////  
+//  Leaf Shaders
+//
+//  *** INTERACTIVE DATA VISUALIZATION (IDV) CONFIDENTIAL AND PROPRIETARY INFORMATION ***
+//
+//  This software is supplied under the terms of a license agreement or
+//  nondisclosure agreement with Interactive Data Visualization, Inc. and
+//  may not be copied, disclosed, or exploited except in accordance with 
+//  the terms of that agreement.
+//
+//      Copyright (c) 2003-2007 IDV, Inc.
+//      All rights reserved in all media.
+//
+//      IDV, Inc.
+//      Web: http://www.idvinc.com
+//
+//  *** Release Version 4.1 ***
+
+#ifdef SHADER_TEST
+#include "defines.cg"
+#endif
+
+#define IDV_OPENGL
+
+
+//-----------------------------------------------------------------------------
+//	global parameters
+//-----------------------------------------------------------------------------
+
+// lighting & materials
+uniform float3      g_vLightDiffuse;                    // light's diffuse color
+uniform float3      g_vLightAmbient;                    // light's diffuse color
+
+// ps
+uniform float       g_fBillboardLightAdjust;		    // used to assist in accuracy of normal map lit bb's matching the 3D tree
+
+#ifdef HORZ_BILLBOARDS
+uniform float       g_fBillboardFadeValue;              // [0,1], 0 = transparent, 1 = opaque
+#endif
+
+//----------------------------------------------------------------------------- 
+//  SBillboardOutput structure
+
+struct SBillboardOutput
+{
+    float4  vPosition         : POSITION;
+    float2  vDiffuseTexCoords : TEXCOORD0;
+    float2  vNormalTexCoords  : TEXCOORD1;
+#ifdef BILLBOARD_NORMAL_MAPPING
+    float4  vNormal           : TEXCOORD2;
+#else
+    float   fNormal           : TEXCOORD2;
+#endif
+    float3  vLightAdjusts     : TEXCOORD3;
+
+#ifdef USE_SHADOWS
+	float4	vShadowMapTexCoords	 : TEXCOORD4;
+	#ifdef USE_FOG
+		float3 FogData		: TEXCOORD5;  
+	#endif
+#else
+	#ifdef USE_FOG
+		float3 FogData		: TEXCOORD4;  
+	#endif
+#endif
+
+};
+
+//#undef BILLBOARD_NORMAL_MAPPING
+
+///////////////////////////////////////////////////////////////////////  
+//  BillboardPS
+//
+//  Billboard geometry pixel shader
+//
+//  Not having BILLBOARD_NORMAL_MAPPING #define'd makes for a much shorter
+//  pixel shader - one that should be used on lower compile targets
+
+float4 main(SBillboardOutput In
+			, uniform sampler2D samBillboardDiffuseMap : TEXUNIT0 
+			, uniform sampler2D samBillboardNormalMap : TEXUNIT1 
+#ifdef USE_SHADOWS
+			, uniform sampler2D samShadowMap   : TEXUNIT2
+#endif // USE_SHADOWS
+#ifdef USE_FOG
+		, uniform sampler2D FogMap: TEXUNIT3 // Fog texture
+#endif
+			) : COLOR
+{
+#ifndef BILLBOARD_NORMAL_MAPPING
+    float4 texDiffuse = tex2D(samBillboardDiffuseMap, In.vDiffuseTexCoords.xy); // , dsdx, dsdy);
+    texDiffuse.a *= In.fNormal;
+
+#ifdef USE_FOG
+    float4 fogColor = tex2D(FogMap, In.FogData.xy);	
+	texDiffuse.rgb = lerp(texDiffuse.rgb, fogColor.rgb, In.FogData.z);    
+#endif
+
+	return texDiffuse;
+
+#else // BILLBOARD_NORMAL_MAPPING
+
+	float2 dsdx = float2(0, 0);
+	float2 dsdy = float2(0, 0);
+
+    // look up the diffuse and normal-map layers
+    float4 texDiffuse = tex2D(samBillboardDiffuseMap, In.vDiffuseTexCoords.xy); //, dsdx, dsdy);
+    float4 texNormal = tex2D(samBillboardNormalMap, In.vNormalTexCoords.xy);//, dsdx, dsdy);
+
+    // compute the ambient value
+    const float4 vecNoiseOffset = { -0.32f, -0.32f, -0.32f, 0.0f };
+    float4 vecAmbient = float4(g_vLightAmbient, 0.0) + (texNormal.aaaa + vecNoiseOffset) * In.vLightAdjusts.z; // float4(g_vLightAmbient, 1.0) * 
+    vecAmbient = vecAmbient * texDiffuse;
+    
+    // since the normal map normal values (normally ranged [-1,1]) are store
+    // as a color value (ranged [0,1]), they must be uncompressed.  a dot product 
+    // is used to compute the diffuse lighting contribution.
+    const float3 vecHalves = { 0.5f, 0.5f, 0.5f };
+    float fDot = saturate(dot(texNormal.rgb - vecHalves, In.vNormal.rgb)) * 2.0f;
+
+	// get shadowing factor
+#ifdef USE_SHADOWS
+	float4 shadow_map = tex2Dproj(samShadowMap, In.vShadowMapTexCoords.xyzw);
+	#ifndef COMPAREZ
+		float shadow_factor = shadow_map.b;   //0 or 1
+	#else
+		float zProj = In.vShadowMapTexCoords.z/In.vShadowMapTexCoords.w; 
+		float shadow_factor = (zProj > shadow_map.b) ? 0 : 1;
+	#endif // COMPAREZ
+	fDot *= shadow_factor;
+#endif // USE_SHADOWS
+
+    // lighting adjustment to use SpeedTreeCAD parameters to help make the bb
+    // match the 3D geometry
+    float fLightAdjust = lerp(In.vLightAdjusts.x, In.vLightAdjusts.y, g_fBillboardLightAdjust);
+    float4 vColor = (fDot * float4(g_vLightDiffuse, 1.0) * texDiffuse * fLightAdjust) + vecAmbient;
+
+    // use an alpha value that is the diffuse map's noisy alpha channel multiplied
+    // against the faded alpha color from the vertex shader
+    vColor.a = texDiffuse.a * In.vNormal.w;
+
+#ifdef USE_FOG
+    float4 fogColor = tex2D(FogMap, In.FogData.xy);	
+	vColor.rgb = lerp(vColor.rgb, fogColor.rgb, In.FogData.z);    
+#endif
+
+    return vColor;
+#endif // BILLBOARD_NORMAL_MAPPING
+}
+

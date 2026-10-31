@@ -1,0 +1,121 @@
+//#define OLD_SHADERS
+//#define REFLECTION_VECTOR
+//#define SPECULAR
+//#undef REFLECTION_VECTOR
+
+
+struct VertexOut
+{
+	float4 texcoord0	: TEXCOORD0;
+	float4 texcoord1	: TEXCOORD1;
+	float4 texcoord2	: TEXCOORD2;
+};
+/*
+float fresnel(float3 light, float3 normal, float R0)
+{
+    float const kOneMinusEdotN = 1-saturate(dot(-light, normal));
+	
+    float result = kOneMinusEdotN * kOneMinusEdotN;
+    result = result * result;
+    result = result * kOneMinusEdotN;   
+    result = R0 + (1.0-R0) * result;
+	
+    return result;
+}
+*/
+float pow16(float v)
+{
+	v = v*v;
+	v = v*v;
+	v = v*v;
+	return v*v;
+}
+
+float4 main( const VertexOut IN
+			,uniform float4 WaterLightDir
+			,uniform float4 AmbientColor
+			,uniform float4 SunDiffuseColor
+			,uniform float4 SunSpecularColor
+			,uniform sampler2D Tex0: TEXUNIT0       //Noise bump texture
+			,uniform sampler2D Tex1: TEXUNIT1       //Noise bump texture
+#ifdef SPECULAR
+			,uniform samplerCUBE Tex2: TEXUNIT2     //normalization cube map texture
+#endif //SPECULAR
+			):COLOR
+{
+    float4 Res;
+	float4 Norm0 = 2*(tex2D(Tex0, IN.texcoord0.xy) - 0.5);
+	float4 Norm1 = 2*(tex2D(Tex1, IN.texcoord1.xy)- 0.5);
+	
+	//-----------calc difuse light-------------
+//	float4 E = expand(IN.texcoord2);
+	// Norm
+	float3 Norm = lerp(Norm1.rgb, Norm0.rgb, WaterLightDir.a);
+	/// need normalize Norm
+	float4 LightDir = 2*(WaterLightDir - 0.5);
+	// Hack: LightVector inverted ?????
+	float Light = dot (Norm , -LightDir.rgb); // clamp01
+	float4 cDiffuseWaterColor = float4(0.95f*0.125, 0.85f*0.125, 0.5f*0.125, 0.25f);
+	float3 DiffuseLight = cDiffuseWaterColor.rgb*SunDiffuseColor.rgb * (Light);
+
+	//-----------calc specular light-------------
+#ifdef SPECULAR
+	// Normalization CubeMap
+	// Eye vector
+    float4 E;
+
+#ifdef OLD_SHADERS
+	//E = (IN.texcoord2.xyzw);
+	E = 2*(texCUBE(Tex2, IN.texcoord2.xyz) - 0.5);
+	//E = (texCUBE(Tex2, IN.texcoord2.xyz));
+#else //OLD_SHADERS
+	E = normalize(IN.texcoord2.xyzw);
+#endif //OLD_SHADERS
+
+   float Spec;
+	
+#ifdef REFLECTION_VECTOR
+	// N . E
+	float3 ne = dot(E.rgb, Norm);
+	// (N*(N.E) - E/2)*2
+	float3 R = (Norm * ne + E.rgb * (-0.5))*2;
+
+//	float3 R = reflect(-E.rgb,Norm);
+//	float f = fresnel(E.rgb, Norm.rgb, 0.5);
+//	float4 L = lit(dot(Norm, LightDir.rgb), dot(LightDir.rgb,R), 8);
+
+	Spec = dot(LightDir.rgb,R.rgb);
+	//Spec = 2*(saturate(Spec*Spec - 0.6));
+#else //REFLECTION_VECTOR
+	float3 HalfVector = (-E.rgb - LightDir.rgb);//*0.5;
+	Spec = (dot(Norm,HalfVector.rgb));
+#endif //REFLECTION_VECTOR
+
+
+
+
+#ifdef OLD_SHADERS
+
+#ifdef REFLECTION_VECTOR
+	Spec = pow16(Spec);
+	Res = float4(Spec + DiffuseLight, WaterLightDir.a);
+#else //REFLECTION_VECTOR
+	//Spec = pow16(Spec);
+	Res = float4(DiffuseLight, WaterLightDir.a);
+#endif //REFLECTION_VECTOR
+
+#else  //OLD_SHADERS
+	Spec = pow(Spec,64);
+	Res = float4(SunSpecularColor.rgb * Spec.xxx + DiffuseLight, WaterLightDir.a);  //SunSpecularColor - ???
+#endif  //OLD_SHADERS
+
+//	Res = float4(1,0,0,1);
+	
+
+#else //SPECULAR
+	 //Attention: this is only one place where SunSpecularColor is used (as some hack)
+     Res = float4(2.0*DiffuseLight + 2.0*SunSpecularColor.rgb, WaterLightDir.a);  //increase diffuse by scale 2 in this case
+#endif //SPECULAR
+
+	return Res;
+}

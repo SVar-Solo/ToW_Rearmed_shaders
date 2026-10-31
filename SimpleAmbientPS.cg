@@ -1,0 +1,39 @@
+// From vertex shader
+struct vfconn
+{
+	// Vertex Color
+	//float4 Color   : COLOR0;
+	// Texcoord for base texture
+	float2 TexCoord0 : TEXCOORD0;
+};
+
+float4 main(in vfconn IN, // From vertex shader
+			uniform float4 FogP		: FOGP, // Fog color and factor
+			uniform float4 AmbientColor, // Ambient color + light On/Off (in alpha)
+			uniform float4 SpecularColor, // Specular color of light + specular factor (in alpha)
+			uniform float4 DiffuseColor, // Diffuse color of light + bump factor (in alpha)
+			uniform float4 ColorScale // Color scale for base texture
+			,uniform sampler2D decal: TEXUNIT0 // Base texture
+			,uniform sampler2D BumpMap: TEXUNIT1 // Normal map + specualar map (in alpha)
+//			uniform sampler2D SpecLevelMap: TEXUNIT3 // Specular level (emulate pow)
+			) : COLOR
+{
+	// Base
+	float4 decalColor = tex2D(decal, IN.TexCoord0);
+
+	// Color scale * Base Texture, (for optimization, bitween specular computation)
+	float4 decalCS = (decalColor * ColorScale);// * IN.Color);
+	// Normal from normal map
+//	float4 NormTex = 2*(tex2D(BumpMap, IN.TexCoord1)-0.5);
+
+	
+	// compute final color
+	return float4(lerp(decalCS.rgb*(AmbientColor.rgb), FogP.rgb, FogP.a), decalCS.a);
+	//return float4(0,1,0,1);
+
+	//float3 Refract = refract(AmbientColor.rgb, FogP.rgb, ColorScale.a);
+	//return float4(Refract,1);
+
+}
+
+

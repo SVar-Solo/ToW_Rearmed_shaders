@@ -1,0 +1,505 @@
+/////////////////////////////////
+///////////////////////////////
+#ifdef USE_SHADOWS
+	uniform sampler2D ShadowMap : TEXUNIT2;
+#endif
+
+// PSSM implemetation
+// matrix array
+uniform float4x4 PSSMProjTexMatrix0;
+uniform float4x4 PSSMProjTexMatrix1;
+uniform float4x4 PSSMProjTexMatrix2;
+uniform float4x4 PSSMProjTexMatrix3;
+
+uniform float PSSMSplit0;
+uniform float PSSMSplit1;
+uniform float PSSMSplit2;
+uniform float PSSMSplit3;
+
+uniform float PSSMWidth;
+uniform float3 koeffNdotL;
+
+uniform float fSkyMultiplier;
+
+// sample shadow map
+float getShadowPixel(float3 projcoord)
+{
+        float ShadowFactor = 1;
+#ifdef USE_SHADOWS
+	float4 Shadow = tex2D(ShadowMap, projcoord.xy);
+#ifndef COMPAREZ  
+	ShadowFactor = Shadow.r;   //0 or 1
+#else  //COMPAREZ
+	float zProj = projcoord.z;
+	ShadowFactor = (zProj > Shadow.r + 0.00) ? 0 : 1;
+	ShadowFactor = Shadow.r > 0 ? ShadowFactor : 1;
+#endif //COMPAREZ
+#endif  //SHADOW
+	return ShadowFactor;
+}
+
+float getShadowFactor(float ref_depth, float4 sm_sample)
+{
+	float shadow_factor = 1.0;
+
+#ifndef COMPAREZ  
+	shadow_factor = sm_sample.r;   // 0 or 1
+#else  //COMPAREZ
+	shadow_factor = (ref_depth > sm_sample.r) ? 0 : 1;
+	shadow_factor = sm_sample.r > 0 ? shadow_factor : 1;
+#endif //COMPAREZ
+
+	return shadow_factor;
+}
+
+float getBilinearFilteredShadowPixel(float3 uvz)
+{
+  float mgs = 1024.f;
+  uvz.x *= mgs;
+  uvz.y *= mgs;
+  float x = floor(uvz.x);
+  float y = floor(uvz.y);
+  float z = uvz.z * mgs;
+  float u_ratio = uvz.x - x;
+  float v_ratio = uvz.y - y;
+  float u_opposite = 1 - u_ratio;
+  float v_opposite = 1 - v_ratio;
+  float result = (getShadowPixel(float3(x,y,z)/mgs) * u_opposite  + getShadowPixel(float3(x+1,y,z)/mgs) * u_ratio) * v_opposite + 
+                  (getShadowPixel(float3(x,y+1,z)/mgs) * u_opposite  + getShadowPixel(float3(x+1,y+1,z)/mgs) * u_ratio) * v_ratio;
+  return result;
+}
+
+// 10, 50, 220, 1200
+float getPSSMPixel2 (float4 world_coords)
+{
+    float4 shad_coord;
+	float4 shadow_sample;
+
+	// 0 level	
+	//float4 shad_coord0 = mul(PSSMProjTexMatrix0, float4(world_coords.xyz, 1));
+	//float4 shad_coord1 = mul(PSSMProjTexMatrix1, float4(world_coords.xyz, 1));
+	//float4 shad_coord2 = mul(PSSMProjTexMatrix2, float4(world_coords.xyz, 1));
+	//float4 shad_coord3 = mul(PSSMProjTexMatrix3, float4(world_coords.xyz, 1));
+
+	float4 sm_k;
+	
+
+	//sm_k.x = step(0, world_coords.w) - step(10, world_coords.w);
+	//sm_k.y = step(10, world_coords.w) - step(50, world_coords.w);
+	//sm_k.z = step(50, world_coords.w) - step(220, world_coords.w);
+	//sm_k.w = step(220, world_coords.w) - step(1200, world_coords.w);
+
+	sm_k.x = world_coords.w > 0 ? (world_coords.w < PSSMSplit0 ? 1.0 : 0.0) : 0.0;
+	sm_k.y = world_coords.w > PSSMSplit0 ? (world_coords.w < PSSMSplit1 ? 1.0 : 0.0) : 0.0;
+	sm_k.z = world_coords.w > PSSMSplit1 ? (world_coords.w < PSSMSplit2 ? 1.0 : 0.0) : 0.0;
+	sm_k.w = world_coords.w > PSSMSplit2 ? (world_coords.w < PSSMSplit3 ? 1.0 : 0.0) : 0.0;
+
+	float4x4 sh_m = sm_k.x*PSSMProjTexMatrix0 +
+					sm_k.y*PSSMProjTexMatrix1 + 
+					sm_k.z*PSSMProjTexMatrix2 + 
+					sm_k.w*PSSMProjTexMatrix3;
+
+	//shad_coord = sm_k.x*shad_coord0 + sm_k.y*shad_coord1 + sm_k.z*shad_coord2 + 
+	//	sm_k.w*shad_coord3;
+	shad_coord = mul(sh_m, float4(world_coords.xyz, 1));
+
+	shad_coord.xyz /= shad_coord.w;
+
+	float3 sm_offs =	sm_k.x * float3(0.0, 0.5, 0.0) +
+						sm_k.y * float3(0.5, 0.5, 0.0) + 
+						sm_k.z * float3(0.0, 0.0, 0.0) + 
+						sm_k.w * float3(0.5, 0.0, 0.0);
+
+	float2 sm_scale = sm_k.x*0.8 + sm_k.y*0.6 + sm_k.z*0.4 + sm_k.w*0.2;
+
+	float shadow_factor = 1.0;
+
+#ifndef PSSM_SMOOTH
+		//shadow_sample = tex2D(ShadowMap, float2(sm_offs.x + 0.5*shad_coord.x, sm_offs.y + 0.5*shad_coord.y));
+	shadow_factor = getShadowPixel(sm_offs + float3(0.5*shad_coord.xy, shad_coord.z));
+	
+#else
+		float3 uvz = shad_coord.xyz; // clamp(shad_coord.xy, 0.0, 1.0);
+		float mgs = PSSMWidth;
+		uvz.x *= 0.5*PSSMWidth;
+		uvz.y *= 0.5*PSSMWidth;
+		float x = floor(uvz.x);
+		float y = floor(uvz.y);
+		float z = uvz.z * mgs;
+		float u_ratio = uvz.x - x;
+		float v_ratio = uvz.y - y;
+		float u_opposite = 1 - u_ratio;
+		float v_opposite = 1 - v_ratio;
+
+		//shadow_sample = tex2D(ShadowMap, float2(sm_offs.x + 0.5*shad_coord.x, sm_offs.y + 0.5*shad_coord.y));
+
+		shadow_factor =
+			(getShadowPixel(sm_offs + float3(x, y, z)/mgs)*u_opposite + 
+			 getShadowPixel(sm_offs + float3(x+1,y,z)/mgs)*u_ratio) * v_opposite + 
+
+			(getShadowPixel(sm_offs + float3(x,y+1,z)/mgs) * u_opposite + 
+			 getShadowPixel(sm_offs + float3(x+1,y+1,z)/mgs)*u_ratio) * v_ratio;
+#endif // PSSM_SMOOTH
+	
+	//return sm_scale*shadow_factor;
+	return shadow_factor;
+}
+
+
+float getPSSMPixel3 (float4 world_coords)
+{
+    float4 shad_coord;
+	float4 shadow_sample;
+
+	// 0 level	
+	float4 shad_coord0 = mul(PSSMProjTexMatrix0, float4(world_coords.xyz, 1));
+	float4 shad_coord1 = mul(PSSMProjTexMatrix1, float4(world_coords.xyz, 1));
+	float4 shad_coord2 = mul(PSSMProjTexMatrix2, float4(world_coords.xyz, 1));
+	float4 shad_coord3 = mul(PSSMProjTexMatrix3, float4(world_coords.xyz, 1));
+
+	float4 sm_k;
+	
+	if (shad_coord0.x > 0.0 && shad_coord0.x < 1.0 && shad_coord0.y > 0.0 && shad_coord0.y < 1.0)
+	{
+		sm_k.x = 1.0; // float4 (1.0, 0.0, 0.0, 0.0);
+	}
+	else
+	{
+		sm_k.x = 0.0;
+		if (shad_coord1.x > 0.0 && shad_coord1.x < 1.0 && shad_coord1.y > 0.0 && shad_coord1.y < 1.0)
+		{
+			sm_k.y = 1.0;
+		}
+		else
+		{
+			sm_k.y = 0.0;
+			if (shad_coord2.x > 0.0 && shad_coord2.x < 1.0 && shad_coord2.y > 0.0 && shad_coord2.y < 1.0)
+			{
+				sm_k.z = 1.0;
+			}
+			else
+			{
+				// sm_k.w = 1.0;
+				if (shad_coord3.x > 0.0 && shad_coord3.x < 1.0 && shad_coord3.y > 0.0 && shad_coord3.y < 1.0)
+				{
+					sm_k.w = 1.0;
+				}
+				else
+				{
+					return 1;
+				}
+			}
+		}
+		
+	}
+
+	//float sm_k_none = 1 - (dot(sm_k, sm_k));
+	
+	shad_coord = 
+		sm_k.x*shad_coord0 + 
+		sm_k.y*shad_coord1 + 
+		sm_k.z*shad_coord2 + 
+		sm_k.w*shad_coord3;
+
+	float z_eps =	sm_k.x*0.00002 + 
+					sm_k.y*0.00004 + 
+					sm_k.z*0.00016 + 
+					sm_k.w*0.00064;
+
+	//shad_coord = mul(sh_m, float4(world_coords.xyz, 1));
+
+	shad_coord.xyz /= shad_coord.w;
+
+
+	float3 sm_offs = sm_k.x*float3(0, 0.5, 0) +
+		sm_k.y*float3(0.5, 0.5, 0) + 
+		sm_k.z*float3(0, 0, 0) + 
+		sm_k.w*float3(0.5, 0, 0);
+
+	//float2 sm_scale = sm_k.x*0.8 + sm_k.y*0.6 + sm_k.z*0.4 + sm_k.w*0.2;
+	float shadow_factor = 1.0;
+
+#ifndef PSSM_SMOOTH	
+		//shadow_sample = tex2D(ShadowMap, float2(sm_offs.x + 0.5*shad_coord.x, sm_offs.y + 0.5*shad_coord.y));
+		//shadow_factor = getShadowPixel(sm_offs + float3(0.5*shad_coord.xy, shad_coord.z));
+
+	shadow_sample = tex2D(ShadowMap, float2(sm_offs.x + 0.5*shad_coord.x, sm_offs.y + 0.5*shad_coord.y));
+
+#ifndef COMPAREZ  
+	shadow_factor = shadow_sample.r;   // 0 or 1
+#else  //COMPAREZ
+	shadow_factor = (shad_coord.z - z_eps > shadow_sample.r) ? 0 : 1;
+	shadow_factor = shadow_sample.r > 0 ? shadow_factor : 1;
+#endif //COMPAREZ
+
+#else
+		float3 uvz = shad_coord.xyz; // clamp(shad_coord.xy, 0.0, 1.0);
+		float mgs = PSSMWidth;
+		uvz.x *= 0.5*PSSMWidth;
+		uvz.y *= 0.5*PSSMWidth;
+		float x = floor(uvz.x);
+		float y = floor(uvz.y);
+		float z = uvz.z * mgs;
+		float u_ratio = uvz.x - x;
+		float v_ratio = uvz.y - y;
+		float u_opposite = 1 - u_ratio;
+		float v_opposite = 1 - v_ratio;
+
+		//shadow_sample = tex2D(ShadowMap, float2(sm_offs.x + 0.5*shad_coord.x, sm_offs.y + 0.5*shad_coord.y));
+
+		shadow_factor =
+			(getShadowPixel(sm_offs + float3(x, y, z)/mgs)*u_opposite + 
+			 getShadowPixel(sm_offs + float3(x+1,y,z)/mgs)*u_ratio) * v_opposite + 
+
+			(getShadowPixel(sm_offs + float3(x,y+1,z)/mgs) * u_opposite + 
+			 getShadowPixel(sm_offs + float3(x+1,y+1,z)/mgs)*u_ratio) * v_ratio;
+#endif	// PSSM_SMOOTH
+
+	//return sm_scale*shadow_factor;
+	return shadow_factor; //  + sm_k_none;
+}
+
+float getPSSMPixel(float4 world_coords)
+{
+    float4 shad_coord;
+	float4 shadow_sample;
+
+	// 0 level
+	//world_coords.w = 1;
+
+	float4 shad_coord0 = mul(PSSMProjTexMatrix0, world_coords);
+	shad_coord0.xyz = shad_coord0.xyz/shad_coord0.w;
+	float4 shadow0 = tex2D(ShadowMap, float2(0.5*shad_coord0.x, 0.5 + 0.5*shad_coord0.y));
+
+	float4 shad_coord1 = mul(PSSMProjTexMatrix1, world_coords);
+	shad_coord1.xyz = shad_coord1.xyz/shad_coord1.w;
+	float4 shadow1 = tex2D(ShadowMap, float2(0.5 + 0.5*shad_coord1.x, 0.5 + 0.5*shad_coord1.y));
+
+	float4 shad_coord2 = mul(PSSMProjTexMatrix2, world_coords);
+	shad_coord2.xyz = shad_coord2.xyz/shad_coord2.w;
+	float4 shadow2 = tex2D(ShadowMap, float2(0.5*shad_coord2.x, 0.5*shad_coord2.y));
+
+	float4 shad_coord3 = mul(PSSMProjTexMatrix3, world_coords);
+	shad_coord3.xyz = shad_coord3.xyz/shad_coord3.w;
+	float4 shadow3 = tex2D(ShadowMap, float2(0.5 + 0.5*shad_coord3.x, 0.5*shad_coord3.y));
+/*
+	shadow_sample = shadow0;
+	shad_coord = shad_coord0;
+
+	if (shad_coord.x < 0 || shad_coord.x > 1 || shad_coord.y < 0 || shad_coord.y > 1 )
+		//|| shad_coord.z < 0 || shad_coord.z > 1)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0.5*getShadowFactor(shad_coord.z, shadow_sample);
+	}
+*/		
+
+	
+	if (shad_coord0.x < 0 || shad_coord0.x > 1 || shad_coord0.y < 0 || shad_coord0.y > 1)
+	{
+		// 1 level
+		
+		if (shad_coord1.x < 0 || shad_coord1.x > 1 || shad_coord1.y < 0 || shad_coord1.y > 1)
+		{
+			//return 1;
+			
+			// 2 level
+			
+			if (shad_coord2.x < 0 || shad_coord2.x > 1 || shad_coord2.y < 0 || shad_coord2.y > 1)
+			{
+				return 1;
+				// 3 level
+				/*
+				if (shad_coord3.x < 0 || shad_coord3.x > 1 || shad_coord3.y < 0 || shad_coord3.y > 1)
+				{
+					return 1;
+				}
+				else 
+				{				
+					shadow_sample = shadow3;
+					shad_coord = shad_coord3;
+				}
+				*/
+			}
+			else
+			{
+				shadow_sample = shadow2;
+				shad_coord = shad_coord2;
+				//return 0.3*getShadowFactor(shad_coord.z, shadow_sample);
+				return getShadowFactor(shad_coord.z, shadow_sample);
+			}
+			
+		}
+		else
+		{
+
+			shadow_sample = shadow1;
+			shad_coord = shad_coord1;
+			//return 0.5*getShadowFactor(shad_coord.z, shadow_sample);
+			return getShadowFactor(shad_coord.z, shadow_sample);
+		}
+	}
+	else
+	{
+		shadow_sample = shadow0;
+		shad_coord = shad_coord0;
+		//return 0.7*getShadowFactor(shad_coord.z, shadow_sample);
+		return getShadowFactor(shad_coord.z, shadow_sample);
+	}
+	
+
+	//shad_coord = mul(PSSMProjTexMatrix[1], world_coords);
+	//float4 Shadow1 = tex2D(ShadowMap, float2(0.5 + 0.5*shad_coord.x, 0.5+0.5*shad_coord.y));
+
+	//shad_coord = mul(PSSMProjTexMatrix[2], world_coords);	
+	//float4 Shadow2 = tex2D(ShadowMap, float2(0.5 + 0.5*shad_coord.x, 0.5+0.5*shad_coord.y));
+
+	//shad_coord = mul(PSSMProjTexMatrix[3], world_coords);	
+	//float4 Shadow3 = tex2D(ShadowMap, float2(0.5 + 0.5*shad_coord.x, 0.5+0.5*shad_coord.y));
+
+	return 0.5*getShadowFactor(shad_coord.z, shadow_sample);
+}
+
+
+
+
+/////////////////////////////
+struct vfconn
+{
+	float4 FogColor : COLOR0;
+	float3 Normal : COLOR1;
+	float2 TexCoord0 : TEXCOORD0;
+	float3 fogCoord : TEXCOORD1; // fog
+	float3 LightDir : TEXCOORD2;
+	float3 H : TEXCOORD3;
+	float4 shadowTex : TEXCOORD4; // shadows
+//	float3 UpDir : TEXCOORD5; // up
+};
+
+float4 main(in vfconn IN
+			//,uniform float2 AlphaRef
+			//uniform float BumpAmount,
+			//uniform float SpecularAmount,
+			,uniform float4 AmbientColor
+#ifdef USE_SPECULAR
+			,uniform float4 SpecularColor
+#endif
+			,uniform float4 DiffuseColor
+			,uniform float4 ColorScale
+			,uniform sampler2D decal  : TEXUNIT0
+			,uniform sampler2D BumpMap  : TEXUNIT1
+#ifdef USE_FOG
+			,uniform samplerCUBE SkyMap: TEXUNIT3 // Fog texture
+#endif
+			) : COLOR
+{
+//  AmbientColor = float3(0.5, 0.5, 0.75);
+//  DiffuseColor = float3(1.0, 1.0, 1.0);
+//  SpecularColor = float3(1.0, 1.0, 0.8);
+
+  //float4 Fog = float4(0,0,0,0);
+  //float3 LightDiffuse = float3(1.0, 1.0, 1.0);
+//  DiffuseColor = float3(1.0, 1.0, 1.0);
+//  SpecularColor = float3(1.0,1.0,0.7);
+//    AmbientColor.rgb = float3(0.0, 0.0, 0.0);
+
+  float BumpAmount = DiffuseColor.a;
+  //BumpAmount = 0;
+  //AmbientColor.rgb = float3(1,1,1);
+  //DiffuseColor.rgb = float3(1,1,1);
+  //SpecularColor.rgb = float3(0,0,0);
+
+#ifdef USE_SPECULAR  
+  float SpecularAmount = SpecularColor.a;
+#endif
+  
+  float4 decalColor = tex2D(decal, IN.TexCoord0);
+  float4 NormTex = (tex2D(BumpMap, IN.TexCoord0));
+  
+  //float SpecAmount = SpecularAmount;// * NormTex.a;
+  
+  //float3 normal = 2*(IN.Normal-0.5);
+  float3 Norm = (2*(NormTex.xyz)-1.0);//normalize(lerp(normal.rgb, 2*(NormTex.rgb-0.5), BumpAmount));
+  //Norm.z *=0.5;
+  //Norm = 2*IN.Normal-1;
+  Norm = normalize(Norm);
+
+  float3 L = normalize(IN.LightDir.xyz);
+  // compute self-shadowing term
+  //float shadow = saturate(4 * dot((normal.xyz),L));
+  float light = saturate(dot((Norm.rgb), L ));//*AmbientColor.a;// * shadow;
+  //float light2 = saturate(dot((-Norm.rgb), L ));//*AmbientColor.a;// * shadow;
+  //light = max(light, light2);
+  //float uplight = saturate(dot(float3(0,0,1), normalize(normalize(IN.UpDir)+float3(0,0,1)*0.5) ));
+#ifdef USE_SPECULAR
+float spec;
+if (SpecularAmount>0)
+{
+  float3 E = normalize(IN.H);
+  //float3 R = normalize(2*Norm*dot(Norm.rgb, L) - L);
+  float3 R = reflect(L, Norm.rgb);
+  //float spec = saturate(dot(Norm.rgb, 2*(IN.H.rgb-0.5)));
+  spec = saturate(dot(R, -E));
+
+  spec = pow(spec,SpecularAmount);//*shadow;
+}
+else
+    spec = 0;
+#endif
+  //float alpha2 = AlphaRef.y>0.5?(decalColor.a>(AlphaRef.x)?decalColor.a:0):1;
+  // Color scale * Base Texture, (for optimization, bitween specular computation)
+  float4 decalCS = float4(decalColor.rgb * ColorScale.rgb /** IN.Color*/, decalColor.a * ColorScale.a);
+
+  //SpecularAmount = 1.0;
+#ifdef USE_SPECULAR
+if (SpecularAmount>0)
+  SpecularColor.rgb *= spec * NormTex.a;
+else
+  SpecularColor.rgb = float3(0,0,0);
+#endif
+
+#ifdef USE_SHADOWS
+    float3 projcoord = IN.shadowTex.xyz/IN.shadowTex.w;	
+#ifdef SM30
+    float ShadowFactor = getPSSMPixel3(IN.shadowTex); 
+	// float ShadowFactor = getBilinearFilteredShadowPixel(projcoord);
+#else
+    float ShadowFactor = getShadowPixel(projcoord);
+#endif
+  light *= ShadowFactor;//(ShadowFactor*saturate(light - 0.02)/(1.0 - 0.02));
+#endif  //SHADOW
+
+  //DiffuseColor.rgb = light*(DiffuseColor.rgb);
+  //DiffuseColor.rgb = clamp(float3(0,0,0),DiffuseColor.rgb,float3(1,1,1));
+  // compute final color
+  //float3 LightValue = decalCS.rgb*clamp( (DiffuseColor.rgb + (0.4+0.6*uplight)*AmbientColor.rgb ), float3(0,0,0), float3(1,1,1));
+  //float3 LightValue = decalCS.rgb*clamp( (DiffuseColor.rgb + AmbientColor.rgb ), float3(0,0,0), float3(1,1,1));
+
+  light = clamp(light*koeffNdotL.x+koeffNdotL.y, 0, 1);
+
+  float3 LightValue = decalCS.rgb*lerp(AmbientColor.rgb, DiffuseColor.rgb*koeffNdotL.z, light);
+  
+#ifdef USE_SPECULAR
+float4 resColor;
+if (SpecularAmount>0)
+  resColor= float4( LightValue.rgb + saturate(SpecularColor.rgb) , decalCS.a);
+else
+  resColor = float4( LightValue.rgb, decalCS.a);
+#else
+  float4 resColor = float4( LightValue.rgb, decalCS.a);
+#endif
+
+#ifdef USE_FOG
+  float4 fogColor = texCUBE(SkyMap, IN.fogCoord);
+  fogColor.rgb = lerp(fogColor.rgb, fogColor.rgb*fSkyMultiplier, fogColor.a);
+  // compute final color
+  resColor.rgb = lerp(resColor.rgb, fogColor.rgb, IN.FogColor.a);
+#endif
+  //resColor.rgb = NormTex.xyz;//decalColor.rgb;//IN.LightDir;//light.xxx;//float3(IN.TexCoord0.xy, 0);
+  //resColor.rgb = light.xxx;
+  //resColor.rgb = IN.Normal;
+  return resColor;
+}

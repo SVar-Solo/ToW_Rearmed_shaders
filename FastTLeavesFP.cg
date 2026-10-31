@@ -1,0 +1,23 @@
+// Попытка сделать быстрый вариант particles для листьев дерева
+// FragmentShader
+
+struct InFPStruct
+{
+  float4 position : POSITION;
+  float4 color    : COLOR0;
+ 
+  float2 tcoords0 : TEXCOORD0;
+  float2 tcoords1 : TEXCOORD1;
+};
+
+
+//---------------------------------------------------------------------------------
+ float4 main(in InFPStruct IN,
+          uniform sampler2D BumpTex : TEXUNIT0,
+          uniform sampler2D TreeTex : TEXUNIT1) : COLOR {
+
+  // todo:...          
+  //float4 color = tex2D(TreeTex, IN.tcoords0.xy);
+  float4 color = float4(1, 1, 1, 1);
+  return color;
+}

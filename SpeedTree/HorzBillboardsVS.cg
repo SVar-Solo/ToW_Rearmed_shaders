@@ -1,0 +1,342 @@
+///////////////////////////////////////////////////////////////////////  
+//  Leaf Shaders
+//
+//  *** INTERACTIVE DATA VISUALIZATION (IDV) CONFIDENTIAL AND PROPRIETARY INFORMATION ***
+//
+//  This software is supplied under the terms of a license agreement or
+//  nondisclosure agreement with Interactive Data Visualization, Inc. and
+//  may not be copied, disclosed, or exploited except in accordance with 
+//  the terms of that agreement.
+//
+//      Copyright (c) 2003-2007 IDV, Inc.
+//      All rights reserved in all media.
+//
+//      IDV, Inc.
+//      Web: http://www.idvinc.com
+//
+//  *** Release Version 4.1 ***
+
+#ifdef SHADER_TEST
+	#include "defines.cg"
+#endif
+
+#define IDV_OPENGL
+
+// global params
+uniform float4x4	ModelViewProj;
+
+// wind 
+uniform float       g_fWindMatrixOffset;					// keeps two instances of the same tree model from using the same wind matrix (range: [0,NUM_WIND_MATRICES])
+uniform float4x4    g_amWindMatrices[MAX_NUM_LEAF_ANGLES];	// houses all of the wind matrices shared by all geometry types
+
+// fog
+uniform float4      g_vFogColor;                        // fog color
+uniform float3      g_vFogParams;                       // used for fog distance calcs: .x = fog start, .y = fog end, .z = end - start
+
+// lighting & materials
+uniform float3      g_vLightDir;                         // normalized light direction (shaders assume a single light source)
+uniform float4      g_vLightDiffuse;                    // light's diffuse color
+uniform float4      g_vMaterialDiffuse;                 // active material's diffuse color (set differently for branches, fronds, leaves, and billboards)
+
+// other
+//uniform float4x4    ModelViewProj;                    // composite modelview/projection matrix
+uniform float4      g_vTreePos;                          // each tree is in a unique position and rotation: .xyz = pos, .w = rotation
+uniform float4      g_vTreeRotationTrig;                // stores (sin, cos, -sin, 0.0) for an instance's rotation angle (optimizes rotation code)
+uniform float       g_fTreeScale;                        // each tree has a unique scale (1.0 is no scale)
+uniform float2      g_vCameraAngles;                     // shared by Billboard.fx and Leaf.fx - stores camera azimuth and pitch for billboarding computations
+uniform float4      g_vCameraAzimuthTrig;               // stores (sin, cos, -sin, 0.0) for the camera azimuth angle for optimized rotation in billboard vs
+
+// constants
+const float c_fClearAlpha = 255.0f;                     // alpha testing, 255 means not visible
+const float c_fOpaqueAlpha = 84.0f;                     // alpha testing, 84 means fully visible
+const float c_fAlphaSpread = 171.0f;                    // 171 = 255 - 84
+const float c_fTwoPi = 6.28318530f;                     // 2 * pi
+
+
+///////////////////////////////////////////////////////////////////////  
+//  Billboard-specific global variables
+
+// vs
+uniform float4      g_v360TexCoords[NUM_360_IMAGES]; // each element defines the texcoords for a single billboard image - each element has:
+                                                     //     x = s-coord (rightmost s-coord of billboard)
+                                                     //     y = t-coord (topmost t-coord of billboard) 
+                                                     //     z = s-axis width (leftmost s-coord = x - z)
+                                                     //     w = t-axis height (bottommost t-coord = y - w)
+uniform float       g_fSpecialAzimuth;                       // camera azimuth, adjusted to speed billboard vs computations
+uniform float4x4    g_amBBNormals;                           // all billboards share the same normals since they all face the camera
+uniform float4x4    g_amBBBinormals;                         // all billboards share the same binormals since they all face the camera  
+uniform float4x4    g_amBBTangents;                          // all billboards share the same tangents since they all face the camera
+uniform float4		g_mBBUnitSquare[4] =                        // unit billboard card that's turned towards the camera.  card is aligned on 
+            {                                        // YZ plane and centered at (0.0f, 0.0f, 0.5f)
+                float4(0.0f, 0.5f, 1.0f, 0.0f), 
+                float4(0.0f, -0.5f, 1.0f, 0.0f), 
+                float4(0.0f, -0.5f, 0.0f, 0.0f), 
+                float4(0.0f, 0.5f, 0.0f, 0.0f) 
+            };
+
+uniform float4      g_afTexCoordScales[4] =                     // used to compress & optimize the g_v360TexCoord lookups (x = s scale, y = t scale)
+            { 
+                float4(0.0f, 0.0f, 0.0f, 0.0f), 
+                float4(1.0f, 0.0f, 0.0f, 0.0f), 
+                float4(1.0f, 1.0f, 0.0f, 0.0f), 
+                float4(0.0f, 1.0f, 0.0f, 0.0f) 
+            };
+
+#ifdef HORZ_BILLBOARDS
+uniform float       g_fBillboardFadeValue;                   // [0,1], 0 = transparent, 1 = opaque
+#endif
+
+
+//----------------------------------------------------------------------------- 
+//  SBillboardOutput structure
+
+struct SBillboardOutput
+{
+    float4  vPosition         : POSITION;
+    float2  vDiffuseTexCoords : TEXCOORD0;
+    float2  vNormalTexCoords  : TEXCOORD1;
+#ifdef BILLBOARD_NORMAL_MAPPING
+    float4  vNormal           : TEXCOORD2;
+#else
+    float   fNormal           : TEXCOORD2;
+#endif
+
+#ifdef USE_FOG
+    float4  vLightAdjusts     : TEXCOORD3;
+#else
+    float3  vLightAdjusts     : TEXCOORD3; 
+#endif
+};
+
+
+//-----------------------------------------------------------------------------
+//	WindEffect
+//-----------------------------------------------------------------------------
+
+#define TWO_WEIGHT_WIND
+
+float3 WindEffect(float3 vPosition, float2 vWindInfo)
+{
+    // decode both wind weights and matrix indices at the same time in order to save
+    // vertex instructions
+    vWindInfo.xy += g_fWindMatrixOffset.xx;
+    float2 vWeights = frac(vWindInfo.xy);
+    float2 vIndices = (vWindInfo - vWeights) * 0.05f * NUM_WIND_MATRICES;
+    
+    // first-level wind effect - interpolate between static position and fully-blown
+    // wind position by the wind weight value
+#ifdef IDV_OPENGL
+	float4x4 tmp_mat = g_amWindMatrices[int(vIndices.x)];
+    float3 vWindEffect = lerp(vPosition.xyz, mul(vPosition.xyz, float3x3(tmp_mat[0].xyz, tmp_mat[1].xyz, tmp_mat[2].xyz)), vWeights.x);
+#else
+    float3 vWindEffect = lerp(vPosition.xyz, mul(vPosition, g_amWindMatrices[int(vIndices.x)]), vWeights.x);
+#endif
+    
+    // second-level wind effect - interpolate between first-level wind position and 
+    // the fully-blown wind position by the second wind weight value
+#ifdef TWO_WEIGHT_WIND
+    #ifdef IDV_OPENGL
+		tmp_mat = g_amWindMatrices[int(vIndices.y)];
+        return lerp(vWindEffect, mul(vWindEffect.xyz, float3x3(tmp_mat[0].xyz, tmp_mat[1].xyz, tmp_mat[2].xyz)), vWeights.y);
+    #else
+        return lerp(vWindEffect, mul(vWindEffect, g_amWindMatrices[int(vIndices.y)]), vWeights.y);
+    #endif
+#else
+    return vWindEffect;
+#endif
+}
+
+//-----------------------------------------------------------------------------
+//  LightDiffuse
+//
+//  Very simple lighting equation, used by the fronds and leaves (branches
+//  and billboards are normal mapped).
+//-----------------------------------------------------------------------------
+
+float3 LightDiffuse(float3 vVertex,
+                    float3 vNormal,
+                    float3 vLightDir,
+                    float3 vLightColor,
+                    float3 vDiffuseMaterial)
+{
+    return vDiffuseMaterial * vLightColor * max(dot(vNormal, vLightDir), 0.0f);
+}
+
+
+//-----------------------------------------------------------------------------
+//  FogValue
+//
+//  Simple LINEAR fog computation.  If an exponential equation is desired,
+//  it can be placed here - all of the shaders call this one function.
+//-----------------------------------------------------------------------------
+
+#ifdef USE_FOG
+float FogValue(float fPoint)
+{
+    float fFogEnd = g_vFogParams.y;
+    float fFogDist = g_vFogParams.z;
+    
+    return saturate((fFogEnd - fPoint) / fFogDist);
+}
+#endif
+
+//-----------------------------------------------------------------------------
+//  RotationMatrix_zAxis
+//
+//  Constructs a Z-axis rotation matrix
+//-----------------------------------------------------------------------------
+
+float3x3 RotationMatrix_zAxis(float fAngle)
+{
+    // compute sin/cos of fAngle
+    float2 vSinCos;
+    sincos(fAngle, vSinCos.x, vSinCos.y);
+    
+    return float3x3(vSinCos.y, -vSinCos.x, 0.0f, 
+                    vSinCos.x, vSinCos.y, 0.0f, 
+                    0.0f, 0.0f, 1.0f);
+}
+
+
+//-----------------------------------------------------------------------------
+//  RotationMatrix_yAxis
+//
+//  Constructs a Y-axis rotation matrix
+//-----------------------------------------------------------------------------
+
+float3x3 RotationMatrix_yAxis(float fAngle)
+{
+    // compute sin/cos of fAngle
+    float2 vSinCos;
+    sincos(fAngle, vSinCos.x, vSinCos.y);
+    
+    return float3x3(vSinCos.y, 0.0f, vSinCos.x,
+                    0.0f, 1.0f, 0.0f,
+                    -vSinCos.x, 0.0f, vSinCos.y);
+}
+
+
+//-----------------------------------------------------------------------------
+//  RotationMatrix_xAxis
+//
+//  Constructs a X-axis rotation matrix
+//-----------------------------------------------------------------------------
+
+float3x3 RotationMatrix_xAxis(float fAngle)
+{
+    // compute sin/cos of fAngle
+    float2 vSinCos;
+    sincos(fAngle, vSinCos.x, vSinCos.y);
+    
+    return float3x3(1.0f, 0.0f, 0.0f,
+                    0.0f, vSinCos.y, -vSinCos.x,
+                    0.0f, vSinCos.x, vSinCos.y);
+}
+
+//-----------------------------------------------------------------------------
+//  Rotate_zAxis
+//
+//  Returns an updated .xy value
+//-----------------------------------------------------------------------------
+
+float2 Rotate_zAxis(float fAngle, float3 vPoint)
+{
+    float2 vSinCos;
+    sincos(fAngle, vSinCos.x, vSinCos.y);
+    
+    return float2(dot(vSinCos.yx, vPoint.xy), dot(float2(-vSinCos.x, vSinCos.y), vPoint.xy));
+}
+
+//-----------------------------------------------------------------------------
+//  Rotate_yAxis
+//
+//  Returns an updated .xz value
+//-----------------------------------------------------------------------------
+
+float2 Rotate_yAxis(float fAngle, float3 vPoint)
+{
+    float2 vSinCos;
+    sincos(fAngle, vSinCos.x, vSinCos.y);
+    
+    return float2(dot(float2(vSinCos.y, -vSinCos.x), vPoint.xz), dot(vSinCos.xy, vPoint.xz));
+}
+
+
+
+#ifdef HORZ_BILLBOARDS
+///////////////////////////////////////////////////////////////////////  
+//  HorzBillboardVS
+
+SBillboardOutput main(float4 vPosition      : POSITION,     // xyz = position, w = ground offset
+                      float4 vGeom          : TEXCOORD0,    // x = corner-x, y = corner-y, z = tree azimuth, w = lod fade
+                      float3 vMiscParams    : TEXCOORD1,    // x = scale, y = s texcoord, z = t texcoord
+                      float3 vLightAdjusts  : TEXCOORD2)    // x = bright side adjustment, y = dark side adjustment, z = ambient scale
+{
+    // this will be fed to the billboard pixel shader
+    SBillboardOutput sOutput;
+    
+    // define attribute aliases for readability
+    float c_fLodFade = vGeom.w;                 // computed on CPU - the amount the billboard as a whole is faded from 3D geometry
+    float c_fTreeScale = vMiscParams.x;
+    float c_fTreeAzimuth = vGeom.z;
+#ifdef UPVECTOR_POS_Y
+    float3 c_vNormal = float3(0.0f, 1.0f, 0.0f);
+    float3 c_vTangent = float3(-1.0f, 0.0f, 0.0f);
+    float3 c_vBinormal = float3(0.0f, 0.0f, 1.0f);
+#else
+    float3 c_vNormal = float3(0.0f, 0.0f, 1.0f);
+    float3 c_vTangent = float3(1.0f, 0.0f, 0.0f);
+    float3 c_vBinormal = float3(0.0f, 1.0f, 0.0f);
+#endif
+
+    // compute alpha fade/fizzle value
+    float fFadePoint = lerp(c_fClearAlpha, c_fOpaqueAlpha, c_fLodFade);
+    float fAlpha = lerp(fFadePoint, c_fClearAlpha, g_fBillboardFadeValue);
+    
+    // each billboard may be faded at a distinct value, but it isn't efficient to change
+    // the alpha test value per billboard.  instead we adjust the alpha value of the 
+    // billboards's outgoing color to achieve the same effect against a static alpha test 
+    // value (c_gOpaqueAlpha).
+    fAlpha = 1.0f - (fAlpha - c_fOpaqueAlpha) / c_fAlphaSpread;
+    
+#ifdef BILLBOARD_NORMAL_MAPPING
+    // setup per-pixel normal mapping  (assumes normalized light direction)
+    sOutput.vNormal.x = dot(g_vLightDir.xyz, c_vTangent);
+    sOutput.vNormal.y = dot(g_vLightDir.xyz, c_vNormal);
+    sOutput.vNormal.z = dot(g_vLightDir.xyz, c_vBinormal);
+    sOutput.vNormal.w = fAlpha;
+#else
+    sOutput.fNormal = fAlpha;
+#endif
+
+    // pass on texcoords
+    sOutput.vDiffuseTexCoords = float2(vMiscParams.y, 1 - vMiscParams.z);
+    sOutput.vNormalTexCoords = vMiscParams.yz;
+    
+    // scale and rotate the corner
+#ifdef UPVECTOR_POS_Y
+    float3 vCorner = float3(vGeom.x, vPosition.w, vGeom.y) * c_fTreeScale;
+    vCorner.xz = Rotate_yAxis(c_fTreeAzimuth, vCorner);
+#else
+    float3 vCorner = float3(vGeom.xy, vPosition.w) * c_fTreeScale;
+    vCorner.xy = Rotate_zAxis(c_fTreeAzimuth, vCorner);
+#endif
+    
+    // translate corner piece to base tree position
+    vPosition.xyz += vCorner;
+    
+    // project to the screen
+    vPosition.w = 1.0f;
+    sOutput.vPosition = mul(ModelViewProj, vPosition);
+
+    // pass through light adjustments
+    sOutput.vLightAdjusts.xyz = vLightAdjusts.xyz;
+
+#ifdef USE_FOG      
+    // calc fog (cheap in vertex shader, relatively expensive later in the pixel shader)
+    sOutput.vLightAdjusts.w = FogValue(sOutput.vPosition.z);
+#endif
+   
+    return sOutput;
+}
+#endif

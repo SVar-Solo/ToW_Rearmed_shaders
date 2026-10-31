@@ -1,0 +1,109 @@
+// From vertex shader
+struct vfconn
+{
+        // Vertex Color
+        //float4 Color   : COLOR0;
+        // Light Dir unsigned
+    float3 LightDirUnsigned : COLOR1;
+        // Texcoord for base texture
+        float2 TexCoord0 : TEXCOORD0;
+        // Texcoord for normal texture
+        float2 TexCoord1 : TEXCOORD1;
+#ifdef USE_SPECULAR
+        // Half vector
+        float3 H                : TEXCOORD2;
+        // Light direction
+        float3 LightDir : TEXCOORD3;
+#endif
+};
+
+float4 main(in vfconn IN, // From vertex shader
+                        uniform float2 AlphaRef,
+                        uniform float4 AmbientColor, // Ambient color + light On/Off (in alpha)
+#ifdef USE_SPECULAR
+                        uniform float4 SpecularColor, // Specular color of light + specular factor (in alpha)
+#endif
+                        uniform float4 DiffuseColor, // Diffuse color of light + bump factor (in alpha)
+                        //uniform float4 ColorScale, // Color scale for base texture
+                        uniform sampler2D decal: TEXUNIT0, // Base texture
+                        uniform sampler2D BumpMap: TEXUNIT1 // Normal map + specualar map (in alpha)
+#ifdef USE_SPECULAR
+                        ,uniform sampler2D SpecLevelMap: TEXUNIT3 // Specular level (emulate pow)
+#endif
+                        ) : COLOR
+{
+//      float Fog2 = FogP.a;
+        // Bump factor
+        float BumpAmount = DiffuseColor.a;
+#ifdef USE_SPECULAR
+        // Specular factor
+        float SpecularAmount = SpecularColor.a;
+#endif
+        // Base
+        float4 decalColor = tex2D(decal, IN.TexCoord0);
+        // Normal from normal map
+        float4 NormTex = 2*(tex2D(BumpMap, IN.TexCoord1)-0.5);
+#ifdef USE_SPECULAR     
+        // Specualar ammount * specular map
+        float SpecAmount = (0.5*NormTex.a+0.5);
+#endif
+
+    // Light vector
+        float3 LightVec = 2*(IN.LightDirUnsigned.xyz-0.5);
+
+        float NL = dot( NormTex.rgb, LightVec);
+
+        // compute self-shadowing term
+        float shadow = saturate(4 * NL);
+
+        // Compute light
+        float light = saturate(NL) * AmbientColor.a;
+
+#ifdef USE_SPECULAR     
+        float2 spec_coord = float2( dot(NormTex.rgb, IN.H.rgb), dot(NormTex.rgb, IN.LightDir.rgb) );
+        
+        float4 specLev = tex2D(SpecLevelMap, spec_coord) * shadow;
+#endif
+        
+        
+        // Compute specualar, N dot H
+        //float spec = saturate(dot(Norm.rgb, 2*(IN.H.rgb-0.5)));
+        // pow specular and modulate by self-shadowing term
+        //spec = spec*spec; // ^2
+        //spec = spec*spec; // ^4
+        //spec = spec*spec; // ^8
+        //spec = spec*spec*shadow; // ^16
+
+        float alpha2 = AlphaRef.y>0.5?(decalColor.a>(AlphaRef.x)?decalColor.a:0):1;
+        // Color scale * Base Texture, (for optimization, bitween specular computation)
+        float4 decalCS = float4(decalColor.rgb /** ColorScale.rgb*/ /** IN.Color*/, /*ColorScale.a **/ alpha2);
+#ifdef USE_SPECULAR
+        // modulate by specular color
+        SpecularColor.rgb = SpecAmount * SpecularColor.rgb * specLev.rgb;
+#endif
+        // Diffuse * light
+        DiffuseColor.rgb *= light;
+
+#ifdef USE_SPECULAR
+        // compute final color
+        return float4( decalCS.rgb*saturate(DiffuseColor.rgb + AmbientColor.rgb) + SpecularColor.rgb, decalCS.a);
+#else
+        return float4( decalCS.rgb*saturate(DiffuseColor.rgb + AmbientColor.rgb), decalCS.a);
+#endif
+        //return float4( lerp(decalCS.rgb*(DiffuseColor.rgb + AmbientColor.rgb), FogP.rgb, FogP.a) + SpecularColor.rgb, decalCS.a);
+        //return float4( lerp(decalCS.rgb*(DiffuseColor.rgb + AmbientColor.rgb), FogP.rgb, FogP.a)/* + SpecularColor.rgb*/, decalCS.a);
+        //return float4(1,1,1,1);
+        //return float4(light * ColorScale.rgb, decalColor.a * ColorScale.a);
+        //return float4(light *, decalColor.a * ColorScale.a);
+//      return float4(Fog2,1,1,1);
+        //return (SpecularColor);
+        //return float4(specLev.rgb,decalCS.a);
+        //return float4(DiffuseColor.rgb + AmbientColor.rgb,decalCS.a);
+        //return float4(light,light,light,decalCS.a);
+        
+        //return float4(LightVec,1);
+        //return float4(IN.LightDir.rgb,1);
+        //return float4(IN.H.rgb,1);
+}
+
+

@@ -1,0 +1,29 @@
+// From vertex shader
+struct vfconn
+{
+	float4 HPos			: POSITION;	
+	float4 zCoord		: TEXCOORD0;
+};
+
+uniform sampler2D typeMap: register(s0);
+
+float4 main(in vfconn IN // From vertex shader			
+			// ,uniform sampler2D decal: register(s0) // Base texture
+			//,out float depth : DEPTH
+			) : COLOR
+{
+	// Base
+	float4 decalColor; //  = tex2D(decal, IN.TexCoord0.xy);
+	//float rz = 0.5*((IN.zCoord.z)/IN.zCoord.w)+0.5;
+	float rz = -IN.zCoord.z;
+	decalColor.rgb = rz.xxx;
+	decalColor.a = 1.0;
+	float4 TMColor = tex2D(typeMap, IN.zCoord.xy);
+	if (TMColor.a < 1.0f)
+	{
+		discard;
+	}
+	return decalColor;
+}
+
+

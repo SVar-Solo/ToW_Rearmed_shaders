@@ -1,0 +1,17 @@
+# Windows
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Ярлыки Windows
+*.lnk
+
+# Скомпилированные шейдеры (создаются .bat-скриптами)
+*.vso
+*.pso
+*.fxc
+*.fxo
+*.cso
+
+# Компилятор Cg — скачивается отдельно, см. README
+cgc.exe

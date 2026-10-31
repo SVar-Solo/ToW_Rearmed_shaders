@@ -1,0 +1,35 @@
+//****************************************************
+//Far trees fragment shader
+//****************************************************
+
+struct InStruct
+{
+  float4 color    : COLOR0;
+  float4 fogColor : COLOR1;
+  float2 tex0     : TEXCOORD0;
+  float4 fogCoord : TEXCOORD1;
+};
+
+uniform float fSkyMultiplier;
+
+half4 main(InStruct IN
+,uniform sampler2D TreeTex : TEXUNIT0
+,uniform samplerCUBE SkyMap: TEXUNIT1 // Fog texture
+) : COLOR
+{
+
+  float4 color;
+  float4 texColor;
+  
+  texColor  = tex2D(TreeTex, IN.tex0.xy);  
+  color.rgb = IN.color.rgb * texColor.rgb;
+  color.a   = texColor.a;
+#ifdef FOG
+  float4 fogColor = texCUBE(SkyMap, IN.fogCoord.xyz);
+  fogColor.rgb = lerp(fogColor.rgb, fogColor.rgb*fSkyMultiplier, fogColor.a);
+  // compute final color
+  color.rgb = lerp(color.rgb, fogColor.rgb, IN.fogCoord.w);
+#endif
+  return color;
+}
+

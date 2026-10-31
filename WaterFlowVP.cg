@@ -1,0 +1,38 @@
+//****************************************************
+//Vertex shader for Water Flow render pass
+//****************************************************
+
+struct VertexIn
+{
+    float4 position : POSITION;
+};
+
+struct VertexOut
+{
+    float4 pos : POSITION;
+    float2 tex0 : TEXCOORD0;    //Flow texture 
+};
+
+VertexOut main(VertexIn IN,
+
+#ifndef PROFILE_ARBVP1
+            uniform float4x4 ModelViewProj : _GL_MVP,
+#endif
+			uniform float4 S_TexGenVec,                
+			uniform float4 T_TexGenVec
+			)                
+{
+    VertexOut OUT;
+
+#ifdef PROFILE_ARBVP1
+   float4x4 ModelViewProj = glstate.matrix.mvp;
+#endif
+	//---transform vertex to camera space---
+    OUT.pos = mul(ModelViewProj, IN.position);
+
+	float2 texc = float2( dot(IN.position, S_TexGenVec),  dot(IN.position, T_TexGenVec));  
+
+	OUT.tex0 = texc;
+
+    return OUT;
+} 

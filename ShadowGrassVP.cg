@@ -1,0 +1,118 @@
+//****************************************************
+//Vertex shader for Light+Shadow calculation for Grass.
+//Define FULL - for full shader with shadow map
+//****************************************************
+
+//#define FULL
+//#define PassThrowGLStates
+#define PSSM
+
+struct VertexIN
+{
+    float4 position : POSITION;
+    float2 TEX0 : TEXCOORD0;
+};
+
+struct VertexOut
+{
+    float4 HPOS : POSITION;
+	float4 COL0 : COLOR0;
+	float4 COL1 : COLOR1;
+    float2 TEX0 : TEXCOORD0;
+    float2 TEX1 : TEXCOORD1;
+#ifdef FULL
+	//Attention: we assume that will be used hardware shadow map support, so Tex(s/q, t/q) will be compared with r/q
+    float4 TEX2 : TEXCOORD2;    //shadow map texture - !!!NEW    
+#endif
+};
+
+VertexOut main(VertexIN IN
+//---redirection of uniform parameters to OpenGLStates----
+#ifdef PROFILE_ARBVP1
+#ifndef PassThrowGLStates
+			,uniform float4x4 SlopeMatrix,
+			uniform float4 S_TexGenVec,  //tex gen vector for main land texture
+			uniform float4 T_TexGenVec,  //tex gen vector for main land texture
+			uniform float4 Color0,
+			uniform float4 Color1,
+			uniform float4 TexCoordShift  //to select texture type
+#ifdef FULL
+			,uniform float4x4 ShadowMapProjTexMatrix
+#endif //FULL
+#endif  //PassThrowGLStates
+
+#else  //PROFILE_ARBVP1
+            ,uniform float4x4 ModelViewProj : _GL_MVP
+			,uniform float4x4 SlopeMatrix
+			,uniform float4 S_TexGenVec  //tex gen vector for main land texture
+			,uniform float4 T_TexGenVec  //tex gen vector for main land texture
+			,uniform float4 Color0
+			,uniform float4 Color1
+			,uniform float4 TexCoordShift  //to select texture type - really used only 1 float
+#ifdef FULL
+			,uniform float4x4 ShadowMapProjTexMatrix
+#endif //FULL
+
+#endif  //PROFILE_ARBVP1
+//--------------------------------------------------------
+			)                
+{
+    VertexOut OUT;
+
+//---redirection of uniform parameters to OpenGLStates----
+#ifdef PROFILE_ARBVP1
+   float4x4 ModelViewProj = glstate.matrix.mvp;
+
+//for perfomance reason - pass uniform parameters throw OpenGL states
+#ifdef PassThrowGLStates
+    float4x4 SlopeMatrix = glstate.matrix.texture[0];
+    float4 S_TexGenVec = glstate.texgen[0].object.s;
+    float4 T_TexGenVec = glstate.texgen[0].object.t;
+	float4 Color0 = glstate.texgen[1].object.s;
+	float4 Color1 = glstate.texgen[1].object.t;
+	float4 TexCoordShift = glstate.texgen[2].object.s;
+#ifdef FULL
+	float4x4 ShadowMapProjTexMatrix = glstate.matrix.texture[1];
+#endif //FULL
+#endif  //PassThrowGLStates
+
+#endif  //PROFILE_ARBVP1
+//----------------------------------------------------------
+
+	//---transform vertex to camera space---
+    //Attention: here 2 matrix-vector multiplication
+
+//    float4 new_position = IN.position;
+    //IN.position.z *= 2;
+    float4 new_position = mul(SlopeMatrix, IN.position);
+    OUT.HPOS = mul(ModelViewProj, new_position);
+
+    OUT.TEX0 = IN.TEX0 + float2(0.0, TexCoordShift.x);
+
+	float s = dot(S_TexGenVec, IN.position);  
+	float t = dot(T_TexGenVec, IN.position);
+    OUT.TEX1 = float2(s,t);
+
+    OUT.COL0 = Color0;   
+//??????
+/*
+#ifdef PassThrowGLStates
+OUT.COL0 = 0.0;   
+OUT.COL0.a = Color0.a;
+#endif
+*/
+//??????
+    OUT.COL1 = Color1;
+	//------------------------------------------
+
+	//shadow
+#ifdef FULL
+#ifdef PSSM
+    OUT.TEX2 = new_position;
+#else
+	OUT.TEX2 = mul(ShadowMapProjTexMatrix, new_position);
+#endif
+#endif  //FULL
+
+    return OUT;
+} 

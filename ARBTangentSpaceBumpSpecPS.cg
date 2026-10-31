@@ -1,0 +1,136 @@
+/////////////////////////////////
+///////////////////////////////
+/////////////////////////////
+struct vfconn
+{
+	//float4 Color   : COLOR0;
+    float3 Normal : COLOR1;
+	float2 TexCoord0 : TEXCOORD0;
+  	float2 TexCoord1 : TEXCOORD1;
+	float3 LightDir : TEXCOORD2;
+#ifdef USE_SPECULAR
+	float3 H		: TEXCOORD3;
+#endif
+};
+
+float4 main(in vfconn IN,
+			uniform float2 AlphaRef,
+			//uniform float BumpAmount,
+			//uniform float SpecularAmount,
+			uniform float4 AmbientColor,
+#ifdef USE_SPECULAR
+			uniform float4 SpecularColor,
+#endif
+			uniform float4 DiffuseColor,
+			//uniform float4 ColorScale,
+			uniform sampler2D decal,
+			uniform sampler2D BumpMap//,
+			//uniform sampler2D SpecMap
+			) : COLOR
+{
+//  AmbientColor = float3(0.5, 0.5, 0.75);
+//  DiffuseColor = float3(1.0, 1.0, 1.0);
+//  SpecularColor = float3(1.0, 1.0, 0.8);
+
+  //float4 Fog = float4(0,0,0,0);
+  //float3 LightDiffuse = float3(1.0, 1.0, 1.0);
+//  DiffuseColor = float3(1.0, 1.0, 1.0);
+//  SpecularColor = float3(1.0,1.0,0.7);
+//    AmbientColor.rgb = float3(0.0, 0.0, 0.0);
+
+  float BumpAmount = DiffuseColor.a;
+  //BumpAmount = 0;
+  //AmbientColor.rgb = float3(1,1,1);
+  //DiffuseColor.rgb = float3(1,1,1);
+  //SpecularColor.rgb = float3(0,0,0);
+
+#ifdef USE_SPECULAR  
+  float SpecularAmount = SpecularColor.a;
+#endif
+  
+  float4 decalColor = tex2D(decal, IN.TexCoord0);
+  float4 NormTex = (tex2D(BumpMap, IN.TexCoord1));
+  
+  //float SpecAmount = SpecularAmount;// * NormTex.a;
+  
+  float3 normal = 2*(IN.Normal-0.5);
+  float3 Norm = normalize(lerp(normal.rgb, 2*(NormTex.rgb-0.5), BumpAmount));
+
+  float3 L = normalize(IN.LightDir.xyz);
+  // compute self-shadowing term
+  //float shadow = saturate(4 * dot((normal.xyz),L));
+  float light = saturate(dot((Norm.rgb), L ))*AmbientColor.a;// * shadow;
+#ifdef USE_SPECULAR
+  float3 E = normalize(IN.H);
+  //float3 R = normalize(2*Norm*dot(Norm.rgb, L) - L);
+  float3 R = reflect(L, Norm.rgb);
+  //float spec = saturate(dot(Norm.rgb, 2*(IN.H.rgb-0.5)));
+  float spec = saturate(dot(R, -E));
+
+  if (SpecularAmount>=1)
+    spec = pow(spec,SpecularAmount);
+  else
+      spec = 0;
+#endif
+  float alpha2 = AlphaRef.y>0.5?(decalColor.a>(AlphaRef.x)?decalColor.a:0):1;
+  // Color scale * Base Texture, (for optimization, bitween specular computation)
+  float4 decalCS = float4(decalColor.rgb /** ColorScale.rgb *//** IN.Color*/, /*ColorScale.a **/ alpha2);
+
+  //SpecularAmount = 1.0;
+#ifdef USE_SPECULAR
+  SpecularColor.rgb = SpecularColor.rgb * spec * NormTex.a;
+#endif
+  DiffuseColor.rgb *= light;
+  DiffuseColor.rgb = clamp(float3(0,0,0),DiffuseColor.rgb,float3(1,1,1));
+  // compute final color
+  //float3 LightValue = clamp(float3(0,0,0),decalCS.rgb*(DiffuseColor.rgb + AmbientColor.rgb),float3(.5,.5,.5));
+  float3 LightValue = decalCS.rgb*clamp((DiffuseColor.rgb + AmbientColor.rgb), float3(0,0,0), float3(1,1,1));
+  
+#ifdef USE_SPECULAR
+  return float4( LightValue.rgb + saturate(SpecularColor.rgb) , decalCS.a);
+#else
+  return float4( LightValue.rgb, decalCS.a);
+#endif
+  //return float4( lerp(LightValue + SpecularColor.rgb, FogP.rgb, FogP.a), decalCS.a);
+  //return float4(1,1,1,1);
+  //return float4(light, light, light , decalCS.a);
+  
+  // Debug return
+  //return decalColor;
+  //return IN.Color;
+  //return float4(LightValue, decalCS.a);
+  //return float4(decalCS.rgb, decalCS.a);
+  //return float4(DiffuseColor.rgb*decalCS.rgb, decalCS.a);
+  //return float4(AmbientColor.rgb*decalCS.rgb, decalCS.a);
+  //return float4(SpecularColor.rgb, decalCS.a);
+  //return float4(spec, spec, spec, decalCS.a);
+  //return float4( (AmbientColor * decalColor.rgb + shadow) * (light * decalColor.rgb + SpecularColor*spec), decalColor.a);
+  //return float4( lerp( (DiffuseDecal + AmbientDecal + SpecularColor), IN.Fog.rgb, IN.Fog.a), decalCS.a);
+  //return float4( (DiffuseDecal + AmbientDecal + SpecularColor), decalCS.a);
+  //return float4( ( DiffuseDecal + AmbientDecal + SpecularColor) * (1 - saturate(IN.Fog.a)) + IN.Fog.rgb*IN.Fog.a, decalCS.a);
+  //return float4( ( decalColor.rgb*(light*DiffuseColor + AmbientColor,0,1) + SpecularColor*shadow) * (1 - saturate(IN.Fog.a)) + IN.Fog.rgb*IN.Fog.a, decalColor.a);
+  //return float4( decalColor.rgb*(light*DiffuseColor + AmbientColor) + SpecularColor , decalColor.a);
+  //return decalColor;
+  //return float4(decalColor.rgb,1);
+  //return float4(BumpAmount, BumpAmount, BumpAmount, 1);
+  //return float4(SpecularAmount, SpecularAmount, SpecularAmount, 1);
+  //return float4(expand(IN.LightUn.rgb),1);
+  //return float4(expand(IN.LightDir.rgb),1);
+  //return float4(expand(IN.H.rgb),1);
+  //return float4(light, light, light, 1);
+  //return float4(1,1,1,1);
+  //return float4(spec, spec, spec, 1);
+  //return float4(E.x, E.y, E.z, 1);
+  //return float4((Norm.rgb),1);
+  //return float4((IN.Fog.rgb),1);
+  //return float4(FogP.rgb*(1-FogP.a),1);
+  //return (NormTex);
+  //return float4(NormTex.rgb, 1);
+  //return float4(AmbientColor, 1);
+  //return float4(DiffuseColor, 1);
+  //return float4(SpecularColor, 1);
+  //return float4(NormTex.a,NormTex.a,NormTex.a, 1);
+  //return float4((normal.rgb),1);
+  //return float4(light*shadow, light*shadow, light*shadow, 1);
+
+}
