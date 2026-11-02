@@ -2,8 +2,8 @@
 // From vertex shader
 struct vfconn
 {
-	float4 HPos			: SV_Position;	
 	float4 zCoord		: TEXCOORD0;
+	float4 HPos			: SV_Position;
 };
 
 Texture2D typeMap : register(t0);

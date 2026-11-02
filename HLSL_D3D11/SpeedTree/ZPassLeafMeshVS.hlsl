@@ -66,8 +66,8 @@ float4 g_vLeafAngleScalars;                 // each tree model has unique scalar
 };
 struct SLeafOutput
 {
-    float4 vPosition      : SV_Position;
     float2 vBaseTexCoords : TEXCOORD0;
+    float4 vPosition      : SV_Position;
 };
 
 //-----------------------------------------------------------------------------

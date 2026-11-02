@@ -6,8 +6,8 @@ struct VertexIN
 
 struct VertexOUT
 {
-	float4 HPOS : SV_Position;
 	float3 TEX0 : TEXCOORD0;
+	float4 HPOS : SV_Position;
 };
 
 cbuffer SkyCubeVS_CB0 : register(b0)

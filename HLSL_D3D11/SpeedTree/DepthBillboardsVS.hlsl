@@ -35,10 +35,10 @@ struct SBillboardInput
 
 struct SBillboardOutput
 {
-    float4  vPosition         : SV_Position;
-    float4  vDiffuseTexCoords : TEXCOORD0; // uv1, uv2 for 2 nearest slices    
+    float4  vDiffuseTexCoords : TEXCOORD0; // uv1, uv2 for 2 nearest slices
     float4	ScreenPos		  : TEXCOORD1;	// screen coord
-	float2	SliceRatio		  : TEXCOORD2;
+    float2	SliceRatio		  : TEXCOORD2;
+    float4  vPosition         : SV_Position;
 };
 
 //----------------------------------------------------------------------------- 

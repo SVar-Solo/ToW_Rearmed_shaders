@@ -13,21 +13,20 @@ struct VertexIn
 
 struct VertexOut
 {
-    float4 pos : SV_Position;
     float2 tex0 : TEXCOORD0;    //Deformation texture
     float2 tex1 : TEXCOORD1;    //Bump map           //really duplicate TexCoord0 - need for fp20 profile only
     float4 Color : COLOR0;
-
-#ifdef SHADOW
+    #ifdef SHADOW
 	//Attention: we assume that will be used hardware shadow map support, so Tex(s/q, t/q) will be compared with r/q
-    float4 tex2 : TEXCOORD2;    //shadow map texture - !!!NEW    
-#endif  //SHADOW
+    float4 tex2 : TEXCOORD2;    //shadow map texture - !!!NEW
+    #endif  //SHADOW
 
 #ifdef SPECULAR
     float3 Color1 : COLOR1;     //Normal here for specular
-	float3 tex3 : TEXCOORD3;    //contain Half vector for given vertex (need for specular)
-#endif //SPECULAR
+    float3 tex3 : TEXCOORD3;    //contain Half vector for given vertex (need for specular)
+    #endif //SPECULAR
     float4 fogCoord : TEXCOORD4;
+    float4 pos : SV_Position;
 };
 
 #ifdef FOG

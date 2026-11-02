@@ -22,10 +22,10 @@ struct SBranchInput
 
 struct SBranchOutput
 {
-    float4  vPosition					: SV_Position;
     float2  vDiffuseTexCoords			: TEXCOORD0;	// Diffuse + SelfShadow
-	float   vFade						: TEXCOORD1;	// xyz normal, w - INTERMEDIATE_FRONDBRANCH_FADING
-	float4	zCoord						: TEXCOORD2;
+    float   vFade						: TEXCOORD1;	// xyz normal, w - INTERMEDIATE_FRONDBRANCH_FADING
+    float4	zCoord						: TEXCOORD2;
+    float4  vPosition					: SV_Position;
 };
 
 //-----------------------------------------------------------------------------

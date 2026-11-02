@@ -10,11 +10,11 @@ struct VertexIn
 
 struct VertexOut
 {
-    float4 pos : SV_Position;
     float2 tex0 : TEXCOORD0;    //Noise bump texture
     float2 tex1 : TEXCOORD1;    //Noise bump texture
-	float3 tex2 : TEXCOORD2;    //normalization cube map texture
-	float3 tex3 : TEXCOORD2;    //normalization cube map texture
+    float3 tex2 : TEXCOORD2;    //normalization cube map texture
+    float3 tex3 : TEXCOORD2;    //normalization cube map texture
+    float4 pos : SV_Position;
 };
 
 

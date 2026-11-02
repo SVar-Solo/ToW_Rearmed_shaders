@@ -6,10 +6,10 @@ struct VertexIN
 
 struct VertexOUT
 {
-	float4 HPOS : SV_Position;
 	float2 TEX0 : TEXCOORD0;
 	float2 TEX1 : TEXCOORD1;
 	float4 Data : TEXCOORD2; // x - border alpha
+	float4 HPOS : SV_Position;
 };
 
 cbuffer CirrusCloudsVS_CB0 : register(b0)

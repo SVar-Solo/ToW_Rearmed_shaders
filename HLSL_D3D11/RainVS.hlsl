@@ -7,8 +7,8 @@ struct VertexIN
 
 struct VertexOUT
 {
-	float4 HPOS : SV_Position;
 	float4 color : COLOR0; //TEXCOORD0;
+	float4 HPOS : SV_Position;
 };
 
 cbuffer RainVS_CB0 : register(b0)

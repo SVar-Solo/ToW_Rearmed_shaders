@@ -8,9 +8,9 @@ struct VertexIN
 
 struct VertexOUT 
 {
-    float4 HPOS : SV_Position;
     float2 TexCoord[8] : TEXCOORD0;
     //float2 TEX1 : TEXCOORD1;
+    float4 HPOS : SV_Position;
 };
 
 cbuffer PostVS_CB0 : register(b0)

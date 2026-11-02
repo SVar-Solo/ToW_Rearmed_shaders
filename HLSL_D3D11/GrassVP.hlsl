@@ -10,11 +10,11 @@ struct VertexIn
 
 struct VertexOut
 {
-  float4 HPOS : SV_Position;
-  float2 texCoord0 : TEXCOORD0;    //RoundMaskTex    //dsdt 
+  float2 texCoord0 : TEXCOORD0;    //RoundMaskTex    //dsdt
   float2 texCoord1 : TEXCOORD1;    //Mask
   float2 texCoord2 : TEXCOORD2;    //Land
   float2 texCoord3 : TEXCOORD3;    //Grass
+  float4 HPOS : SV_Position;
 };
 
 cbuffer GrassVP_CB0 : register(b0)

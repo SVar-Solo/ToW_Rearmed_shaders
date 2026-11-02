@@ -45,15 +45,14 @@ struct SLeafInput
 
 struct SLeafOutput
 {
-    float4 vPosition		: SV_Position;
     float2 vBaseTexCoords	: TEXCOORD0;
-	float4 vScreenPos		: TEXCOORD1;
-
-#ifdef LEAF_NORMAL_MAPPING	
+    float4 vScreenPos		: TEXCOORD1;
+    #ifdef LEAF_NORMAL_MAPPING	
 	float3 vNormal			: TEXCOORD2;
-#else
-	float4 vColor			: TEXCOORD2;	
-#endif
+    #else
+	float4 vColor			: TEXCOORD2;
+    #endif
+    float4 vPosition		: SV_Position;
 };
 
 //-----------------------------------------------------------------------------

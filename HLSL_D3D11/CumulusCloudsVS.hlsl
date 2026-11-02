@@ -8,11 +8,11 @@ struct VertexIN
 
 struct VertexOUT
 {
-	float4 HPOS : SV_Position;
 	float4 TEX0 : TEXCOORD0;
 	float3 Dist : TEXCOORD1;
 	float3 UpDir : TEXCOORD2;
 	float3 SunDir : TEXCOORD3;
+	float4 HPOS : SV_Position;
 };
 
 cbuffer CumulusCloudsVS_CB0 : register(b0)

@@ -2,8 +2,8 @@
 // From vertex shader
 struct vfconn
 {
-	float4 HPos			: SV_Position;	
-    float4 zCoord		: TEXCOORD0;
+	float4 zCoord		: TEXCOORD0;
+	float4 HPos			: SV_Position;
 };
 
 float4 main(in vfconn IN // From vertex shader			

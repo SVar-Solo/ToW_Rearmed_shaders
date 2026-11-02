@@ -14,10 +14,10 @@ struct VertexIn
 
 struct VertexOut
 {
-    float4 HPOS : SV_Position;
     float4 COL0 : COLOR0;
     float2 TEX0 : TEXCOORD0;  //dsdt texture coord.
     float2 TEX1 : TEXCOORD1;  //reflection texture coord.
+    float4 HPOS : SV_Position;
 };
 
 

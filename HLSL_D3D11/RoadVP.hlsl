@@ -21,19 +21,18 @@ struct VertexIn
 
 struct VertexOut
 {
-    float4 pos : SV_Position;
     float4 tex0 : TEXCOORD0;    //Road texture
     float2 tex1 : TEXCOORD1;    //Bump map           //really duplicate TexCoord0 - need for fp20 profile only
     float4 Color : COLOR0;
     float4 tex2 : TEXCOORD2;    // screen space coords
-
-#ifdef SPECULAR
+    #ifdef SPECULAR
 //    float3 Color1 : COLOR1;     //Normal here for specular
 	float3 tex3 : TEXCOORD3;    //contain Half vector for given vertex (need for specular)
-#endif //SPECULAR
+    #endif //SPECULAR
     float4 fogCoord: TEXCOORD4;
     float2 megaCoord: TEXCOORD5;
-	float3 LightDirOut : TEXCOORD6;
+    float3 LightDirOut : TEXCOORD6;
+    float4 pos : SV_Position;
 };
 
 #ifdef FOG

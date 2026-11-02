@@ -2,16 +2,16 @@
 // From vertex shader
 struct VertexOUT
 {
-	float4 HPOS : SV_Position;
-#ifndef ZPASS
+	#ifndef ZPASS
 	float4 color : COLOR0;
 	float2 texcoord : TEXCOORD0;
-#ifdef FOG
+	#ifdef FOG
 	float4 fogCoord : TEXCOORD1;
-#endif
+	#endif
 #else
 	float4 zcoord : TEXCOORD2;
-#endif // ZPASS
+	#endif // ZPASS
+	float4 HPOS : SV_Position;
 };
 
 cbuffer TreeTrunkPS_CB0 : register(b0)

@@ -19,15 +19,14 @@ struct VertexIN
 
 struct VertexOUT
 {
-    float4 HPOS : SV_Position;
-	float4 COL0 : COLOR0;
+    float4 COL0 : COLOR0;
     float2 TEX0 : TEXCOORD0;    //horizontal grass texture
     float2 TEX1 : TEXCOORD1;    //land texture
-    float4 ScreenPos : TEXCOORD2;    //shadow map texture  
-
-#ifdef BoundTemplate
+    float4 ScreenPos : TEXCOORD2;    //shadow map texture
+    #ifdef BoundTemplate
     float2 TEX3 : TEXCOORD3;    //template mask texture for boundary grass blocks
-#endif  //BoundTemplate
+    #endif  //BoundTemplate
+    float4 HPOS : SV_Position;
 };
 
 cbuffer ShadowGrassVP2_CB0 : register(b0)

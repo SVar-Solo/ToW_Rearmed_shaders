@@ -22,16 +22,16 @@ struct VertexIn
 
 struct VertexOut
 {
-    float4 pos : SV_Position;
     float2 tex0 : TEXCOORD0;    // Main texture
-	float2 tex3 : TEXCOORD3;    // Координаты для прозрачности на границах ландшафта
-#ifdef FULL
+    float2 tex3 : TEXCOORD3;    // Координаты для прозрачности на границах ландшафта
+    #ifdef FULL
     float2 tex1 : TEXCOORD1;    // Common Noise texture
-#ifdef SHADOW
+    #ifdef SHADOW
 	//Attention: we assume that will be used hardware shadow map support, so Tex(s/q, t/q) will be compared with r/q
-    float4 tex2 : TEXCOORD2;    //shadow map texture - !!!NEW    
-#endif  //SHADOW
+    float4 tex2 : TEXCOORD2;    //shadow map texture - !!!NEW
+    #endif  //SHADOW
 #endif  //FULL
+    float4 pos : SV_Position;
 };
 
 cbuffer HFLandVP_CB0 : register(b0)

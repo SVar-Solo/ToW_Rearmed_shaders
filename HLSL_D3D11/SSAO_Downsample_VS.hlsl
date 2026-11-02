@@ -5,9 +5,9 @@ struct VertexIN {
 };
 
 struct VertexOUT {
-    float4 HPOS : SV_Position;
     float2 TEX0 : TEXCOORD0;
     float2 TEX1 : TEXCOORD1;
+    float4 HPOS : SV_Position;
 };
 
 cbuffer SSAO_Downsample_VS_CB0 : register(b0)

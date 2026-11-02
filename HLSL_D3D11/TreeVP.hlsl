@@ -29,31 +29,30 @@ struct InStruct
 
 struct OutStruct
 {
-    float4 HPOS : SV_Position;
-
-#ifndef ZPASS
+    #ifndef ZPASS
     float4 COL0 : COLOR0;       //temp - tranzit from input    - diffuse + ambient light
     float4 COL1 : COLOR1;       //temp - tranzit from input    - fog
     float2 tex0 : TEXCOORD0;
     float2 tex1 : TEXCOORD1;
-#else
+    #else
 	float2 tex1 : TEXCOORD0;
-#endif //ZPASS
+    #endif //ZPASS
     
 
 #ifndef ZPASS
 #ifdef SHADOW
 	//Attention: we assume that will be used hardware shadow map support, so Tex(s/q, t/q) will be compared with r/q
-    float4 TEX2 : TEXCOORD2;    //shadow map texture - !!!NEW    
-#endif  //SHADOW
+    float4 TEX2 : TEXCOORD2;    //shadow map texture - !!!NEW
+    #endif  //SHADOW
   #ifdef FOG
 	float4 fogCoord : TEXCOORD3;
-  #endif
+    #endif
 #else
 	float4 zcoord : TEXCOORD4;
-#endif //ZPASS
+    #endif //ZPASS
 	float3 ambient_dir : TEXCOORD5;
     float3 normal : TEXCOORD6;
+    float4 HPOS : SV_Position;
 };
 
 #ifdef FOG

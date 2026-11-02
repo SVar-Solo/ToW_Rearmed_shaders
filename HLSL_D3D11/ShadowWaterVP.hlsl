@@ -12,10 +12,9 @@ struct appdata
 
 struct vfconn
 {
+    //Attention: we assume that will be used hardware shadow map support, so Tex(s/q, t/q) will be compared with r/q
+    float4 TEX0 : TEXCOORD0;    //shadow map texture - !!!NEW
     float4 HPOS : SV_Position;
-
-	//Attention: we assume that will be used hardware shadow map support, so Tex(s/q, t/q) will be compared with r/q
-    float4 TEX0 : TEXCOORD0;    //shadow map texture - !!!NEW    
 };
 
 cbuffer ShadowWaterVP_CB0 : register(b0)
