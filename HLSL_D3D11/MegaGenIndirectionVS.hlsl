@@ -7,9 +7,9 @@ struct VertexIN
 
 struct VertexOUT
 {
-	float4 HPOS : SV_Position;
 	float4 screenpos : TEXCOORD0;
 	float4 coord : TEXCOORD1;
+	float4 HPOS : SV_Position;
 };
 
 cbuffer MegaGenIndirectionVS_CB0 : register(b0)

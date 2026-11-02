@@ -10,13 +10,13 @@ struct VertexIn
 
 struct VertexOut
 {
-    float4 pos			: SV_Position;
     float4 NoiseUV		: TEXCOORD0;    // Noise bump texture
-	float4 EyeDir_Depth : TEXCOORD1;    // eye dir plus screen depth
-	float4 DSDT_Refl	: TEXCOORD2;    // dsdt uv plus reflective uv
-	float4 WorldPos		: TEXCOORD3;	// world position
-	float4 ScreenPos	: TEXCOORD4;    // reflection texture uv
-	float2 absPos	 	: TEXCOORD5;    // Координаты для прозрачности на границах ландшафта
+    float4 EyeDir_Depth : TEXCOORD1;    // eye dir plus screen depth
+    float4 DSDT_Refl	: TEXCOORD2;    // dsdt uv plus reflective uv
+    float4 WorldPos		: TEXCOORD3;	// world position
+    float4 ScreenPos	: TEXCOORD4;    // reflection texture uv
+    float2 absPos	 	: TEXCOORD5;    // Координаты для прозрачности на границах ландшафта
+    float4 pos			: SV_Position;
 };
 
 

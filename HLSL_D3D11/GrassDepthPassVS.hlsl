@@ -15,9 +15,9 @@ struct VertexIN
 
 struct VertexOut
 {
-    float4 HPOS : SV_Position;
-    float2 TEX0 : TEXCOORD0;    
+    float2 TEX0 : TEXCOORD0;
     float4 zCoord : TEXCOORD1;
+    float4 HPOS : SV_Position;
 };
 
 cbuffer GrassDepthPassVS_CB0 : register(b0)

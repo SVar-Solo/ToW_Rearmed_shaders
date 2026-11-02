@@ -16,9 +16,9 @@ struct vertexInputs
 
 struct vfconn
 {
-    float4 HPos : SV_Position;
     float2 Tex0 : TEXCOORD0;
     float4 zCoord : TEXCOORD1;
+    float4 HPos : SV_Position;
 };
 
 cbuffer ObjectsDepthPassVS_CB0 : register(b0)

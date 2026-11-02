@@ -17,7 +17,6 @@ struct vertexInputs
 
 struct vfconn
 {
-	float4 HPos : SV_Position;
 	float4 FogColor : COLOR0;
 	float3 Normal : COLOR1;
 	float2 Tex0 : TEXCOORD0;
@@ -25,7 +24,8 @@ struct vfconn
 	float3 LightDir : TEXCOORD2;
 	float3 Tex3 : TEXCOORD3;
 	float4 Tex4 : TEXCOORD4; // shadows
-//	float3 UpDir : TEXCOORD5; // up
+	//	float3 UpDir : TEXCOORD5; // up
+	float4 HPos : SV_Position;
 };
 
 cbuffer ObjectsOnePassVS_CB0 : register(b0)

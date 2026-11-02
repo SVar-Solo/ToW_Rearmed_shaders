@@ -12,11 +12,11 @@ struct InStruct
 
 struct OutStruct
 {
-  float4 hPos     : SV_Position;
   float4 color    : COLOR0;
   float4 fogColor : COLOR1;
   float2 tex0     : TEXCOORD0;
   float4 fogCoord : TEXCOORD1;
+  float4 hPos     : SV_Position;
 };
 
 //Calculate integral fog density throw 2 fog layers

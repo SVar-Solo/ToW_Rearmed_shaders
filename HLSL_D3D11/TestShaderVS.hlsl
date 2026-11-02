@@ -7,9 +7,9 @@ struct appdata {
 };
 
 struct vfconn {
-    float4 HPOS : SV_Position;
     float4 COL0 : COLOR0;
     float2 TEX0 : TEXCOORD0;
+    float4 HPOS : SV_Position;
 };
 
 cbuffer TestShaderVS_CB0 : register(b0)

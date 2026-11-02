@@ -14,10 +14,10 @@ struct appdata
 
 struct vfconn
 {
-    float4 HPOS : SV_Position;
     float4 COL0 : COLOR0;
     float3 fogCoord : TEXCOORD0;
-//	float ppp : PSIZE;
+    //	float ppp : PSIZE;
+    float4 HPOS : SV_Position;
 };
 
 /*      

@@ -41,11 +41,11 @@ struct SBranchInput
 
 struct SBranchOutput
 {
-    float4  vPosition					: SV_Position;
     float4  vDiffuseAndSelfTexCoords	: TEXCOORD0;	// Diffuse + SelfShadow
-	float4  vNormal						: TEXCOORD1;	// xyz normal, w - INTERMEDIATE_FRONDBRANCH_FADING
-	float4  vNormAndDetailTexCoords		: TEXCOORD2;	// NormalMap + DetailTexMap
-	float4  vScreenPos					: TEXCOORD3;
+    float4  vNormal						: TEXCOORD1;	// xyz normal, w - INTERMEDIATE_FRONDBRANCH_FADING
+    float4  vNormAndDetailTexCoords		: TEXCOORD2;	// NormalMap + DetailTexMap
+    float4  vScreenPos					: TEXCOORD3;
+    float4  vPosition					: SV_Position;
 };
 
 //-----------------------------------------------------------------------------

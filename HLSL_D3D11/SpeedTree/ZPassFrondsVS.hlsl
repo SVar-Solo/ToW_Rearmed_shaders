@@ -85,8 +85,8 @@ float3 WindEffect(float3 vPosition, float2 vWindInfo)
 
 struct SFrondOutput
 {
-    float4 vPosition            : SV_Position;
     float2 vDiffuseTexCoords    : TEXCOORD0;
+    float4 vPosition            : SV_Position;
 };
 
 

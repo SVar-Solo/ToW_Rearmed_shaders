@@ -7,8 +7,8 @@ struct vertexInputs
 
 struct vfconn
 {
-    float4 HPos : SV_Position;
     float4 zCoord : TEXCOORD0;
+    float4 HPos : SV_Position;
 };
 
 cbuffer LandDepthPassVS_CB0 : register(b0)

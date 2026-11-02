@@ -33,16 +33,16 @@ struct SBillboardInput
 
 struct SBillboardOutput
 {
-    float4  vPosition         : SV_Position;
     float2  vDiffuseTexCoords : TEXCOORD0;
     float2  vNormalTexCoords  : TEXCOORD1;
-#ifdef BILLBOARD_NORMAL_MAPPING
+    #ifdef BILLBOARD_NORMAL_MAPPING
     float4  vNormal           : TEXCOORD2;
-#else
+    #else
     float   fNormal           : TEXCOORD2;
-#endif    
+    #endif    
     float3  vLightAdjusts     : TEXCOORD3;
     float4	vScreenPos		  : TEXCOORD4;	// screen coord
+    float4  vPosition         : SV_Position;
 };
 
 //----------------------------------------------------------------------------- 

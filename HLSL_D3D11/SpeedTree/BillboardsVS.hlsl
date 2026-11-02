@@ -35,14 +35,14 @@ struct SBillboardInput
 
 struct SBillboardOutput
 {
-    float4  vPosition         : SV_Position;
     float4  vDiffuseTexCoords : TEXCOORD0; // uv1, uv2 for 2 nearest slices
     float4  vNormalTexCoords  : TEXCOORD1; // uv1, uv2 for 2 nearest slices
     float4  vNormal           : TEXCOORD2; // xyz - normal, w - slices blend factor
     float4  vLightAdjusts     : TEXCOORD3;  // xyz - adjust, w - fade
-    float4	vScreenPos		  : TEXCOORD4;	// screen coord 
-	float4	vNormal2		  : TEXCOORD5;	// normal2
-	float2  vAbsCoord		  : TEXCOORD6;  // Координаты для прозрачности на границах ландшафта
+    float4	vScreenPos		  : TEXCOORD4;	// screen coord
+    float4	vNormal2		  : TEXCOORD5;	// normal2
+    float2  vAbsCoord		  : TEXCOORD6;  // Координаты для прозрачности на границах ландшафта
+    float4  vPosition         : SV_Position;
 };
 
 //----------------------------------------------------------------------------- 

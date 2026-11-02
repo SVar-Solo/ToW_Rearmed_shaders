@@ -9,17 +9,16 @@ struct VertexIN
 
 struct VertexOUT
 {
-	float4 HPOS : SV_Position;
-#ifdef USE_FOG
+	#ifdef USE_FOG
 	float4 FogColor: COLOR0;
-#endif
+	#endif
 	float4 coord : TEXCOORD0;
 	float4 spos	: TEXCOORD1;
 	float4 screen_pos : TEXCOORD2;
-#ifdef USE_FOG
+	#ifdef USE_FOG
 	float3 fogCoord : TEXCOORD3;
-#endif
-
+	#endif
+	float4 HPOS : SV_Position;
 };
 
 #ifdef USE_FOG

@@ -15,13 +15,13 @@ struct VertexIN
 
 struct VertexOut
 {
-    float4 HPOS		 : SV_Position;
-	float4 COL0		 : COLOR0;
-	float4 COL1		 : COLOR1;
+    float4 COL0		 : COLOR0;
+    float4 COL1		 : COLOR1;
     float2 TEX0		 : TEXCOORD0;
     float2 TEX1		 : TEXCOORD1;
     float4 ScreenPos : TEXCOORD2;
-	float4 coordw	 : TEXCOORD3;
+    float4 coordw	 : TEXCOORD3;
+    float4 HPOS		 : SV_Position;
 };
 
 // redirection of uniform parameters to OpenGLStates

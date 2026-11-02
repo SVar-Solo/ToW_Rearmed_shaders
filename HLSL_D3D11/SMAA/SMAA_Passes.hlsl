@@ -18,24 +18,24 @@ struct SMAA_VSIn
 
 struct SMAA_EdgeVSOut
 {
-    float4 position : SV_Position;
     float2 texcoord : TEXCOORD0;
     float4 offset[3] : TEXCOORD1;
+    float4 position : SV_Position;
 };
 
 struct SMAA_BlendVSOut
 {
-    float4 position : SV_Position;
     float2 texcoord : TEXCOORD0;
     float2 pixcoord : TEXCOORD1;
     float4 offset[3] : TEXCOORD2;
+    float4 position : SV_Position;
 };
 
 struct SMAA_NeighborVSOut
 {
-    float4 position : SV_Position;
     float2 texcoord : TEXCOORD0;
     float4 offset : TEXCOORD1;
+    float4 position : SV_Position;
 };
 
 void SMAAEdgeDetectionVS_Main(in SMAA_VSIn input, out SMAA_EdgeVSOut output)

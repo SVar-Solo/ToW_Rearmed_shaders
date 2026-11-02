@@ -8,9 +8,9 @@ struct VertexIN
 
 struct VertexOUT
 {
-	float4 HPOS : SV_Position;
 	float2 TEX0 : TEXCOORD0;
 	float4 color: COLOR0;
+	float4 HPOS : SV_Position;
 };
 
 cbuffer LandDecalVS_CB0 : register(b0)

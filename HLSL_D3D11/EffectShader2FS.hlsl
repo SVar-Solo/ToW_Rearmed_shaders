@@ -3,11 +3,11 @@
 
 struct vfconn
 {
-    float4 HPOS			: SV_Position;
     float4 TEX0			: TEXCOORD0;
     float4 COL0			: TEXCOORD1;
     float4 ScreenPos	: TEXCOORD2; // screen coords
-    float  CameraDepth  : TEXCOORD3; 
+    float  CameraDepth  : TEXCOORD3;
+    float4 HPOS			: SV_Position;
 };
 
 Texture2D TexMap : register(t0);

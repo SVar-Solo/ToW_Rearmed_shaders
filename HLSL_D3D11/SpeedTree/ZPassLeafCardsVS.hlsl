@@ -73,8 +73,8 @@ float4      g_mLeafUnitSquare[4] =                  // unit leaf card that's tur
 
 struct SLeafOutput
 {
-    float4 vPosition      : SV_Position;
     float2 vBaseTexCoords : TEXCOORD0;
+    float4 vPosition      : SV_Position;
 };
 
 //-----------------------------------------------------------------------------

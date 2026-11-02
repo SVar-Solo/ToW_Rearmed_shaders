@@ -19,9 +19,9 @@ struct SFrondInput
 
 struct SFrondOutput
 {
-    float4  vPosition					: SV_Position;
     float2  vDiffuseTexCoords			: TEXCOORD0;
-	float4  zCoord						: TEXCOORD1;
+    float4  zCoord						: TEXCOORD1;
+    float4  vPosition					: SV_Position;
 };
 
 //-----------------------------------------------------------------------------

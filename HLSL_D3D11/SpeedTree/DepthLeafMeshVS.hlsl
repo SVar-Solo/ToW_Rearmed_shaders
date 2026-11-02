@@ -22,9 +22,9 @@ struct SLeafInput
 
 struct SLeafOutput
 {
-    float4 vPosition		: SV_Position;
     float2 vBaseTexCoords	: TEXCOORD0;
-	float4 zCoord			: TEXCOORD1;
+    float4 zCoord			: TEXCOORD1;
+    float4 vPosition		: SV_Position;
 };
 
 //-----------------------------------------------------------------------------

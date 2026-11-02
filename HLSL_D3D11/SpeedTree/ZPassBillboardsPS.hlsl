@@ -51,25 +51,24 @@ float g_fBillboardLightAdjust;		       // used to assist in accuracy of normal m
 };
 struct SBillboardOutput
 {
-    float4  vPosition         : SV_Position;
     float2  vDiffuseTexCoords : TEXCOORD0;
     float2  vNormalTexCoords  : TEXCOORD1;
-#ifdef BILLBOARD_NORMAL_MAPPING
+    #ifdef BILLBOARD_NORMAL_MAPPING
     float4  vNormal           : TEXCOORD2;
-#else
+    #else
     float   fNormal           : TEXCOORD2;
-#endif
+    #endif
 
 #ifdef USE_FOG
     float4  vLightAdjusts     : TEXCOORD3;
-#else
-    float3  vLightAdjusts     : TEXCOORD3; 
-#endif
+    #else
+    float3  vLightAdjusts     : TEXCOORD3;
+    #endif
 
 #ifdef USE_SHADOWS
 	float4	vShadowMapTexCoords	: TEXCOORD4;
-#endif
-
+    #endif
+    float4  vPosition         : SV_Position;
 };
 
 // #undef BILLBOARD_NORMAL_MAPPING

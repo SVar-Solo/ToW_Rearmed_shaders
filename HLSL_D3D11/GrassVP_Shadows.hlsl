@@ -13,11 +13,11 @@ struct VertexIn
 
 struct VertexOut
 {
-  float4 HPOS : SV_Position;
   float4 texCoord0 : TEXCOORD0;    //ShadowMap
-  float2 texCoord1 : TEXCOORD1;    //Mask          
+  float2 texCoord1 : TEXCOORD1;    //Mask
   float2 texCoord2 : TEXCOORD2;    //Land
   float2 texCoord3 : TEXCOORD3;    //Grass
+  float4 HPOS : SV_Position;
 };
 
 cbuffer GrassVP_Shadows_CB0 : register(b0)
