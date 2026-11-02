@@ -1,0 +1,69 @@
+// D3D11 port of CirrusCloudsVS.hlsl. Generated from the legacy HLSL source; see README.md.
+struct VertexIN
+{
+    float4 position : POSITION;
+};
+
+struct VertexOUT
+{
+	float4 HPOS : SV_Position;
+	float2 TEX0 : TEXCOORD0;
+	float2 TEX1 : TEXCOORD1;
+	float4 Data : TEXCOORD2; // x - border alpha
+};
+
+cbuffer CirrusCloudsVS_CB0 : register(b0)
+{
+column_major float4x4 ModelViewProj;
+float4 worldTime;
+float3 cameraPosition;
+
+};
+VertexOUT main(in VertexIN IN
+			) 
+{
+	VertexOUT OUT;
+	
+	float dty = worldTime.y*0.000003;
+
+	float kUV = 0.5f/(2000);
+	float genU0 = 0.0f;
+	float genkU = 4.0f;
+	float genV0 = 0.0f+dty * 0.85;
+	float genkV = 4.0f;
+
+	float3 pos = IN.position.xyz;
+	
+	//float step = 5000/7;
+	//float Hf0 = ((pos.x-step)*(pos.x-step)+(pos.y-step)*(pos.y-step)) / (250000);
+	//pos.z = (0.9f-Hf0)*1000.0f;
+
+	//pos.z = 8000;
+	//float cs = normalize(pos).z;//dot(normalize(pos), float3(0,0,1));
+	//float sn = sqrt(1-cs*cs);
+	//pos.z = (1-sn)*8000;
+	
+	//float xy2 = pos.x*pos.x/1000;//+pos.y*pos.y;
+	//pos.z = (1-sqrt( xy2/(xy2+25000) ))*4000;
+	float R = 81.92f*sqrt(2.f);
+	float x = pos.x * 0.01;
+	float y = pos.y * 0.01;
+	pos.z = sqrt(R*R-x*x-y*y)*50-3000;
+	
+
+	OUT.HPOS = mul(ModelViewProj, float4(cameraPosition+pos, 1.0));
+
+	//float newU = pos.x*kUV;
+	//float newV = pos.y*kUV+dty;
+
+	OUT.Data = float4( clamp(0, (1-abs(pos.x)/8192) * (1-abs(pos.y)/8192)*4, 1), 0, 0, 0);
+
+	float newU = pos.x/8192;
+	float newV = pos.y/8192+dty;
+	//float newUV = float2(atan(cs/sn)/5000;
+
+	OUT.TEX0 = float2(newU, newV);
+	OUT.TEX1 = float2(genU0 + genkU * newU, genV0 + genkV * newV);
+	
+	return OUT;
+} 
