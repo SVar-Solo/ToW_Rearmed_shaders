@@ -1,0 +1,43 @@
+// D3D11 port of HDRMainPS.hlsl. Generated from the legacy HLSL source; see README.md.
+// From vertex shader
+struct VertexOUT
+{
+	float2 TEX0 : TEXCOORD0;
+};
+
+Texture2D TexMap : register(t0);
+SamplerState TexMap_Sampler : register(s0); // Base texture
+
+float4 getPixel(float2 coord)
+{
+  return TexMap.Sample(TexMap_Sampler, coord);
+}
+float4 getFilteredPixel(float2 uv)
+{
+  float mgs = 1024;
+
+  uv.x *= mgs;
+  uv.y *= mgs;
+  float x = floor(uv.x);
+  float y = floor(uv.y);
+  float u_ratio = uv.x - x;
+  float v_ratio = uv.y - y;
+  float u_opposite = 1 - u_ratio;
+  float v_opposite = 1 - v_ratio;
+  float4 result = (getPixel(float2(x,y)/mgs) * u_opposite  + getPixel(float2(x+1,y)/mgs) * u_ratio) * v_opposite + 
+                  (getPixel(float2(x,y+1)/mgs) * u_opposite  + getPixel(float2(x+1,y+1)/mgs) * u_ratio) * v_ratio;
+  return result;
+}
+
+float4 main(in VertexOUT IN // From vertex shader
+			) : SV_Target0
+{
+	//float4 decalColor = getFilteredPixel(IN.TEX0.xy);
+	float4 decalColor = getPixel(IN.TEX0.xy);
+	float3 LUMINANCE_VECTOR = float3(0.2125, 0.7154, 0.0721);
+	//float des = dot(decalColor.rgb,LUMINANCE_VECTOR);
+	//decalColor.rgb = des.xxx;
+	return decalColor;
+}
+
+

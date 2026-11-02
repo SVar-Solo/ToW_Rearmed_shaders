@@ -1,0 +1,7538 @@
+{
+  "shaders": [
+    {
+      "source": "CirrusCloudsPS.hlsl",
+      "path": "HLSL_D3D11/CirrusCloudsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "HighCloudsMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "HighCloudsMap_Sampler"
+        },
+        {
+          "name": "CloudsNoiseMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "CloudsNoiseMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "CirrusCloudsPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "fCloudsMultiplier",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "CirrusCloudsPS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "CloudAmbientColor",
+              "type": "float3"
+            },
+            {
+              "name": "CloudDiffuseColor",
+              "type": "float3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "CirrusCloudsVS.hlsl",
+      "path": "HLSL_D3D11/CirrusCloudsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "CirrusCloudsVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "worldTime",
+              "type": "float4"
+            },
+            {
+              "name": "cameraPosition",
+              "type": "float3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "CumulusCloudsPS.hlsl",
+      "path": "HLSL_D3D11/CumulusCloudsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "CulumusCloudsMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "CulumusCloudsMap_Sampler"
+        },
+        {
+          "name": "SphereNormalMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "SphereNormalMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "CumulusCloudsPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "CloudAmbientColor",
+              "type": "float3"
+            },
+            {
+              "name": "CloudDiffuseColor",
+              "type": "float3"
+            },
+            {
+              "name": "SunColor",
+              "type": "float3"
+            },
+            {
+              "name": "CloudsTransparentRange",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "CumulusCloudsVS.hlsl",
+      "path": "HLSL_D3D11/CumulusCloudsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "CumulusCloudsVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            }
+          ]
+        },
+        {
+          "name": "CumulusCloudsVS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "cameraMtx",
+              "type": "float4x4"
+            }
+          ]
+        },
+        {
+          "name": "CumulusCloudsVS_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "cameraPosition",
+              "type": "float3"
+            },
+            {
+              "name": "worldTime",
+              "type": "float4"
+            },
+            {
+              "name": "SunDir",
+              "type": "float3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "DeformationFP.hlsl",
+      "path": "HLSL_D3D11/DeformationFP.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "ShadowMap",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "ShadowMap_Sampler"
+        },
+        {
+          "name": "RoadTex",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "RoadTex_Sampler"
+        },
+        {
+          "name": "BumpMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "BumpMap_Sampler"
+        },
+        {
+          "name": "SkyMap",
+          "type": "TextureCube",
+          "srv": 3,
+          "sampler": 3,
+          "sampler_name": "SkyMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "DeformationFP_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "PSSMProjTexMatrix0",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMProjTexMatrix1",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMProjTexMatrix2",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMProjTexMatrix3",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMModelTexMatrix0",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMModelTexMatrix1",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMModelTexMatrix2",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMModelTexMatrix3",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMSplit0",
+              "type": "float"
+            },
+            {
+              "name": "PSSMSplit1",
+              "type": "float"
+            },
+            {
+              "name": "PSSMSplit2",
+              "type": "float"
+            },
+            {
+              "name": "PSSMSplit3",
+              "type": "float"
+            },
+            {
+              "name": "PSSMWidth",
+              "type": "float"
+            },
+            {
+              "name": "fSkyMultiplier",
+              "type": "float4"
+            }
+          ]
+        },
+        {
+          "name": "DeformationFP_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "Ka",
+              "type": "float4"
+            },
+            {
+              "name": "Kd",
+              "type": "float4"
+            },
+            {
+              "name": "LightDir",
+              "type": "float3"
+            }
+          ]
+        },
+        {
+          "name": "DeformationFP_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "SpecularAmount",
+              "type": "float"
+            },
+            {
+              "name": "BumpAmount",
+              "type": "float"
+            },
+            {
+              "name": "SunSpecularColor",
+              "type": "float3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "DeformationVP.hlsl",
+      "path": "HLSL_D3D11/DeformationVP.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "DeformationVP_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "CamPos",
+              "type": "float3"
+            },
+            {
+              "name": "LightDir",
+              "type": "float3"
+            }
+          ]
+        },
+        {
+          "name": "DeformationVP_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            }
+          ]
+        },
+        {
+          "name": "DeformationVP_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "cSimpleDensity",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "DeformationVP_CB3",
+          "slot": 3,
+          "fields": [
+            {
+              "name": "CamPos",
+              "type": "float3"
+            }
+          ]
+        },
+        {
+          "name": "DeformationVP_CB4",
+          "slot": 4,
+          "fields": [
+            {
+              "name": "cTexScale",
+              "type": "float"
+            },
+            {
+              "name": "cFogHBounds",
+              "type": "float4"
+            },
+            {
+              "name": "cFogABAB",
+              "type": "float4"
+            },
+            {
+              "name": "CosSin",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "EffDebugPS.hlsl",
+      "path": "HLSL_D3D11/EffDebugPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": []
+    },
+    {
+      "source": "EffDebugVS.hlsl",
+      "path": "HLSL_D3D11/EffDebugVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "EffDebugVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "EffectShader2FS.hlsl",
+      "path": "HLSL_D3D11/EffectShader2FS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "TexMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "TexMap_Sampler"
+        },
+        {
+          "name": "DepthMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "DepthMap_Sampler"
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "EffectShader2VS.hlsl",
+      "path": "HLSL_D3D11/EffectShader2VS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "EffectShader2VS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            },
+            {
+              "name": "halTextureMatrix0",
+              "type": "float4x4"
+            },
+            {
+              "name": "SunColorScale",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "EffectShaderFS.hlsl",
+      "path": "HLSL_D3D11/EffectShaderFS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "TexMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "TexMap_Sampler"
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "EffectShaderVS.hlsl",
+      "path": "HLSL_D3D11/EffectShaderVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "EffectShaderVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "halTextureMatrix0",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "FarTreeFP.hlsl",
+      "path": "HLSL_D3D11/FarTreeFP.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "TreeTex",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "TreeTex_Sampler"
+        },
+        {
+          "name": "SkyMap",
+          "type": "TextureCube",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "SkyMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "FarTreeFP_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "fSkyMultiplier",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "FarTreeVP.hlsl",
+      "path": "HLSL_D3D11/FarTreeVP.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "FarTreeVP_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "LightVector",
+              "type": "float3"
+            },
+            {
+              "name": "DiffuseColor",
+              "type": "float3"
+            },
+            {
+              "name": "AmbientColor",
+              "type": "float3"
+            },
+            {
+              "name": "CameraPos",
+              "type": "float3"
+            }
+          ]
+        },
+        {
+          "name": "FarTreeVP_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "cSimpleDensity",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "FarTreeVP_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "CamPos",
+              "type": "float3"
+            },
+            {
+              "name": "cTexScale",
+              "type": "float"
+            },
+            {
+              "name": "cFogHBounds",
+              "type": "float4"
+            },
+            {
+              "name": "cFogABAB",
+              "type": "float4"
+            },
+            {
+              "name": "CosSin",
+              "type": "float4"
+            }
+          ]
+        },
+        {
+          "name": "FarTreeVP_CB3",
+          "slot": 3,
+          "fields": [
+            {
+              "name": "koeffNdotL",
+              "type": "float3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "FogTest.hlsl",
+      "path": "HLSL_D3D11/FogTest.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "FogTest_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            }
+          ]
+        },
+        {
+          "name": "FogTest_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "CustomMatrix",
+              "type": "float4x4"
+            }
+          ]
+        },
+        {
+          "name": "FogTest_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "CamPos",
+              "type": "float3"
+            },
+            {
+              "name": "cTexScale",
+              "type": "float"
+            },
+            {
+              "name": "cFogHBounds",
+              "type": "float4"
+            },
+            {
+              "name": "cFogABAB",
+              "type": "float4"
+            }
+          ]
+        },
+        {
+          "name": "FogTest_CB3",
+          "slot": 3,
+          "fields": [
+            {
+              "name": "cSimpleDensity",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "FogTest_CB4",
+          "slot": 4,
+          "fields": [
+            {
+              "name": "CosSin",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "FogTestFS.hlsl",
+      "path": "HLSL_D3D11/FogTestFS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "SkyMap",
+          "type": "TextureCube",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "SkyMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "FogTestFS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "fSkyMultiplier",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "GrassDepthPassPS.hlsl",
+      "path": "HLSL_D3D11/GrassDepthPassPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "VGrassTex",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "VGrassTex_Sampler"
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "GrassDepthPassVS.hlsl",
+      "path": "HLSL_D3D11/GrassDepthPassVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "GrassDepthPassVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "GrassFP.hlsl",
+      "path": "HLSL_D3D11/GrassFP.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "RoundMaskTex",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "RoundMaskTex_Sampler"
+        },
+        {
+          "name": "MaskMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "MaskMap_Sampler"
+        },
+        {
+          "name": "LandMap",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "LandMap_Sampler"
+        },
+        {
+          "name": "GrassMap",
+          "type": "Texture2D",
+          "srv": 3,
+          "sampler": 3,
+          "sampler_name": "GrassMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "GrassFP_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "kBlend",
+              "type": "float"
+            },
+            {
+              "name": "Ka",
+              "type": "float4"
+            },
+            {
+              "name": "Kd",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "GrassFP_Shadows.hlsl",
+      "path": "HLSL_D3D11/GrassFP_Shadows.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "ShadowMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "ShadowMap_Sampler"
+        },
+        {
+          "name": "MaskMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "MaskMap_Sampler"
+        },
+        {
+          "name": "LandMap",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "LandMap_Sampler"
+        },
+        {
+          "name": "GrassMap",
+          "type": "Texture2D",
+          "srv": 3,
+          "sampler": 3,
+          "sampler_name": "GrassMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "GrassFP_Shadows_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "PSSMProjTexMatrix0",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMProjTexMatrix1",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMProjTexMatrix2",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMProjTexMatrix3",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMSplit0",
+              "type": "float"
+            },
+            {
+              "name": "PSSMSplit1",
+              "type": "float"
+            },
+            {
+              "name": "PSSMSplit2",
+              "type": "float"
+            },
+            {
+              "name": "PSSMSplit3",
+              "type": "float"
+            },
+            {
+              "name": "PSSMWidth",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "GrassFP_Shadows_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "Ka",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "GrassMainPassPS.hlsl",
+      "path": "HLSL_D3D11/GrassMainPassPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "GBufferTex",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "GBufferTex_Sampler"
+        },
+        {
+          "name": "VGrassTex",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "VGrassTex_Sampler"
+        },
+        {
+          "name": "LandTex",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "LandTex_Sampler"
+        },
+        {
+          "name": "MegaNormalMap",
+          "type": "Texture2D",
+          "srv": 4,
+          "sampler": 4,
+          "sampler_name": "MegaNormalMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "GrassMainPassPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightAmbient",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightScale",
+              "type": "float3"
+            },
+            {
+              "name": "LightDir",
+              "type": "float3"
+            }
+          ]
+        },
+        {
+          "name": "GrassMainPassPS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "gRTSize",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "GrassMainPassVS.hlsl",
+      "path": "HLSL_D3D11/GrassMainPassVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "GrassMainPassVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "GrassVP.hlsl",
+      "path": "HLSL_D3D11/GrassVP.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "GrassVP_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "CamPos",
+              "type": "float3"
+            },
+            {
+              "name": "dH",
+              "type": "float"
+            },
+            {
+              "name": "dXdY",
+              "type": "float2"
+            },
+            {
+              "name": "MaxRadius",
+              "type": "float"
+            },
+            {
+              "name": "S_TexGenVecMain",
+              "type": "float4"
+            },
+            {
+              "name": "T_TexGenVecMain",
+              "type": "float4"
+            },
+            {
+              "name": "S_TexGenVecNoise",
+              "type": "float4"
+            },
+            {
+              "name": "T_TexGenVecNoise",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "GrassVP_Shadows.hlsl",
+      "path": "HLSL_D3D11/GrassVP_Shadows.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "GrassVP_Shadows_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "ShadowMapProjTexMatrix",
+              "type": "float4x4"
+            },
+            {
+              "name": "S_TexGenVecMain",
+              "type": "float4"
+            },
+            {
+              "name": "T_TexGenVecMain",
+              "type": "float4"
+            },
+            {
+              "name": "S_TexGenVecNoise",
+              "type": "float4"
+            },
+            {
+              "name": "T_TexGenVecNoise",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "HDRBloomBlurPS.hlsl",
+      "path": "HLSL_D3D11/HDRBloomBlurPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "TexMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "TexMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "HDRBloomBlurPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "avSampleOffsets",
+              "type": "float2[MAX_SAMPLES]"
+            },
+            {
+              "name": "avSampleWeights",
+              "type": "float4[MAX_SAMPLES]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "HDRBrightPassFilterPS.hlsl",
+      "path": "HLSL_D3D11/HDRBrightPassFilterPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "TexMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "TexMap_Sampler"
+        },
+        {
+          "name": "TexMap2",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "TexMap2_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "HDRBrightPassFilterPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "dataHDR",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "HDRCalculateAdaptedLumPS.hlsl",
+      "path": "HLSL_D3D11/HDRCalculateAdaptedLumPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "TexMap1",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "TexMap1_Sampler"
+        },
+        {
+          "name": "TexMap2",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "TexMap2_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "HDRCalculateAdaptedLumPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "fElapsedTimeEyeLimit",
+              "type": "float3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "HDRClearPS.hlsl",
+      "path": "HLSL_D3D11/HDRClearPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "HDRClearPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "color",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "HDRFinalPS.hlsl",
+      "path": "HLSL_D3D11/HDRFinalPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "TexMap1",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "TexMap1_Sampler"
+        },
+        {
+          "name": "TexMap2",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "TexMap2_Sampler"
+        },
+        {
+          "name": "BloomMap",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "BloomMap_Sampler"
+        },
+        {
+          "name": "DepthMap",
+          "type": "Texture2D",
+          "srv": 3,
+          "sampler": 3,
+          "sampler_name": "DepthMap_Sampler"
+        },
+        {
+          "name": "SkyCube",
+          "type": "TextureCube",
+          "srv": 4,
+          "sampler": 4,
+          "sampler_name": "SkyCube_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "HDRFinalPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "CamModelViewInv",
+              "type": "float4x4"
+            },
+            {
+              "name": "Unproject",
+              "type": "float2"
+            },
+            {
+              "name": "CamPos",
+              "type": "float3"
+            },
+            {
+              "name": "cTexScale",
+              "type": "float"
+            },
+            {
+              "name": "cFogHBounds",
+              "type": "float4"
+            },
+            {
+              "name": "cFogABAB",
+              "type": "float4"
+            },
+            {
+              "name": "CosSin",
+              "type": "float4"
+            },
+            {
+              "name": "fSkyMultiplier",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "HDRFinalPS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "cSimpleDensity",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "HDRFinalPS_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "dataHDR",
+              "type": "float4"
+            },
+            {
+              "name": "bloomTexSize",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "HDRFinalVS.hlsl",
+      "path": "HLSL_D3D11/HDRFinalVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "HDRFinalVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "pixelSize",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "HDRMainPS.hlsl",
+      "path": "HLSL_D3D11/HDRMainPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "TexMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "TexMap_Sampler"
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "HDRMainVS.hlsl",
+      "path": "HLSL_D3D11/HDRMainVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "HDRMainVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "pixelSize",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "HDRResampleAvgLumExpPS.hlsl",
+      "path": "HLSL_D3D11/HDRResampleAvgLumExpPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "TexMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "TexMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "HDRResampleAvgLumExpPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "avSampleOffsets",
+              "type": "float2[MAX_SAMPLES]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "HDRResampleAvgLumPS.hlsl",
+      "path": "HLSL_D3D11/HDRResampleAvgLumPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "TexMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "TexMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "HDRResampleAvgLumPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "avSampleOffsets",
+              "type": "float2[MAX_SAMPLES]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "HDRSampleAvgLumPS.hlsl",
+      "path": "HLSL_D3D11/HDRSampleAvgLumPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "TexMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "TexMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "HDRSampleAvgLumPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "avSampleOffsets",
+              "type": "float2[MAX_SAMPLES]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "HDRScalePS.hlsl",
+      "path": "HLSL_D3D11/HDRScalePS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "TexMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "TexMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "HDRScalePS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "avSampleOffsets",
+              "type": "float2[16]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "HFLandFP.hlsl",
+      "path": "HLSL_D3D11/HFLandFP.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "LandTex",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "LandTex_Sampler"
+        },
+        {
+          "name": "LandCommonNoiseTex",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "LandCommonNoiseTex_Sampler"
+        },
+        {
+          "name": "ShadowMap",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "ShadowMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "HFLandFP_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "Ka",
+              "type": "float4"
+            },
+            {
+              "name": "Kd",
+              "type": "float4"
+            }
+          ]
+        },
+        {
+          "name": "HFLandFP_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "koeffNdotL",
+              "type": "float3"
+            }
+          ]
+        },
+        {
+          "name": "HFLandFP_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "PSSMProjTexMatrix0",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMProjTexMatrix1",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMProjTexMatrix2",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMProjTexMatrix3",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMSplit0",
+              "type": "float"
+            },
+            {
+              "name": "PSSMSplit1",
+              "type": "float"
+            },
+            {
+              "name": "PSSMSplit2",
+              "type": "float"
+            },
+            {
+              "name": "PSSMSplit3",
+              "type": "float"
+            },
+            {
+              "name": "PSSMWidth",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "HFLandVP.hlsl",
+      "path": "HLSL_D3D11/HFLandVP.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "HFLandVP_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "S_TexGenVecMain",
+              "type": "float4"
+            },
+            {
+              "name": "T_TexGenVecMain",
+              "type": "float4"
+            }
+          ]
+        },
+        {
+          "name": "HFLandVP_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "commonNoiseTile",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "HFLandVP_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "ShadowMapProjTexMatrix",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "LandDecalPS.hlsl",
+      "path": "HLSL_D3D11/LandDecalPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "DiffuseMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "DiffuseMap_Sampler"
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "LandDecalVS.hlsl",
+      "path": "HLSL_D3D11/LandDecalVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "LandDecalVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "LandDepthPassPS.hlsl",
+      "path": "HLSL_D3D11/LandDepthPassPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "typeMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "typeMap_Sampler"
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "LandDepthPassVS.hlsl",
+      "path": "HLSL_D3D11/LandDepthPassVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "LandDepthPassVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "LandZPassFS.hlsl",
+      "path": "HLSL_D3D11/LandZPassFS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": []
+    },
+    {
+      "source": "LandZPassVS.hlsl",
+      "path": "HLSL_D3D11/LandZPassVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "LandZPassVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "LinesPS.hlsl",
+      "path": "HLSL_D3D11/LinesPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": []
+    },
+    {
+      "source": "LinesVS.hlsl",
+      "path": "HLSL_D3D11/LinesVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "LinesVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "Proj",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "MegaGenIndirectionPS.hlsl",
+      "path": "HLSL_D3D11/MegaGenIndirectionPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "MegaGenIndirectionPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "fScaleDist",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "MegaGenIndirectionVS.hlsl",
+      "path": "HLSL_D3D11/MegaGenIndirectionVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "MegaGenIndirectionVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "texGenData",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "MegaPlanePS.hlsl",
+      "path": "HLSL_D3D11/MegaPlanePS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "IndirTex",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "IndirTex_Sampler"
+        },
+        {
+          "name": "MegaCacheTex",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "MegaCacheTex_Sampler"
+        },
+        {
+          "name": "GBufferTex",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "GBufferTex_Sampler"
+        },
+        {
+          "name": "typeMap",
+          "type": "Texture2D",
+          "srv": 3,
+          "sampler": 3,
+          "sampler_name": "typeMap_Sampler"
+        },
+        {
+          "name": "megaNoise",
+          "type": "Texture2D",
+          "srv": 4,
+          "sampler": 4,
+          "sampler_name": "megaNoise_Sampler"
+        },
+        {
+          "name": "maskDSDT",
+          "type": "Texture2D",
+          "srv": 5,
+          "sampler": 5,
+          "sampler_name": "maskDSDT_Sampler"
+        },
+        {
+          "name": "SkyMap",
+          "type": "TextureCube",
+          "srv": 6,
+          "sampler": 6,
+          "sampler_name": "SkyMap_Sampler"
+        },
+        {
+          "name": "NormalMap",
+          "type": "Texture2D",
+          "srv": 7,
+          "sampler": 7,
+          "sampler_name": "NormalMap_Sampler"
+        },
+        {
+          "name": "CommonNoise",
+          "type": "Texture2D",
+          "srv": 8,
+          "sampler": 8,
+          "sampler_name": "CommonNoise_Sampler"
+        },
+        {
+          "name": "FarMainTex",
+          "type": "Texture2D",
+          "srv": 9,
+          "sampler": 9,
+          "sampler_name": "FarMainTex_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "MegaPlanePS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "MGT_TILE_SIZE",
+              "type": "float3"
+            }
+          ]
+        },
+        {
+          "name": "MegaPlanePS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "SunDir",
+              "type": "float3"
+            }
+          ]
+        },
+        {
+          "name": "MegaPlanePS_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "commonNoiseTile",
+              "type": "float"
+            },
+            {
+              "name": "koeffNdotL",
+              "type": "float3"
+            },
+            {
+              "name": "fSkyMultiplier",
+              "type": "float"
+            },
+            {
+              "name": "SunDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "SunAmbient",
+              "type": "float3"
+            }
+          ]
+        },
+        {
+          "name": "MegaPlanePS_CB3",
+          "slot": 3,
+          "fields": [
+            {
+              "name": "fClipPlaneZ",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "MegaPlanePS_CB4",
+          "slot": 4,
+          "fields": [
+            {
+              "name": "gRTSize",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "MegaPlaneVS.hlsl",
+      "path": "HLSL_D3D11/MegaPlaneVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "MegaPlaneVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            },
+            {
+              "name": "cameraPosition",
+              "type": "float3"
+            }
+          ]
+        },
+        {
+          "name": "MegaPlaneVS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "cSimpleDensity",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "MegaPlaneVS_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "CamPos",
+              "type": "float3"
+            },
+            {
+              "name": "cTexScale",
+              "type": "float"
+            },
+            {
+              "name": "cFogHBounds",
+              "type": "float4"
+            },
+            {
+              "name": "cFogABAB",
+              "type": "float4"
+            },
+            {
+              "name": "CosSin",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "ObjectsDepthPassPS.hlsl",
+      "path": "HLSL_D3D11/ObjectsDepthPassPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "decal",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "decal_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "ObjectsDepthPassPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "fAlphatest",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "ObjectsDepthPassVS.hlsl",
+      "path": "HLSL_D3D11/ObjectsDepthPassVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "ObjectsDepthPassVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            },
+            {
+              "name": "halTextureMatrix0",
+              "type": "float4x4"
+            },
+            {
+              "name": "BonesMatrix",
+              "type": "float4x4[40]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "ObjectsOnePassPS.hlsl",
+      "path": "HLSL_D3D11/ObjectsOnePassPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "decal",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "decal_Sampler"
+        },
+        {
+          "name": "BumpMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "BumpMap_Sampler"
+        },
+        {
+          "name": "GBufferTex",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "GBufferTex_Sampler"
+        },
+        {
+          "name": "SkyMap",
+          "type": "TextureCube",
+          "srv": 3,
+          "sampler": 3,
+          "sampler_name": "SkyMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "ObjectsOnePassPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "koeffNdotL",
+              "type": "float3"
+            },
+            {
+              "name": "fSkyMultiplier",
+              "type": "float"
+            },
+            {
+              "name": "gRTSize",
+              "type": "float2"
+            }
+          ]
+        },
+        {
+          "name": "ObjectsOnePassPS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "AmbientColor",
+              "type": "float4"
+            }
+          ]
+        },
+        {
+          "name": "ObjectsOnePassPS_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "SpecularColor",
+              "type": "float4"
+            }
+          ]
+        },
+        {
+          "name": "ObjectsOnePassPS_CB3",
+          "slot": 3,
+          "fields": [
+            {
+              "name": "DiffuseColor",
+              "type": "float4"
+            },
+            {
+              "name": "ColorScale",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "ObjectsOnePassVS.hlsl",
+      "path": "HLSL_D3D11/ObjectsOnePassVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "ObjectsOnePassVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "LightDir",
+              "type": "float3"
+            }
+          ]
+        },
+        {
+          "name": "ObjectsOnePassVS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "ViewDir",
+              "type": "float3"
+            }
+          ]
+        },
+        {
+          "name": "ObjectsOnePassVS_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "halTextureMatrix0",
+              "type": "float4x4"
+            },
+            {
+              "name": "MatrixObjectToWorld",
+              "type": "float4x4"
+            }
+          ]
+        },
+        {
+          "name": "ObjectsOnePassVS_CB3",
+          "slot": 3,
+          "fields": [
+            {
+              "name": "cSimpleDensity",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "ObjectsOnePassVS_CB4",
+          "slot": 4,
+          "fields": [
+            {
+              "name": "CamPos",
+              "type": "float3"
+            },
+            {
+              "name": "cTexScale",
+              "type": "float"
+            },
+            {
+              "name": "cFogHBounds",
+              "type": "float4"
+            },
+            {
+              "name": "cFogABAB",
+              "type": "float4"
+            },
+            {
+              "name": "CosSin",
+              "type": "float4"
+            }
+          ]
+        },
+        {
+          "name": "ObjectsOnePassVS_CB5",
+          "slot": 5,
+          "fields": [
+            {
+              "name": "BonesMatrix",
+              "type": "float4x4[40]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "ObjectsZPassFS.hlsl",
+      "path": "HLSL_D3D11/ObjectsZPassFS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "decal",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "decal_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "ObjectsZPassFS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "fAlphatest",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "ObjectsZPassVS.hlsl",
+      "path": "HLSL_D3D11/ObjectsZPassVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "ObjectsZPassVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            },
+            {
+              "name": "halTextureMatrix0",
+              "type": "float4x4"
+            },
+            {
+              "name": "BonesMatrix",
+              "type": "float4x4[40]"
+            },
+            {
+              "name": "MatrixObjectToWorld",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "PostBlurPS.hlsl",
+      "path": "HLSL_D3D11/PostBlurPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "TexMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "TexMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "PostBlurPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "avSampleOffsets",
+              "type": "float2[MAX_SAMPLES]"
+            },
+            {
+              "name": "avSampleWeights",
+              "type": "float4[MAX_SAMPLES]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "PostVS.hlsl",
+      "path": "HLSL_D3D11/PostVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "PostVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "PixelSize",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "RainPS.hlsl",
+      "path": "HLSL_D3D11/RainPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": []
+    },
+    {
+      "source": "RainVS.hlsl",
+      "path": "HLSL_D3D11/RainVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "RainVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "RoadFP.hlsl",
+      "path": "HLSL_D3D11/RoadFP.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "RoadTex",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "RoadTex_Sampler"
+        },
+        {
+          "name": "BumpMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "BumpMap_Sampler"
+        },
+        {
+          "name": "GBufferTex",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "GBufferTex_Sampler"
+        },
+        {
+          "name": "SkyMap",
+          "type": "TextureCube",
+          "srv": 3,
+          "sampler": 3,
+          "sampler_name": "SkyMap_Sampler"
+        },
+        {
+          "name": "MegaNormalMap",
+          "type": "Texture2D",
+          "srv": 4,
+          "sampler": 4,
+          "sampler_name": "MegaNormalMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "RoadFP_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "Ka",
+              "type": "float4"
+            },
+            {
+              "name": "Kd",
+              "type": "float4"
+            },
+            {
+              "name": "koeffNdotL",
+              "type": "float3"
+            },
+            {
+              "name": "fSkyMultiplier",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "RoadFP_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "SpecularPower",
+              "type": "float"
+            },
+            {
+              "name": "BumpAmount",
+              "type": "float"
+            },
+            {
+              "name": "SunSpecularColor",
+              "type": "float3"
+            }
+          ]
+        },
+        {
+          "name": "RoadFP_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "gRTSize",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "RoadVP.hlsl",
+      "path": "HLSL_D3D11/RoadVP.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "RoadVP_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "CamPos",
+              "type": "float3"
+            }
+          ]
+        },
+        {
+          "name": "RoadVP_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "LightDir",
+              "type": "float3"
+            },
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            }
+          ]
+        },
+        {
+          "name": "RoadVP_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "ShadowMapProjTexMatrix",
+              "type": "float4x4"
+            }
+          ]
+        },
+        {
+          "name": "RoadVP_CB3",
+          "slot": 3,
+          "fields": [
+            {
+              "name": "cSimpleDensity",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "RoadVP_CB4",
+          "slot": 4,
+          "fields": [
+            {
+              "name": "CamPos",
+              "type": "float3"
+            }
+          ]
+        },
+        {
+          "name": "RoadVP_CB5",
+          "slot": 5,
+          "fields": [
+            {
+              "name": "cTexScale",
+              "type": "float"
+            },
+            {
+              "name": "cFogHBounds",
+              "type": "float4"
+            },
+            {
+              "name": "cFogABAB",
+              "type": "float4"
+            },
+            {
+              "name": "CosSin",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SSAO_Blur_PS.hlsl",
+      "path": "HLSL_D3D11/SSAO_Blur_PS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "BlurSrcSampler",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "BlurSrcSampler_Sampler"
+        },
+        {
+          "name": "zMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "zMap_Sampler"
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "SSAO_Blur_VS.hlsl",
+      "path": "HLSL_D3D11/SSAO_Blur_VS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "SSAO_Blur_VS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "pixelSize",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SSAO_Downsample_PS.hlsl",
+      "path": "HLSL_D3D11/SSAO_Downsample_PS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "sceneDepthBuffer",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "sceneDepthBuffer_Sampler"
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "SSAO_Downsample_VS.hlsl",
+      "path": "HLSL_D3D11/SSAO_Downsample_VS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "SSAO_Downsample_VS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "pixelSize",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SSAO_PS.hlsl",
+      "path": "HLSL_D3D11/SSAO_PS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "DepthMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "DepthMap_Sampler"
+        },
+        {
+          "name": "RandSample",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "RandSample_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "SSAO_PS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_vScreenData",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SSAO_VS.hlsl",
+      "path": "HLSL_D3D11/SSAO_VS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "SSAO_VS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "pixelSize",
+              "type": "float2"
+            },
+            {
+              "name": "Proj",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SSFogCopy_PS.hlsl",
+      "path": "HLSL_D3D11/SSFogCopy_PS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "TexMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "TexMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "SSFogCopy_PS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "fSkyMultiplier",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SSFog_PS.hlsl",
+      "path": "HLSL_D3D11/SSFog_PS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "DepthMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "DepthMap_Sampler"
+        },
+        {
+          "name": "SkyCube",
+          "type": "TextureCube",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "SkyCube_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "SSFog_PS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "CamModelViewInv",
+              "type": "float4x4"
+            },
+            {
+              "name": "Unproject",
+              "type": "float2"
+            },
+            {
+              "name": "CamPos",
+              "type": "float3"
+            },
+            {
+              "name": "cTexScale",
+              "type": "float"
+            },
+            {
+              "name": "cFogHBounds",
+              "type": "float4"
+            },
+            {
+              "name": "cFogABAB",
+              "type": "float4"
+            },
+            {
+              "name": "CosSin",
+              "type": "float4"
+            },
+            {
+              "name": "fSkyMultiplier",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "SSFog_PS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "cSimpleDensity",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SSFog_VS.hlsl",
+      "path": "HLSL_D3D11/SSFog_VS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "SSFog_VS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "PixelSize",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SSSBlur_PS.hlsl",
+      "path": "HLSL_D3D11/SSSBlur_PS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "TexMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "TexMap_Sampler"
+        },
+        {
+          "name": "DepthMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "DepthMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "SSSBlur_PS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "SampleWeights",
+              "type": "float[MAX_SAMPLES]"
+            },
+            {
+              "name": "SampleOffsets",
+              "type": "float2[MAX_SAMPLES]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SSSBlur_VS.hlsl",
+      "path": "HLSL_D3D11/SSSBlur_VS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "SSSBlur_VS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "PixelSize",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SSShadow_PS.hlsl",
+      "path": "HLSL_D3D11/SSShadow_PS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "DepthMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "DepthMap_Sampler"
+        },
+        {
+          "name": "ShadowMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "ShadowMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "SSShadow_PS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "CamModelViewInv",
+              "type": "float4x4"
+            },
+            {
+              "name": "Unproject",
+              "type": "float2"
+            },
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            },
+            {
+              "name": "CamModelView",
+              "type": "float4x4"
+            },
+            {
+              "name": "CamProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "CamModelViewInv",
+              "type": "float4x4"
+            },
+            {
+              "name": "CamProjInv",
+              "type": "float4x4"
+            },
+            {
+              "name": "FrustumV0",
+              "type": "float3"
+            },
+            {
+              "name": "FrustumV1",
+              "type": "float3"
+            },
+            {
+              "name": "FrustumV2",
+              "type": "float3"
+            },
+            {
+              "name": "FrustumV3",
+              "type": "float3"
+            },
+            {
+              "name": "PSSMProjTexMatrix0",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMProjTexMatrix1",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMProjTexMatrix2",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMProjTexMatrix3",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMModelTexMatrix0",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMModelTexMatrix1",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMModelTexMatrix2",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMModelTexMatrix3",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMModelTexMatrix0o",
+              "type": "float4"
+            },
+            {
+              "name": "PSSMModelTexMatrix1o",
+              "type": "float4"
+            },
+            {
+              "name": "PSSMModelTexMatrix2o",
+              "type": "float4"
+            },
+            {
+              "name": "PSSMModelTexMatrix3o",
+              "type": "float4"
+            },
+            {
+              "name": "PSSMSplit0",
+              "type": "float"
+            },
+            {
+              "name": "PSSMSplit1",
+              "type": "float"
+            },
+            {
+              "name": "PSSMSplit2",
+              "type": "float"
+            },
+            {
+              "name": "PSSMSplit3",
+              "type": "float"
+            },
+            {
+              "name": "PSSMSplitN",
+              "type": "float4"
+            },
+            {
+              "name": "PSSMFadeDist",
+              "type": "float"
+            },
+            {
+              "name": "PSSMWidth",
+              "type": "float"
+            },
+            {
+              "name": "PSSMFadeDist_PSSMWidth",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SSShadow_VS.hlsl",
+      "path": "HLSL_D3D11/SSShadow_VS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "SSShadow_VS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "PixelSize",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "ShadowGrassFP.hlsl",
+      "path": "HLSL_D3D11/ShadowGrassFP.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "GBufferTex",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "GBufferTex_Sampler"
+        },
+        {
+          "name": "VGrassTex",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "VGrassTex_Sampler"
+        },
+        {
+          "name": "LandTex",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "LandTex_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "ShadowGrassFP_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "Ka",
+              "type": "float4"
+            },
+            {
+              "name": "Kd",
+              "type": "float4"
+            }
+          ]
+        },
+        {
+          "name": "ShadowGrassFP_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "gRTSize",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "ShadowGrassFP2.hlsl",
+      "path": "HLSL_D3D11/ShadowGrassFP2.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "HGrassTex",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "HGrassTex_Sampler"
+        },
+        {
+          "name": "LandTex",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "LandTex_Sampler"
+        },
+        {
+          "name": "GBufferTex",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "GBufferTex_Sampler"
+        },
+        {
+          "name": "TemplateTex",
+          "type": "Texture2D",
+          "srv": 3,
+          "sampler": 3,
+          "sampler_name": "TemplateTex_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "ShadowGrassFP2_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "Ka",
+              "type": "float4"
+            },
+            {
+              "name": "Kd",
+              "type": "float4"
+            }
+          ]
+        },
+        {
+          "name": "ShadowGrassFP2_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "gRTSize",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "ShadowGrassVP.hlsl",
+      "path": "HLSL_D3D11/ShadowGrassVP.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "ShadowGrassVP_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            }
+          ]
+        },
+        {
+          "name": "ShadowGrassVP_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "ShadowMapProjTexMatrix",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "ShadowGrassVP2.hlsl",
+      "path": "HLSL_D3D11/ShadowGrassVP2.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "ShadowGrassVP2_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            }
+          ]
+        },
+        {
+          "name": "ShadowGrassVP2_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "ShadowMapProjTexMatrix",
+              "type": "float4x4"
+            }
+          ]
+        },
+        {
+          "name": "ShadowGrassVP2_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "LayerColor",
+              "type": "float4"
+            },
+            {
+              "name": "LayerDH",
+              "type": "float"
+            },
+            {
+              "name": "S_TexGenVec",
+              "type": "float4"
+            },
+            {
+              "name": "T_TexGenVec",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "ShadowWaterFP.hlsl",
+      "path": "HLSL_D3D11/ShadowWaterFP.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "ShadowMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "ShadowMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "ShadowWaterFP_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "PSSMProjTexMatrix0",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMProjTexMatrix1",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMProjTexMatrix2",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMProjTexMatrix3",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMSplit0",
+              "type": "float"
+            },
+            {
+              "name": "PSSMSplit1",
+              "type": "float"
+            },
+            {
+              "name": "PSSMSplit2",
+              "type": "float"
+            },
+            {
+              "name": "PSSMSplit3",
+              "type": "float"
+            },
+            {
+              "name": "PSSMWidth",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "ShadowWaterVP.hlsl",
+      "path": "HLSL_D3D11/ShadowWaterVP.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "ShadowWaterVP_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "ShadowMapProjTexMatrix",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SkyCubePS.hlsl",
+      "path": "HLSL_D3D11/SkyCubePS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "SkyMap",
+          "type": "TextureCube",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "SkyMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "SkyCubePS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "fSkyMultiplier",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SkyCubeVS.hlsl",
+      "path": "HLSL_D3D11/SkyCubeVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "SkyCubeVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "cameraPosition",
+              "type": "float3"
+            },
+            {
+              "name": "CosSin",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/Billboards0PS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/Billboards0PS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samBillboardDiffuseMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samBillboardDiffuseMap_Sampler"
+        },
+        {
+          "name": "samBillboardNormalMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "samBillboardNormalMap_Sampler"
+        },
+        {
+          "name": "GBufferTex",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "GBufferTex_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "Billboards0PS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightAmbient",
+              "type": "float3"
+            },
+            {
+              "name": "g_fDiffuseScale",
+              "type": "float3"
+            },
+            {
+              "name": "g_fBillboardLightAdjust",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "Billboards0PS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "g_fBillboardFadeValue",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/Billboards0VS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/Billboards0VS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "Billboards0VS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_fWindMatrixOffset",
+              "type": "float"
+            },
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[MAX_NUM_LEAF_ANGLES]"
+            },
+            {
+              "name": "g_vLightDir",
+              "type": "float3"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_vTreePos",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeRotationTrig",
+              "type": "float4"
+            },
+            {
+              "name": "g_fTreeScale",
+              "type": "float"
+            },
+            {
+              "name": "g_vCameraAngles",
+              "type": "float2"
+            },
+            {
+              "name": "g_vCameraAzimuthTrig",
+              "type": "float4"
+            },
+            {
+              "name": "g_v360TexCoords",
+              "type": "float4[NUM_360_IMAGES]"
+            },
+            {
+              "name": "g_fSpecialAzimuth",
+              "type": "float"
+            },
+            {
+              "name": "g_amBBNormals",
+              "type": "float4[4]"
+            },
+            {
+              "name": "g_amBBBinormals",
+              "type": "float4[4]"
+            },
+            {
+              "name": "g_amBBTangents",
+              "type": "float4[4]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/Billboards1PS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/Billboards1PS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samBillboardDiffuseMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samBillboardDiffuseMap_Sampler"
+        },
+        {
+          "name": "samBillboardNormalMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "samBillboardNormalMap_Sampler"
+        },
+        {
+          "name": "GBufferTex",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "GBufferTex_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "Billboards1PS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightAmbient",
+              "type": "float3"
+            },
+            {
+              "name": "g_fDiffuseScale",
+              "type": "float3"
+            },
+            {
+              "name": "g_fBillboardLightAdjust",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "Billboards1PS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "g_fBillboardFadeValue",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/Billboards1VS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/Billboards1VS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "Billboards1VS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_fWindMatrixOffset",
+              "type": "float"
+            },
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[MAX_NUM_LEAF_ANGLES]"
+            },
+            {
+              "name": "g_vLightDir",
+              "type": "float3"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_vTreePos",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeRotationTrig",
+              "type": "float4"
+            },
+            {
+              "name": "g_fTreeScale",
+              "type": "float"
+            },
+            {
+              "name": "g_vCameraAngles",
+              "type": "float2"
+            },
+            {
+              "name": "g_vCameraAzimuthTrig",
+              "type": "float4"
+            },
+            {
+              "name": "g_v360TexCoords",
+              "type": "float4[NUM_360_IMAGES]"
+            },
+            {
+              "name": "g_fSpecialAzimuth",
+              "type": "float"
+            },
+            {
+              "name": "g_amBBNormals",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_amBBBinormals",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_amBBTangents",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_amBBNormals",
+              "type": "float4[4]"
+            },
+            {
+              "name": "g_amBBBinormals",
+              "type": "float4[4]"
+            },
+            {
+              "name": "g_amBBTangents",
+              "type": "float4[4]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/BillboardsPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/BillboardsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samBillboardDiffuseMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samBillboardDiffuseMap_Sampler"
+        },
+        {
+          "name": "samBillboardNormalMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "samBillboardNormalMap_Sampler"
+        },
+        {
+          "name": "GBufferTex",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "GBufferTex_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "BillboardsPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightAmbient",
+              "type": "float3"
+            },
+            {
+              "name": "g_fDiffuseScale",
+              "type": "float3"
+            },
+            {
+              "name": "g_fBillboardLightAdjust",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "BillboardsPS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "g_fBillboardFadeValue",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/BillboardsVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/BillboardsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "BillboardsVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_vLightDir",
+              "type": "float3"
+            },
+            {
+              "name": "g_vCameraPos",
+              "type": "float3"
+            },
+            {
+              "name": "g_vCameraAngles",
+              "type": "float2"
+            },
+            {
+              "name": "g_vCameraAzimuthTrig",
+              "type": "float4"
+            },
+            {
+              "name": "g_fSpecialAzimuth",
+              "type": "float"
+            },
+            {
+              "name": "g_v360TexCoords",
+              "type": "float4[NUM_360_IMAGES]"
+            },
+            {
+              "name": "g_amBBNormals",
+              "type": "float4[4]"
+            },
+            {
+              "name": "g_amBBBinormals",
+              "type": "float4[4]"
+            },
+            {
+              "name": "g_amBBTangents",
+              "type": "float4[4]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/BranchesFASTPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/BranchesFASTPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samBranchDiffuseMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samBranchDiffuseMap_Sampler"
+        },
+        {
+          "name": "samBranchNormalMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "samBranchNormalMap_Sampler"
+        },
+        {
+          "name": "samSelfShadowMap",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "samSelfShadowMap_Sampler"
+        },
+        {
+          "name": "GBufferTex",
+          "type": "Texture2D",
+          "srv": 3,
+          "sampler": 3,
+          "sampler_name": "GBufferTex_Sampler"
+        },
+        {
+          "name": "samBranchDetailMap",
+          "type": "Texture2D",
+          "srv": 4,
+          "sampler": 4,
+          "sampler_name": "samBranchDetailMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "BranchesFASTPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_fWindMatrixOffset",
+              "type": "float"
+            },
+            {
+              "name": "g_vSelfShadowMotion",
+              "type": "float2"
+            },
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightAmbient",
+              "type": "float3"
+            },
+            {
+              "name": "g_fDiffuseScale",
+              "type": "float3"
+            },
+            {
+              "name": "g_fLeafLightingAdjust",
+              "type": "float"
+            },
+            {
+              "name": "g_mModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_vTreePos",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeRotationTrig",
+              "type": "float4"
+            },
+            {
+              "name": "g_fTreeScale",
+              "type": "float"
+            },
+            {
+              "name": "g_vCameraAngles",
+              "type": "float2"
+            },
+            {
+              "name": "g_vCameraAzimuthTrig",
+              "type": "float4"
+            }
+          ]
+        },
+        {
+          "name": "BranchesFASTPS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "g_vBranchLodValues",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/BranchesFASTVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/BranchesFASTVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "BranchesFASTVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[NUM_WIND_MATRICES]"
+            },
+            {
+              "name": "g_vSelfShadowMotion",
+              "type": "float2"
+            },
+            {
+              "name": "g_vLightDir",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "g_fDiffuseScale",
+              "type": "float3"
+            },
+            {
+              "name": "g_fLeafLightingAdjust",
+              "type": "float"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_vCameraAngles",
+              "type": "float2"
+            },
+            {
+              "name": "g_vCameraAzimuthTrig",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/BranchesPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/BranchesPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samBranchDiffuseMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samBranchDiffuseMap_Sampler"
+        },
+        {
+          "name": "samBranchNormalMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "samBranchNormalMap_Sampler"
+        },
+        {
+          "name": "samSelfShadowMap",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "samSelfShadowMap_Sampler"
+        },
+        {
+          "name": "GBufferTex",
+          "type": "Texture2D",
+          "srv": 3,
+          "sampler": 3,
+          "sampler_name": "GBufferTex_Sampler"
+        },
+        {
+          "name": "samBranchDetailMap",
+          "type": "Texture2D",
+          "srv": 4,
+          "sampler": 4,
+          "sampler_name": "samBranchDetailMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "BranchesPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_fWindMatrixOffset",
+              "type": "float"
+            },
+            {
+              "name": "g_vSelfShadowMotion",
+              "type": "float2"
+            },
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightAmbient",
+              "type": "float3"
+            },
+            {
+              "name": "g_fDiffuseScale",
+              "type": "float3"
+            },
+            {
+              "name": "g_fLeafLightingAdjust",
+              "type": "float"
+            },
+            {
+              "name": "g_mModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_vTreePos",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeRotationTrig",
+              "type": "float4"
+            },
+            {
+              "name": "g_fTreeScale",
+              "type": "float"
+            },
+            {
+              "name": "g_vCameraAngles",
+              "type": "float2"
+            },
+            {
+              "name": "g_vCameraAzimuthTrig",
+              "type": "float4"
+            }
+          ]
+        },
+        {
+          "name": "BranchesPS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "g_vBranchLodValues",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/BranchesVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/BranchesVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "BranchesVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_fWindMatrixOffset",
+              "type": "float"
+            },
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[NUM_WIND_MATRICES]"
+            },
+            {
+              "name": "g_vSelfShadowMotion",
+              "type": "float2"
+            },
+            {
+              "name": "g_vLightDir",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "g_fDiffuseScale",
+              "type": "float3"
+            },
+            {
+              "name": "g_fLeafLightingAdjust",
+              "type": "float"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_vTreeMatrixRow0",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeMatrixRow1",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeMatrixRow2",
+              "type": "float4"
+            },
+            {
+              "name": "g_fTreeScale",
+              "type": "float"
+            },
+            {
+              "name": "g_vCameraAngles",
+              "type": "float2"
+            },
+            {
+              "name": "g_vCameraAzimuthTrig",
+              "type": "float4"
+            }
+          ]
+        },
+        {
+          "name": "BranchesVS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "g_vBranchLodValues",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/DepthBillboardsPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/DepthBillboardsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samBillboardDiffuseMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samBillboardDiffuseMap_Sampler"
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "SpeedTree/DepthBillboardsVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/DepthBillboardsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "DepthBillboardsVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_vLightDir",
+              "type": "float3"
+            },
+            {
+              "name": "g_vCameraPos",
+              "type": "float3"
+            },
+            {
+              "name": "g_vCameraAngles",
+              "type": "float2"
+            },
+            {
+              "name": "g_vCameraAzimuthTrig",
+              "type": "float4"
+            },
+            {
+              "name": "g_fSpecialAzimuth",
+              "type": "float"
+            },
+            {
+              "name": "g_v360TexCoords",
+              "type": "float4[NUM_360_IMAGES]"
+            },
+            {
+              "name": "g_amBBNormals",
+              "type": "float4[4]"
+            },
+            {
+              "name": "g_amBBBinormals",
+              "type": "float4[4]"
+            },
+            {
+              "name": "g_amBBTangents",
+              "type": "float4[4]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/DepthBranchesFASTPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/DepthBranchesFASTPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samBranchDiffuseMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samBranchDiffuseMap_Sampler"
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "SpeedTree/DepthBranchesFASTVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/DepthBranchesFASTVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "DepthBranchesFASTVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[NUM_WIND_MATRICES]"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_fTreeScale",
+              "type": "float"
+            },
+            {
+              "name": "g_vCameraAngles",
+              "type": "float2"
+            },
+            {
+              "name": "g_vCameraAzimuthTrig",
+              "type": "float4"
+            }
+          ]
+        },
+        {
+          "name": "DepthBranchesFASTVS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "g_vBranchLodValues",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/DepthBranchesPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/DepthBranchesPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samBranchDiffuseMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samBranchDiffuseMap_Sampler"
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "SpeedTree/DepthBranchesVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/DepthBranchesVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "DepthBranchesVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_fWindMatrixOffset",
+              "type": "float"
+            },
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[NUM_WIND_MATRICES]"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_vTreeMatrixRow0",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeMatrixRow1",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeMatrixRow2",
+              "type": "float4"
+            },
+            {
+              "name": "g_fTreeScale",
+              "type": "float"
+            },
+            {
+              "name": "g_vCameraAngles",
+              "type": "float2"
+            },
+            {
+              "name": "g_vCameraAzimuthTrig",
+              "type": "float4"
+            }
+          ]
+        },
+        {
+          "name": "DepthBranchesVS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "g_vBranchLodValues",
+              "type": "float2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/DepthFrondsFASTPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/DepthFrondsFASTPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samCompositeDiffuseLeafMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samCompositeDiffuseLeafMap_Sampler"
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "SpeedTree/DepthFrondsFASTVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/DepthFrondsFASTVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "DepthFrondsFASTVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[NUM_WIND_MATRICES]"
+            }
+          ]
+        },
+        {
+          "name": "DepthFrondsFASTVS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "g_vBranchLodValues",
+              "type": "float2"
+            }
+          ]
+        },
+        {
+          "name": "DepthFrondsFASTVS_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/DepthFrondsPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/DepthFrondsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samCompositeDiffuseLeafMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samCompositeDiffuseLeafMap_Sampler"
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "SpeedTree/DepthFrondsVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/DepthFrondsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "DepthFrondsVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_fWindMatrixOffset",
+              "type": "float"
+            },
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[NUM_WIND_MATRICES]"
+            }
+          ]
+        },
+        {
+          "name": "DepthFrondsVS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "g_vBranchLodValues",
+              "type": "float2"
+            }
+          ]
+        },
+        {
+          "name": "DepthFrondsVS_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_vTreeMatrixRow0",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeMatrixRow1",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeMatrixRow2",
+              "type": "float4"
+            },
+            {
+              "name": "g_fTreeScale",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/DepthLeafCardsFASTPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/DepthLeafCardsFASTPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samCompositeDiffuseLeafMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samCompositeDiffuseLeafMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "DepthLeafCardsFASTPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_fAlphaRef",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/DepthLeafCardsFASTVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/DepthLeafCardsFASTVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "DepthLeafCardsFASTVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[NUM_WIND_MATRICES]"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_vCameraAngles",
+              "type": "float2"
+            }
+          ]
+        },
+        {
+          "name": "DepthLeafCardsFASTVS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "g_avLeafAngles",
+              "type": "float4[MAX_NUM_LEAF_ANGLES]"
+            },
+            {
+              "name": "g_vLeafAngleScalars",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/DepthLeafCardsPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/DepthLeafCardsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samCompositeDiffuseLeafMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samCompositeDiffuseLeafMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "DepthLeafCardsPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_fAlphaRef",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/DepthLeafCardsVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/DepthLeafCardsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "DepthLeafCardsVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_fWindMatrixOffset",
+              "type": "float"
+            },
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[NUM_WIND_MATRICES]"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_vTreeMatrixRow0",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeMatrixRow1",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeMatrixRow2",
+              "type": "float4"
+            },
+            {
+              "name": "g_fTreeScale",
+              "type": "float"
+            },
+            {
+              "name": "g_vCameraAngles",
+              "type": "float2"
+            }
+          ]
+        },
+        {
+          "name": "DepthLeafCardsVS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "g_avLeafAngles",
+              "type": "float4[MAX_NUM_LEAF_ANGLES]"
+            },
+            {
+              "name": "g_vLeafAngleScalars",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/DepthLeafMeshPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/DepthLeafMeshPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samCompositeDiffuseLeafMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samCompositeDiffuseLeafMap_Sampler"
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "SpeedTree/DepthLeafMeshVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/DepthLeafMeshVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "DepthLeafMeshVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_fWindMatrixOffset",
+              "type": "float"
+            },
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[NUM_WIND_MATRICES]"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_vTreeMatrixRow0",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeMatrixRow1",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeMatrixRow2",
+              "type": "float4"
+            },
+            {
+              "name": "g_fTreeScale",
+              "type": "float"
+            },
+            {
+              "name": "g_avLeafAngles",
+              "type": "float4[MAX_NUM_LEAF_ANGLES]"
+            },
+            {
+              "name": "g_vLeafAngleScalars",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/FrondsFASTPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/FrondsFASTPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samCompositeDiffuseLeafMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samCompositeDiffuseLeafMap_Sampler"
+        },
+        {
+          "name": "samCompositeNormalLeafMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "samCompositeNormalLeafMap_Sampler"
+        },
+        {
+          "name": "samSelfShadowMap",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "samSelfShadowMap_Sampler"
+        },
+        {
+          "name": "GBufferTex",
+          "type": "Texture2D",
+          "srv": 3,
+          "sampler": 3,
+          "sampler_name": "GBufferTex_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "FrondsFASTPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightAmbient",
+              "type": "float3"
+            },
+            {
+              "name": "g_fDiffuseScale",
+              "type": "float3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/FrondsFASTVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/FrondsFASTVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "FrondsFASTVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[NUM_WIND_MATRICES]"
+            }
+          ]
+        },
+        {
+          "name": "FrondsFASTVS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "g_vBranchLodValues",
+              "type": "float2"
+            }
+          ]
+        },
+        {
+          "name": "FrondsFASTVS_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "g_vSelfShadowMotion",
+              "type": "float2"
+            }
+          ]
+        },
+        {
+          "name": "FrondsFASTVS_CB3",
+          "slot": 3,
+          "fields": [
+            {
+              "name": "g_vLightDir",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/FrondsPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/FrondsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samCompositeDiffuseLeafMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samCompositeDiffuseLeafMap_Sampler"
+        },
+        {
+          "name": "samCompositeNormalLeafMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "samCompositeNormalLeafMap_Sampler"
+        },
+        {
+          "name": "samSelfShadowMap",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "samSelfShadowMap_Sampler"
+        },
+        {
+          "name": "GBufferTex",
+          "type": "Texture2D",
+          "srv": 3,
+          "sampler": 3,
+          "sampler_name": "GBufferTex_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "FrondsPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightAmbient",
+              "type": "float3"
+            },
+            {
+              "name": "g_fDiffuseScale",
+              "type": "float3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/FrondsVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/FrondsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "FrondsVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_fWindMatrixOffset",
+              "type": "float"
+            },
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[NUM_WIND_MATRICES]"
+            }
+          ]
+        },
+        {
+          "name": "FrondsVS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "g_vBranchLodValues",
+              "type": "float2"
+            }
+          ]
+        },
+        {
+          "name": "FrondsVS_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "g_vSelfShadowMotion",
+              "type": "float2"
+            }
+          ]
+        },
+        {
+          "name": "FrondsVS_CB3",
+          "slot": 3,
+          "fields": [
+            {
+              "name": "g_vLightDir",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_vTreeMatrixRow0",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeMatrixRow1",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeMatrixRow2",
+              "type": "float4"
+            },
+            {
+              "name": "g_fTreeScale",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/LeafCardsFASTPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/LeafCardsFASTPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samCompositeDiffuseLeafMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samCompositeDiffuseLeafMap_Sampler"
+        },
+        {
+          "name": "samCompositeNormalLeafMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "samCompositeNormalLeafMap_Sampler"
+        },
+        {
+          "name": "GBufferTex",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "GBufferTex_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "LeafCardsFASTPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightAmbient",
+              "type": "float3"
+            },
+            {
+              "name": "g_fDiffuseScale",
+              "type": "float3"
+            },
+            {
+              "name": "g_fLeafLightingAdjust",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/LeafCardsFASTVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/LeafCardsFASTVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "LeafCardsFASTVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[NUM_WIND_MATRICES]"
+            },
+            {
+              "name": "g_vLightDir",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "g_vMaterialDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_vCameraAngles",
+              "type": "float2"
+            }
+          ]
+        },
+        {
+          "name": "LeafCardsFASTVS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "g_avLeafAngles",
+              "type": "float4[MAX_NUM_LEAF_ANGLES]"
+            },
+            {
+              "name": "g_vLeafAngleScalars",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/LeafCardsPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/LeafCardsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samCompositeDiffuseLeafMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samCompositeDiffuseLeafMap_Sampler"
+        },
+        {
+          "name": "samCompositeNormalLeafMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "samCompositeNormalLeafMap_Sampler"
+        },
+        {
+          "name": "GBufferTex",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "GBufferTex_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "LeafCardsPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightAmbient",
+              "type": "float3"
+            },
+            {
+              "name": "g_fDiffuseScale",
+              "type": "float3"
+            },
+            {
+              "name": "g_fLeafLightingAdjust",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/LeafCardsVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/LeafCardsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "LeafCardsVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_fWindMatrixOffset",
+              "type": "float"
+            },
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[NUM_WIND_MATRICES]"
+            },
+            {
+              "name": "g_vLightDir",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "g_vMaterialDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_vTreeMatrixRow0",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeMatrixRow1",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeMatrixRow2",
+              "type": "float4"
+            },
+            {
+              "name": "g_fTreeScale",
+              "type": "float"
+            },
+            {
+              "name": "g_vCameraAngles",
+              "type": "float2"
+            }
+          ]
+        },
+        {
+          "name": "LeafCardsVS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "g_avLeafAngles",
+              "type": "float4[MAX_NUM_LEAF_ANGLES]"
+            },
+            {
+              "name": "g_vLeafAngleScalars",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/LeafMeshFASTPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/LeafMeshFASTPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samCompositeDiffuseLeafMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samCompositeDiffuseLeafMap_Sampler"
+        },
+        {
+          "name": "samCompositeNormalLeafMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "samCompositeNormalLeafMap_Sampler"
+        },
+        {
+          "name": "GBufferTex",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "GBufferTex_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "LeafMeshFASTPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightAmbient",
+              "type": "float3"
+            },
+            {
+              "name": "g_fDiffuseScale",
+              "type": "float3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/LeafMeshFASTVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/LeafMeshFASTVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "LeafMeshFASTVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[NUM_WIND_MATRICES]"
+            },
+            {
+              "name": "g_vLightDir",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float4"
+            },
+            {
+              "name": "g_vMaterialDiffuse",
+              "type": "float4"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_avLeafAngles",
+              "type": "float4[MAX_NUM_LEAF_ANGLES]"
+            },
+            {
+              "name": "g_vLeafAngleScalars",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/LeafMeshPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/LeafMeshPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samCompositeDiffuseLeafMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samCompositeDiffuseLeafMap_Sampler"
+        },
+        {
+          "name": "samCompositeNormalLeafMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "samCompositeNormalLeafMap_Sampler"
+        },
+        {
+          "name": "GBufferTex",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "GBufferTex_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "LeafMeshPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightAmbient",
+              "type": "float3"
+            },
+            {
+              "name": "g_fDiffuseScale",
+              "type": "float3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/LeafMeshVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/LeafMeshVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "LeafMeshVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_fWindMatrixOffset",
+              "type": "float"
+            },
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[NUM_WIND_MATRICES]"
+            },
+            {
+              "name": "g_vLightDir",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float4"
+            },
+            {
+              "name": "g_vMaterialDiffuse",
+              "type": "float4"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_vTreeMatrixRow0",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeMatrixRow1",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeMatrixRow2",
+              "type": "float4"
+            },
+            {
+              "name": "g_fTreeScale",
+              "type": "float"
+            },
+            {
+              "name": "g_avLeafAngles",
+              "type": "float4[MAX_NUM_LEAF_ANGLES]"
+            },
+            {
+              "name": "g_vLeafAngleScalars",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/ZPassBillboardsPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/ZPassBillboardsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samBillboardDiffuseMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samBillboardDiffuseMap_Sampler",
+          "condition": null
+        },
+        {
+          "name": "samBillboardNormalMap",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "samBillboardNormalMap_Sampler",
+          "condition": null
+        },
+        {
+          "name": "samShadowMap",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "samShadowMap_Sampler",
+          "condition": "USE_SHADOWS"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "ZPassBillboardsPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float4"
+            },
+            {
+              "name": "g_vMaterialDiffuse",
+              "type": "float4"
+            },
+            {
+              "name": "g_fDiffuseScale",
+              "type": "float"
+            },
+            {
+              "name": "g_vMaterialAmbient",
+              "type": "float4"
+            },
+            {
+              "name": "g_fAmbientScale",
+              "type": "float"
+            },
+            {
+              "name": "g_vFogColor",
+              "type": "float4"
+            },
+            {
+              "name": "g_vFogParams",
+              "type": "float3"
+            },
+            {
+              "name": "g_fBillboardLightAdjust",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/ZPassBillboardsVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/ZPassBillboardsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "ZPassBillboardsVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_fWindMatrixOffset",
+              "type": "float"
+            },
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[MAX_NUM_LEAF_ANGLES]"
+            },
+            {
+              "name": "g_vLightDir",
+              "type": "float3"
+            },
+            {
+              "name": "g_vLightDiffuse",
+              "type": "float4"
+            },
+            {
+              "name": "g_vMaterialDiffuse",
+              "type": "float4"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_vTreePos",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeRotationTrig",
+              "type": "float4"
+            },
+            {
+              "name": "g_fTreeScale",
+              "type": "float"
+            },
+            {
+              "name": "g_vCameraAngles",
+              "type": "float2"
+            },
+            {
+              "name": "g_vCameraAzimuthTrig",
+              "type": "float4"
+            }
+          ]
+        },
+        {
+          "name": "ZPassBillboardsVS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "g_v360TexCoords",
+              "type": "float4[NUM_360_IMAGES]"
+            },
+            {
+              "name": "g_fSpecialAzimuth",
+              "type": "float"
+            },
+            {
+              "name": "g_amBBNormals",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_amBBBinormals",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_amBBTangents",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_amBBNormals",
+              "type": "float4[4]"
+            },
+            {
+              "name": "g_amBBBinormals",
+              "type": "float4[4]"
+            },
+            {
+              "name": "g_amBBTangents",
+              "type": "float4[4]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/ZPassBranchesFASTPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/ZPassBranchesFASTPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samBranchDiffuseMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samBranchDiffuseMap_Sampler",
+          "condition": null
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "SpeedTree/ZPassBranchesFASTVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/ZPassBranchesFASTVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "ZPassBranchesFASTVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_fWindMatrixOffset",
+              "type": "float"
+            },
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[NUM_WIND_MATRICES]"
+            },
+            {
+              "name": "g_fDiffuseScale",
+              "type": "float"
+            },
+            {
+              "name": "g_vTreePos",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeRotationTrig",
+              "type": "float4"
+            },
+            {
+              "name": "g_fTreeScale",
+              "type": "float"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_ShadowMapProj",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/ZPassBranchesPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/ZPassBranchesPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samBranchDiffuseMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samBranchDiffuseMap_Sampler",
+          "condition": null
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "SpeedTree/ZPassBranchesVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/ZPassBranchesVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "ZPassBranchesVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_fWindMatrixOffset",
+              "type": "float"
+            },
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[NUM_WIND_MATRICES]"
+            },
+            {
+              "name": "g_fDiffuseScale",
+              "type": "float"
+            },
+            {
+              "name": "g_vTreePos",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeRotationTrig",
+              "type": "float4"
+            },
+            {
+              "name": "g_fTreeScale",
+              "type": "float"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_ShadowMapProj",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/ZPassFrondsPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/ZPassFrondsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samCompositeDiffuseLeafMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samCompositeDiffuseLeafMap_Sampler",
+          "condition": null
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "SpeedTree/ZPassFrondsVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/ZPassFrondsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "ZPassFrondsVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_fWindMatrixOffset",
+              "type": "float"
+            },
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[MAX_NUM_LEAF_ANGLES]"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_vTreePos",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeRotationTrig",
+              "type": "float4"
+            },
+            {
+              "name": "g_fTreeScale",
+              "type": "float"
+            },
+            {
+              "name": "g_vCameraAngles",
+              "type": "float2"
+            },
+            {
+              "name": "g_vCameraAzimuthTrig",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/ZPassLeafCardsPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/ZPassLeafCardsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samCompositeDiffuseLeafMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samCompositeDiffuseLeafMap_Sampler",
+          "condition": null
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "SpeedTree/ZPassLeafCardsVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/ZPassLeafCardsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "ZPassLeafCardsVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_fWindMatrixOffset",
+              "type": "float"
+            },
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[MAX_NUM_LEAF_ANGLES]"
+            },
+            {
+              "name": "g_vTreePos",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeRotationTrig",
+              "type": "float4"
+            },
+            {
+              "name": "g_fTreeScale",
+              "type": "float"
+            },
+            {
+              "name": "g_vCameraAngles",
+              "type": "float2"
+            }
+          ]
+        },
+        {
+          "name": "ZPassLeafCardsVS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "g_avLeafAngles",
+              "type": "float4[MAX_NUM_LEAF_ANGLES]"
+            },
+            {
+              "name": "g_vLeafAngleScalars",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SpeedTree/ZPassLeafMeshPS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/ZPassLeafMeshPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "samCompositeDiffuseLeafMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "samCompositeDiffuseLeafMap_Sampler",
+          "condition": null
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "SpeedTree/ZPassLeafMeshVS.hlsl",
+      "path": "HLSL_D3D11/SpeedTree/ZPassLeafMeshVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "ZPassLeafMeshVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "g_fWindMatrixOffset",
+              "type": "float"
+            },
+            {
+              "name": "g_amWindMatrices",
+              "type": "float4x4[MAX_NUM_LEAF_ANGLES]"
+            },
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "g_vTreePos",
+              "type": "float4"
+            },
+            {
+              "name": "g_vTreeRotationTrig",
+              "type": "float4"
+            },
+            {
+              "name": "g_fTreeScale",
+              "type": "float"
+            },
+            {
+              "name": "g_vCameraAngles",
+              "type": "float2"
+            }
+          ]
+        },
+        {
+          "name": "ZPassLeafMeshVS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "g_avLeafAngles",
+              "type": "float4[MAX_NUM_LEAF_ANGLES]"
+            },
+            {
+              "name": "g_vLeafAngleScalars",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SunPS.hlsl",
+      "path": "HLSL_D3D11/SunPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "DiffuseMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "DiffuseMap_Sampler"
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "SunVS.hlsl",
+      "path": "HLSL_D3D11/SunVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "SunVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "realPosition",
+              "type": "float4"
+            },
+            {
+              "name": "rescale",
+              "type": "float4"
+            },
+            {
+              "name": "realColor",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "TestShaderFS.hlsl",
+      "path": "HLSL_D3D11/TestShaderFS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "TexMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "TexMap_Sampler"
+        }
+      ],
+      "cbuffers": []
+    },
+    {
+      "source": "TestShaderVS.hlsl",
+      "path": "HLSL_D3D11/TestShaderVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "TestShaderVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "halTextureMatrix0",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "TreeFP.hlsl",
+      "path": "HLSL_D3D11/TreeFP.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "ShadowMap",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "ShadowMap_Sampler"
+        },
+        {
+          "name": "BumpTex",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "BumpTex_Sampler"
+        },
+        {
+          "name": "TreeTex",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "TreeTex_Sampler"
+        },
+        {
+          "name": "TreeTex",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "TreeTex_Sampler"
+        },
+        {
+          "name": "SkyMap",
+          "type": "TextureCube",
+          "srv": 3,
+          "sampler": 3,
+          "sampler_name": "SkyMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "TreeFP_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "PSSMProjTexMatrix0",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMProjTexMatrix1",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMProjTexMatrix2",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMProjTexMatrix3",
+              "type": "float4x4"
+            },
+            {
+              "name": "PSSMSplit0",
+              "type": "float"
+            },
+            {
+              "name": "PSSMSplit1",
+              "type": "float"
+            },
+            {
+              "name": "PSSMSplit2",
+              "type": "float"
+            },
+            {
+              "name": "PSSMSplit3",
+              "type": "float"
+            },
+            {
+              "name": "PSSMWidth",
+              "type": "float"
+            },
+            {
+              "name": "fSkyMultiplier",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "TreeFP_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "SunAmbientColor",
+              "type": "float3"
+            },
+            {
+              "name": "SunDiffuseColor",
+              "type": "float3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "TreeTrunkPS.hlsl",
+      "path": "HLSL_D3D11/TreeTrunkPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "TexMap",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "TexMap_Sampler"
+        },
+        {
+          "name": "SkyMap",
+          "type": "TextureCube",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "SkyMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "TreeTrunkPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "fSkyMultiplier",
+              "type": "float"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "TreeTrunkVS.hlsl",
+      "path": "HLSL_D3D11/TreeTrunkVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "TreeTrunkVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            }
+          ]
+        },
+        {
+          "name": "TreeTrunkVS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "cSimpleDensity",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "TreeTrunkVS_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "CamPos",
+              "type": "float3"
+            },
+            {
+              "name": "cTexScale",
+              "type": "float"
+            },
+            {
+              "name": "cFogHBounds",
+              "type": "float4"
+            },
+            {
+              "name": "cFogABAB",
+              "type": "float4"
+            },
+            {
+              "name": "CosSin",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "TreeVP.hlsl",
+      "path": "HLSL_D3D11/TreeVP.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "TreeVP_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            }
+          ]
+        },
+        {
+          "name": "TreeVP_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelViewInverse",
+              "type": "float4x4"
+            },
+            {
+              "name": "Proj",
+              "type": "float4x4"
+            }
+          ]
+        },
+        {
+          "name": "TreeVP_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "LightVector",
+              "type": "float3"
+            },
+            {
+              "name": "Ka",
+              "type": "float"
+            },
+            {
+              "name": "Kd",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "TreeVP_CB3",
+          "slot": 3,
+          "fields": [
+            {
+              "name": "ShadowMapProjTexMatrix",
+              "type": "float4x4"
+            }
+          ]
+        },
+        {
+          "name": "TreeVP_CB4",
+          "slot": 4,
+          "fields": [
+            {
+              "name": "cSimpleDensity",
+              "type": "float"
+            }
+          ]
+        },
+        {
+          "name": "TreeVP_CB5",
+          "slot": 5,
+          "fields": [
+            {
+              "name": "CamPos",
+              "type": "float3"
+            },
+            {
+              "name": "cTexScale",
+              "type": "float"
+            },
+            {
+              "name": "cFogHBounds",
+              "type": "float4"
+            },
+            {
+              "name": "cFogABAB",
+              "type": "float4"
+            },
+            {
+              "name": "CosSin",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "WaterPS.hlsl",
+      "path": "HLSL_D3D11/WaterPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "Tex0",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "Tex0_Sampler"
+        },
+        {
+          "name": "Tex1",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "Tex1_Sampler"
+        },
+        {
+          "name": "Tex2",
+          "type": "TextureCube",
+          "srv": 2,
+          "sampler": 2,
+          "sampler_name": "Tex2_Sampler"
+        },
+        {
+          "name": "TexDSDT",
+          "type": "Texture2D",
+          "srv": 3,
+          "sampler": 3,
+          "sampler_name": "TexDSDT_Sampler"
+        },
+        {
+          "name": "ReflectionTex",
+          "type": "Texture2D",
+          "srv": 4,
+          "sampler": 4,
+          "sampler_name": "ReflectionTex_Sampler"
+        },
+        {
+          "name": "DepthMap",
+          "type": "Texture2D",
+          "srv": 5,
+          "sampler": 5,
+          "sampler_name": "DepthMap_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "WaterPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ReflectMatrix",
+              "type": "float4x4"
+            },
+            {
+              "name": "WaterLightDir",
+              "type": "float4"
+            },
+            {
+              "name": "AmbientColor",
+              "type": "float4"
+            },
+            {
+              "name": "SunDiffuseColor",
+              "type": "float4"
+            },
+            {
+              "name": "SunSpecularColor",
+              "type": "float4"
+            },
+            {
+              "name": "MatOffset",
+              "type": "float4"
+            }
+          ]
+        },
+        {
+          "name": "WaterPS_CB1",
+          "slot": 1,
+          "fields": [
+            {
+              "name": "WaterReflectiveColor",
+              "type": "float4"
+            },
+            {
+              "name": "WaterSpecularColor",
+              "type": "float4"
+            },
+            {
+              "name": "WaterDiffuseColor",
+              "type": "float4"
+            },
+            {
+              "name": "WaterAmbientColor",
+              "type": "float4"
+            },
+            {
+              "name": "WaterDeepColor",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "WaterReflectionPS.hlsl",
+      "path": "HLSL_D3D11/WaterReflectionPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "samplers": [
+        {
+          "name": "Tex0",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "Tex0_Sampler"
+        },
+        {
+          "name": "Tex1",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 1,
+          "sampler_name": "Tex1_Sampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "WaterReflectionPS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "MatOffset",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "WaterTexCoord.hlsl",
+      "path": "HLSL_D3D11/WaterTexCoord.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "WaterTexCoord_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "CustomProjMatrix",
+              "type": "float4x4"
+            },
+            {
+              "name": "TextureScale",
+              "type": "float"
+            },
+            {
+              "name": "TexMtx",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "WaterVP.hlsl",
+      "path": "HLSL_D3D11/WaterVP.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "WaterVP_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "S_TexGenVec0",
+              "type": "float4"
+            },
+            {
+              "name": "T_TexGenVec0",
+              "type": "float4"
+            },
+            {
+              "name": "CamPosition",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "WaterVS.hlsl",
+      "path": "HLSL_D3D11/WaterVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "samplers": [],
+      "cbuffers": [
+        {
+          "name": "WaterVS_CB0",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "ModelViewProj",
+              "type": "float4x4"
+            },
+            {
+              "name": "ModelView",
+              "type": "float4x4"
+            },
+            {
+              "name": "S_TexGenVec0",
+              "type": "float4"
+            },
+            {
+              "name": "T_TexGenVec0",
+              "type": "float4"
+            },
+            {
+              "name": "CamPosition",
+              "type": "float4"
+            },
+            {
+              "name": "ReflectMatrix",
+              "type": "float4x4"
+            },
+            {
+              "name": "TextureScale",
+              "type": "float"
+            },
+            {
+              "name": "TexMtx",
+              "type": "float4x4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "SMAA/SMAA.fx (techniques) + SMAA/SMAA.hlsl",
+      "path": "HLSL_D3D11/SMAA/SMAA_Passes.hlsl",
+      "stage": "multi",
+      "entry": "multiple",
+      "samplers": [
+        {
+          "name": "colorTex",
+          "type": "Texture2D",
+          "srv": 0,
+          "sampler": 0,
+          "sampler_name": "LinearSampler/PointSampler"
+        },
+        {
+          "name": "depthTex",
+          "type": "Texture2D",
+          "srv": 1,
+          "sampler": 0,
+          "sampler_name": "LinearSampler"
+        },
+        {
+          "name": "edgesTex",
+          "type": "Texture2D",
+          "srv": 2,
+          "sampler": 0,
+          "sampler_name": "LinearSampler"
+        },
+        {
+          "name": "blendTex",
+          "type": "Texture2D",
+          "srv": 3,
+          "sampler": 0,
+          "sampler_name": "LinearSampler"
+        },
+        {
+          "name": "areaTex",
+          "type": "Texture2D",
+          "srv": 4,
+          "sampler": 0,
+          "sampler_name": "LinearSampler"
+        },
+        {
+          "name": "searchTex",
+          "type": "Texture2D",
+          "srv": 5,
+          "sampler": 1,
+          "sampler_name": "PointSampler"
+        }
+      ],
+      "cbuffers": [
+        {
+          "name": "SMAA_Metrics",
+          "slot": 0,
+          "fields": [
+            {
+              "name": "SMAA_RT_METRICS",
+              "type": "float4"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "targets": [
+    {
+      "source": "HLSL_D3D11/CirrusCloudsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/CirrusCloudsPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/CirrusCloudsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/CirrusCloudsVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/CumulusCloudsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/CumulusCloudsPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/CumulusCloudsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/CumulusCloudsVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/DeformationFP.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/DeformationFP.cso"
+    },
+    {
+      "source": "HLSL_D3D11/DeformationVP.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/DeformationVP.cso"
+    },
+    {
+      "source": "HLSL_D3D11/EffDebugPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/EffDebugPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/EffDebugVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/EffDebugVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/EffectShader2FS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/EffectShader2FS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/EffectShader2VS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/EffectShader2VS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/EffectShaderFS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/EffectShaderFS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/EffectShaderVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/EffectShaderVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/FarTreeFP.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/FarTreeFP.cso"
+    },
+    {
+      "source": "HLSL_D3D11/FarTreeVP.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/FarTreeVP.cso"
+    },
+    {
+      "source": "HLSL_D3D11/FogTest.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/FogTest.cso"
+    },
+    {
+      "source": "HLSL_D3D11/FogTestFS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/FogTestFS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/GrassDepthPassPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/GrassDepthPassPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/GrassDepthPassVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/GrassDepthPassVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/GrassFP.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/GrassFP.cso"
+    },
+    {
+      "source": "HLSL_D3D11/GrassFP_Shadows.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/GrassFP_Shadows.cso"
+    },
+    {
+      "source": "HLSL_D3D11/GrassMainPassPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/GrassMainPassPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/GrassMainPassVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/GrassMainPassVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/GrassVP.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/GrassVP.cso"
+    },
+    {
+      "source": "HLSL_D3D11/GrassVP_Shadows.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/GrassVP_Shadows.cso"
+    },
+    {
+      "source": "HLSL_D3D11/HDRBloomBlurPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/HDRBloomBlurPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/HDRBrightPassFilterPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/HDRBrightPassFilterPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/HDRCalculateAdaptedLumPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/HDRCalculateAdaptedLumPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/HDRClearPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/HDRClearPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/HDRFinalPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/HDRFinalPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/HDRFinalVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/HDRFinalVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/HDRMainPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/HDRMainPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/HDRMainVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/HDRMainVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/HDRResampleAvgLumExpPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/HDRResampleAvgLumExpPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/HDRResampleAvgLumPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/HDRResampleAvgLumPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/HDRSampleAvgLumPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/HDRSampleAvgLumPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/HDRScalePS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/HDRScalePS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/HFLandFP.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/HFLandFP.cso"
+    },
+    {
+      "source": "HLSL_D3D11/HFLandVP.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/HFLandVP.cso"
+    },
+    {
+      "source": "HLSL_D3D11/LandDecalPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/LandDecalPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/LandDecalVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/LandDecalVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/LandDepthPassPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/LandDepthPassPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/LandDepthPassVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/LandDepthPassVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/LandZPassFS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/LandZPassFS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/LandZPassVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/LandZPassVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/LinesPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/LinesPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/LinesVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/LinesVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/MegaGenIndirectionPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/MegaGenIndirectionPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/MegaGenIndirectionVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/MegaGenIndirectionVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/MegaPlanePS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/MegaPlanePS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/MegaPlaneVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/MegaPlaneVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/ObjectsDepthPassPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/ObjectsDepthPassPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/ObjectsDepthPassVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/ObjectsDepthPassVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/ObjectsOnePassPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/ObjectsOnePassPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/ObjectsOnePassVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/ObjectsOnePassVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/ObjectsZPassFS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/ObjectsZPassFS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/ObjectsZPassVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/ObjectsZPassVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/PostBlurPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/PostBlurPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/PostVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/PostVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/RainPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/RainPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/RainVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/RainVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/RoadFP.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/RoadFP.cso"
+    },
+    {
+      "source": "HLSL_D3D11/RoadVP.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/RoadVP.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SSAO_Blur_PS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SSAO_Blur_PS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SSAO_Blur_VS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SSAO_Blur_VS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SSAO_Downsample_PS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SSAO_Downsample_PS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SSAO_Downsample_VS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SSAO_Downsample_VS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SSAO_PS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SSAO_PS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SSAO_VS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SSAO_VS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SSFogCopy_PS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SSFogCopy_PS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SSFog_PS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SSFog_PS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SSFog_VS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SSFog_VS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SSSBlur_PS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SSSBlur_PS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SSSBlur_VS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SSSBlur_VS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SSShadow_PS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SSShadow_PS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SSShadow_VS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SSShadow_VS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/ShadowGrassFP.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/ShadowGrassFP.cso"
+    },
+    {
+      "source": "HLSL_D3D11/ShadowGrassFP2.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/ShadowGrassFP2.cso"
+    },
+    {
+      "source": "HLSL_D3D11/ShadowGrassVP.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/ShadowGrassVP.cso"
+    },
+    {
+      "source": "HLSL_D3D11/ShadowGrassVP2.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/ShadowGrassVP2.cso"
+    },
+    {
+      "source": "HLSL_D3D11/ShadowWaterFP.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/ShadowWaterFP.cso"
+    },
+    {
+      "source": "HLSL_D3D11/ShadowWaterVP.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/ShadowWaterVP.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SkyCubePS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SkyCubePS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SkyCubeVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SkyCubeVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/Billboards0PS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/Billboards0PS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/Billboards0VS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/Billboards0VS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/Billboards1PS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/Billboards1PS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/Billboards1VS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/Billboards1VS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/BillboardsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/BillboardsPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/BillboardsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/BillboardsVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/BranchesFASTPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/BranchesFASTPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/BranchesFASTVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/BranchesFASTVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/BranchesPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/BranchesPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/BranchesVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/BranchesVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/DepthBillboardsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/DepthBillboardsPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/DepthBillboardsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/DepthBillboardsVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/DepthBranchesFASTPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/DepthBranchesFASTPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/DepthBranchesFASTVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/DepthBranchesFASTVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/DepthBranchesPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/DepthBranchesPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/DepthBranchesVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/DepthBranchesVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/DepthFrondsFASTPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/DepthFrondsFASTPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/DepthFrondsFASTVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/DepthFrondsFASTVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/DepthFrondsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/DepthFrondsPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/DepthFrondsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/DepthFrondsVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/DepthLeafCardsFASTPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/DepthLeafCardsFASTPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/DepthLeafCardsFASTVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/DepthLeafCardsFASTVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/DepthLeafCardsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/DepthLeafCardsPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/DepthLeafCardsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/DepthLeafCardsVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/DepthLeafMeshPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/DepthLeafMeshPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/DepthLeafMeshVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/DepthLeafMeshVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/FrondsFASTPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/FrondsFASTPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/FrondsFASTVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/FrondsFASTVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/FrondsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/FrondsPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/FrondsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/FrondsVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/LeafCardsFASTPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/LeafCardsFASTPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/LeafCardsFASTVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/LeafCardsFASTVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/LeafCardsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/LeafCardsPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/LeafCardsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/LeafCardsVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/LeafMeshFASTPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/LeafMeshFASTPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/LeafMeshFASTVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/LeafMeshFASTVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/LeafMeshPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/LeafMeshPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/LeafMeshVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/LeafMeshVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/ZPassBillboardsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/ZPassBillboardsPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/ZPassBillboardsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/ZPassBillboardsVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/ZPassBranchesFASTPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/ZPassBranchesFASTPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/ZPassBranchesFASTVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/ZPassBranchesFASTVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/ZPassBranchesPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/ZPassBranchesPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/ZPassBranchesVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/ZPassBranchesVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/ZPassFrondsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/ZPassFrondsPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/ZPassFrondsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/ZPassFrondsVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/ZPassLeafCardsPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/ZPassLeafCardsPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/ZPassLeafCardsVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/ZPassLeafCardsVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/ZPassLeafMeshPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/ZPassLeafMeshPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SpeedTree/ZPassLeafMeshVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SpeedTree/ZPassLeafMeshVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SunPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/SunPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SunVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/SunVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/TestShaderFS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/TestShaderFS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/TestShaderVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/TestShaderVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/TreeFP.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/TreeFP.cso"
+    },
+    {
+      "source": "HLSL_D3D11/TreeTrunkPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/TreeTrunkPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/TreeTrunkVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/TreeTrunkVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/TreeVP.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/TreeVP.cso"
+    },
+    {
+      "source": "HLSL_D3D11/WaterPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/WaterPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/WaterReflectionPS.hlsl",
+      "stage": "ps",
+      "entry": "main",
+      "output": "Compiled/WaterReflectionPS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/WaterTexCoord.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/WaterTexCoord.cso"
+    },
+    {
+      "source": "HLSL_D3D11/WaterVP.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/WaterVP.cso"
+    },
+    {
+      "source": "HLSL_D3D11/WaterVS.hlsl",
+      "stage": "vs",
+      "entry": "main",
+      "output": "Compiled/WaterVS.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SMAA/SMAA_Passes.hlsl",
+      "stage": "vs",
+      "entry": "SMAAEdgeDetectionVS_Main",
+      "output": "Compiled/SMAA/SMAAEdgeDetectionVS_Main.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SMAA/SMAA_Passes.hlsl",
+      "stage": "vs",
+      "entry": "SMAABlendingWeightCalculationVS_Main",
+      "output": "Compiled/SMAA/SMAABlendingWeightCalculationVS_Main.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SMAA/SMAA_Passes.hlsl",
+      "stage": "vs",
+      "entry": "SMAANeighborhoodBlendingVS_Main",
+      "output": "Compiled/SMAA/SMAANeighborhoodBlendingVS_Main.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SMAA/SMAA_Passes.hlsl",
+      "stage": "ps",
+      "entry": "SMAALumaEdgeDetectionPS_Main",
+      "output": "Compiled/SMAA/SMAALumaEdgeDetectionPS_Main.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SMAA/SMAA_Passes.hlsl",
+      "stage": "ps",
+      "entry": "SMAAColorEdgeDetectionPS_Main",
+      "output": "Compiled/SMAA/SMAAColorEdgeDetectionPS_Main.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SMAA/SMAA_Passes.hlsl",
+      "stage": "ps",
+      "entry": "SMAADepthEdgeDetectionPS_Main",
+      "output": "Compiled/SMAA/SMAADepthEdgeDetectionPS_Main.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SMAA/SMAA_Passes.hlsl",
+      "stage": "ps",
+      "entry": "SMAABlendingWeightCalculationPS_Main",
+      "output": "Compiled/SMAA/SMAABlendingWeightCalculationPS_Main.cso"
+    },
+    {
+      "source": "HLSL_D3D11/SMAA/SMAA_Passes.hlsl",
+      "stage": "ps",
+      "entry": "SMAANeighborhoodBlendingPS_Main",
+      "output": "Compiled/SMAA/SMAANeighborhoodBlendingPS_Main.cso"
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+// D3D11 port of CumulusCloudsVS.hlsl. Generated from the legacy HLSL source; see README.md.
+//#define SIMPLE_SPRITE
+struct VertexIN
+{
+    float4 position : POSITION;
+    float4 data: TEXCOORD0;
+};
+
+struct VertexOUT
+{
+	float4 HPOS : SV_Position;
+	float4 TEX0 : TEXCOORD0;
+	float3 Dist : TEXCOORD1;
+	float3 UpDir : TEXCOORD2;
+	float3 SunDir : TEXCOORD3;
+};
+
+cbuffer CumulusCloudsVS_CB0 : register(b0)
+{
+column_major float4x4 ModelViewProj;
+};
+#ifdef SIMPLE_SPRITE
+cbuffer CumulusCloudsVS_CB1 : register(b1)
+{
+	column_major float4x4 cameraMtx;
+};
+#endif
+cbuffer CumulusCloudsVS_CB2 : register(b2)
+{
+float3 cameraPosition;
+float4 worldTime;
+float3 SunDir;
+
+};
+VertexOUT main(in VertexIN IN
+			) 
+{
+#ifdef PROFILE_ARBVP1
+	float4x4 ModelViewProj = glstate.matrix.mvp;
+#endif
+
+	VertexOUT OUT;
+#ifdef SIMPLE_SPRITE
+	float3x3 camRot = float3x3(cameraMtx[0].xyz, cameraMtx[1].xyz, cameraMtx[2].xyz);
+#else
+	float3x3 camRot;
+	float3 camPos = cameraPosition;
+	camRot[1] = float3(0,0,1.00001);
+	camRot[2] = normalize(cameraPosition-IN.position.xyz);
+	camRot[0] = normalize(cross(camRot[2], camRot[1]));
+	camRot[1] = cross(camRot[0], camRot[2]);
+#endif
+
+	float R = IN.position.w*2;
+	float3x3 spriteRotAndScale = float3x3(float3(IN.data.z,-IN.data.w,0), float3(IN.data.w,IN.data.z,0), float3(0,0,1));
+
+	camRot = mul(spriteRotAndScale, camRot);
+	float3 sideVector = camRot[0];
+	float3 upVector = camRot[1];
+
+	float3x3 mtxWorldToTangentSpace;
+	mtxWorldToTangentSpace[0] = normalize(camRot[0].xyz);
+	mtxWorldToTangentSpace[1] = normalize(camRot[1].xyz);
+	mtxWorldToTangentSpace[2] = normalize(camRot[2].xyz);
+	OUT.UpDir = mul(mtxWorldToTangentSpace, float3(0,0,1));
+	OUT.SunDir = mul(mtxWorldToTangentSpace, SunDir);
+
+	float3 pos = IN.position.xyz + sideVector*(IN.data.x*2-1) + upVector*(IN.data.y*2-1);
+
+	// pos.xy -= (worldTime*0.01f).xx-float2(3000,3000);
+	
+	OUT.HPOS = mul(ModelViewProj, float4(pos, 1.0));
+	OUT.Dist.x = length(cameraPosition-IN.position.xyz);
+	OUT.Dist.y = OUT.HPOS.w;
+	OUT.Dist.z = IN.position.w;
+
+	OUT.TEX0 = float4(IN.data.x, IN.data.y, IN.data.x, IN.data.y);
+
+	//OUT.SunDir = camRot[2];//*0.5+0.5;
+	
+	return OUT;
+} 
