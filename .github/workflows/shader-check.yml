@@ -27,6 +27,8 @@ jobs:
   fxc:
     name: fxc SM${{ matrix.shader_model }}
     runs-on: windows-latest
+    env:
+      PYTHONIOENCODING: utf-8
     strategy:
       fail-fast: false
       matrix:

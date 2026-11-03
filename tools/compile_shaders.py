@@ -219,6 +219,42 @@ def count_warnings(text: str) -> int:
     return sum(1 for line in text.splitlines() if re.search(r"\bwarning\b", line, re.IGNORECASE))
 
 
+def github_escape(value: str) -> str:
+    return value.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+
+
+def emit_github_error(message: str, file: str = "", title: str = "") -> None:
+    if os.environ.get("GITHUB_ACTIONS") != "true":
+        return
+    props = []
+    if file:
+        props.append("file=" + github_escape(file))
+    if title:
+        props.append("title=" + github_escape(title))
+    prefix = "::error" + (",".join(props) and " " + ",".join(props) or "") + "::"
+    print(prefix + github_escape(message), flush=True)
+
+
+def write_github_summary(ok: int, failed: list[dict], warnings_total: int, skipped: list[str]) -> None:
+    summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not summary_path:
+        return
+    lines = [
+        "## Shader compile check",
+        "",
+        f"- OK: {ok}",
+        f"- Failed: {len(failed)}",
+        f"- Warnings: {warnings_total}",
+        f"- Skipped library files: {len(skipped)}",
+    ]
+    if failed:
+        lines += ["", "| Source | Entry | Profile | Error |", "|---|---|---|---|"]
+        for result in failed[:100]:
+            message = result["message"].replace("|", "\\|").replace("\n", " ")
+            lines.append(f"| {result['source']} | {result['entry']} | {result['profile']} | {message} |")
+    Path(summary_path).write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def output_path(out_dir: Path, target: Target, profile: str, entry: str, defines: list[str]) -> Path:
     base = out_dir / Path(target.rel_source).parent
     suffix = ""
@@ -313,6 +349,12 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str]) -> int:
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError):
+            pass
+
     args = build_parser().parse_args(argv)
     shader_dir = Path(args.shader_dir).expanduser().resolve()
 
@@ -388,6 +430,12 @@ def main(argv: list[str]) -> int:
             continue
 
         failed.append(result)
+        workspace = Path(os.environ.get("GITHUB_WORKSPACE", str(port_root.parent)))
+        try:
+            annotation_file = target.source.relative_to(workspace).as_posix()
+        except ValueError:
+            annotation_file = target.rel_source
+        emit_github_error(result["message"], annotation_file, f"{profile} {target.entry}")
         print(f"ОШИБКА  {target.rel_source} :: {target.entry} [{profile}]")
         for line in result["log"].splitlines():
             if line.strip():
@@ -400,6 +448,8 @@ def main(argv: list[str]) -> int:
         print("Пропущено (нет отдельной цели в манифесте — библиотеки/заголовки):")
         for item in skipped:
             print(f"  {item}")
+
+    write_github_summary(ok, failed, warnings_total, skipped)
 
     if args.report:
         report_path = Path(args.report).expanduser().resolve()
@@ -433,4 +483,8 @@ def main(argv: list[str]) -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    try:
+        sys.exit(main(sys.argv[1:]))
+    except Exception as exc:
+        emit_github_error(f"compile_shaders.py failed: {type(exc).__name__}: {exc}")
+        raise
