@@ -1,4 +1,8 @@
 // D3D11 port of MegaPlanePS.hlsl. Generated from the legacy HLSL source; see README.md.
+// Legacy fog variant alias: FOG1/USE_FOG1 must see the same resources/interpolators as USE_FOG.
+#if defined(USE_FOG1) && !defined(USE_FOG)
+#define USE_FOG
+#endif
 // defines
 #define PSSM 1
 //#define USE_FOG
@@ -249,7 +253,7 @@ float4 main(in VertexOUT IN) : SV_Target0
 	result.rgb *= CommonNoisePixel.rgb*2.f;
 	
 	float2 scaleCenter = float2(0.5f, 0.5f);
-	float2 input = (IN.coord - scaleCenter) * 0.5f + scaleCenter;
+	float2 input = (IN.coord.xy - scaleCenter) * 0.5f + scaleCenter;
 	float4 simpleTex = FarMainTex.Sample(FarMainTex_Sampler, input);
 	float ndlSimple = simpleTex.a; 
 	

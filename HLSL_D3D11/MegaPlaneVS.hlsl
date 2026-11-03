@@ -1,4 +1,8 @@
 // D3D11 port of MegaPlaneVS.hlsl. Generated from the legacy HLSL source; see README.md.
+// Legacy fog variant alias: FOG1/USE_FOG1 must see the same resources/interpolators as USE_FOG.
+#if defined(USE_FOG1) && !defined(USE_FOG)
+#define USE_FOG
+#endif
 
 
 struct VertexIN
@@ -128,6 +132,8 @@ VertexOUT main(VertexIN IN)
   OUT.fogCoord = float3(0,0,0);
 #endif
 	
+#ifdef USE_FOG
     OUT.FogColor = saturate(OUT.FogColor); // D3D9 COLOR interpolator clamp
+#endif
 	return OUT;
 } 

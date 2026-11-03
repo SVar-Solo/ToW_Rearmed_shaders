@@ -121,7 +121,7 @@ VertexOut main(VertexIn IN
 
 #ifdef SPECULAR
 	//calc Half vector
-	float3 ViewDir = normalize(CamPos - pos_new);
+	float3 ViewDir = normalize(CamPos - pos_new.xyz);
 	float3 HalfVec = ViewDir + LightDir; //will be normirate in pixel shader
 
     OUT.Color1.rgb = 0.5*IN.Normal + 0.5;
@@ -171,6 +171,8 @@ VertexOut main(VertexIn IN
 #endif
 
     OUT.Color = saturate(OUT.Color); // D3D9 COLOR interpolator clamp
+#ifdef SPECULAR
     OUT.Color1 = saturate(OUT.Color1); // D3D9 COLOR interpolator clamp
+#endif
     return OUT;
 } 

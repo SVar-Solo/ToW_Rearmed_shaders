@@ -13,7 +13,7 @@ struct VertexOut
     float2 tex0 : TEXCOORD0;    //Noise bump texture
     float2 tex1 : TEXCOORD1;    //Noise bump texture
     float3 tex2 : TEXCOORD2;    //normalization cube map texture
-    float3 tex3 : TEXCOORD2;    //normalization cube map texture
+    float3 tex3 : TEXCOORD3;    //normalization cube map texture (legacy duplicate TEXCOORD2 fixed for D3D11)
     float4 pos : SV_Position;
 };
 
@@ -39,6 +39,7 @@ VertexOut main(in VertexIn IN )
 	OUT.tex1.xy = texc*3; //3.33;
 
 	OUT.tex2.xyz = (IN.position.xyz - CamPosition.xyz );
+	OUT.tex3 = float3(0, 0, 0); // unused legacy output; keep deterministic
 
     return OUT;
 } 

@@ -252,7 +252,7 @@ OutStruct main(in InStruct IN)
     //OUT.TEX2 = float4(SpriteVertexWCS.x, SpriteVertexWCS.y, SpriteVertexWCS.z*0, SpriteVertexWCS.w)/100.f;//mul(ShadowMapProjTexMatrix, new_position);
     //new_position = float4(1,1,1,1);
     OUT.TEX2 = mul(ShadowMapProjTexMatrix, new_position);
-#endif PSSM
+#endif // PSSM
 #endif  //SHADOW
 
 #ifdef FOG
@@ -302,7 +302,9 @@ OutStruct main(in InStruct IN)
 	OUT.zcoord = OUT.HPOS;
 #endif // ZPASS
 
+#ifndef ZPASS
     OUT.COL0 = saturate(OUT.COL0); // D3D9 COLOR interpolator clamp
     OUT.COL1 = saturate(OUT.COL1); // D3D9 COLOR interpolator clamp
+#endif
     return OUT;
 } 

@@ -1,4 +1,8 @@
 // D3D11 port of ObjectsOnePassVS.hlsl. Generated from the legacy HLSL source; see README.md.
+// Legacy fog variant alias: FOG1/USE_FOG1 must see the same resources/interpolators as USE_FOG.
+#if defined(USE_FOG1) && !defined(USE_FOG)
+#define USE_FOG
+#endif
 struct vertexInputs
 {
     float4 position     : POSITION;
