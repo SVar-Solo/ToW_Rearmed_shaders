@@ -1,0 +1,3879 @@
+{
+ "_comment": "Дефайны, с которыми core.dll реально компилирует шейдеры. Сгенерировано tools/gen_engine_defines.py; см. docs/SHADER_CI_DEFINE_TASK.md.",
+ "always": [
+  "SM40=1"
+ ],
+ "targets": [
+  {
+   "source": "CirrusCloudsPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "CirrusCloudsVS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "CumulusCloudsPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "CumulusCloudsVS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "DeformationFP.hlsl",
+   "defines": []
+  },
+  {
+   "source": "DeformationVP.hlsl",
+   "defines": []
+  },
+  {
+   "source": "EffDebugPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "EffDebugVS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "EffectShader2FS.hlsl",
+   "defines": [
+    "SOFT_PARTICLES"
+   ]
+  },
+  {
+   "source": "EffectShader2VS.hlsl",
+   "defines": [
+    "SOFT_PARTICLES"
+   ]
+  },
+  {
+   "source": "EffectShaderFS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "EffectShaderVS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "FarTreeFP.hlsl",
+   "defines": []
+  },
+  {
+   "source": "FarTreeVP.hlsl",
+   "defines": []
+  },
+  {
+   "source": "FogTest.hlsl",
+   "defines": [
+    "SIMPLE_FOG"
+   ]
+  },
+  {
+   "source": "FogTestFS.hlsl",
+   "defines": [
+    "SIMPLE_FOG"
+   ]
+  },
+  {
+   "source": "GrassDepthPassPS.hlsl",
+   "defines": [
+    "FULL"
+   ]
+  },
+  {
+   "source": "GrassDepthPassVS.hlsl",
+   "defines": [
+    "FULL"
+   ]
+  },
+  {
+   "source": "GrassFP.hlsl",
+   "defines": []
+  },
+  {
+   "source": "GrassFP_Shadows.hlsl",
+   "defines": []
+  },
+  {
+   "source": "GrassMainPassPS.hlsl",
+   "defines": [
+    "FULL"
+   ]
+  },
+  {
+   "source": "GrassMainPassPS.hlsl",
+   "defines": [
+    "FULL",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "GrassMainPassVS.hlsl",
+   "defines": [
+    "FULL"
+   ]
+  },
+  {
+   "source": "GrassMainPassVS.hlsl",
+   "defines": [
+    "FULL",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "GrassVP.hlsl",
+   "defines": []
+  },
+  {
+   "source": "GrassVP_Shadows.hlsl",
+   "defines": []
+  },
+  {
+   "source": "HDRBloomBlurPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "HDRBrightPassFilterPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "HDRCalculateAdaptedLumPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "HDRClearPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "HDRFinalPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "HDRFinalVS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "HDRMainPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "HDRMainVS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "HDRResampleAvgLumExpPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "HDRResampleAvgLumPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "HDRSampleAvgLumPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "HDRScalePS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "HFLandFP.hlsl",
+   "defines": []
+  },
+  {
+   "source": "HFLandVP.hlsl",
+   "defines": []
+  },
+  {
+   "source": "LandDecalPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "LandDecalVS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "LandDepthPassPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "LandDepthPassVS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "LandZPassFS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "LandZPassVS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "LinesPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "LinesVS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "MegaGenIndirectionPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "MegaGenIndirectionVS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "CLIPPING"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "USE_NOISE"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "USE_NOISE",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_NOISE"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_NOISE",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "USE_FOG",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_FOG",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "USE_NOISE",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "USE_NOISE",
+    "USE_FOG",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_NOISE",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_NOISE",
+    "USE_FOG",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "USE_BUMP"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "USE_BUMP",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_BUMP"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_BUMP",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "USE_NOISE",
+    "USE_BUMP"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "USE_NOISE",
+    "USE_BUMP",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_NOISE",
+    "USE_BUMP"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_NOISE",
+    "USE_BUMP",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "USE_FOG",
+    "USE_BUMP"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "USE_FOG",
+    "USE_BUMP",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_FOG",
+    "USE_BUMP"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_FOG",
+    "USE_BUMP",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "USE_NOISE",
+    "USE_FOG",
+    "USE_BUMP"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "USE_NOISE",
+    "USE_FOG",
+    "USE_BUMP",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_NOISE",
+    "USE_FOG",
+    "USE_BUMP"
+   ]
+  },
+  {
+   "source": "MegaPlanePS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_NOISE",
+    "USE_FOG",
+    "USE_BUMP",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "CLIPPING"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "USE_NOISE"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "USE_NOISE",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_NOISE"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_NOISE",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "USE_FOG",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_FOG",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "USE_NOISE",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "USE_NOISE",
+    "USE_FOG",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_NOISE",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_NOISE",
+    "USE_FOG",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "USE_BUMP"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "USE_BUMP",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_BUMP"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_BUMP",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "USE_NOISE",
+    "USE_BUMP"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "USE_NOISE",
+    "USE_BUMP",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_NOISE",
+    "USE_BUMP"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_NOISE",
+    "USE_BUMP",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "USE_FOG",
+    "USE_BUMP"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "USE_FOG",
+    "USE_BUMP",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_FOG",
+    "USE_BUMP"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_FOG",
+    "USE_BUMP",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "USE_NOISE",
+    "USE_FOG",
+    "USE_BUMP"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "USE_NOISE",
+    "USE_FOG",
+    "USE_BUMP",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_NOISE",
+    "USE_FOG",
+    "USE_BUMP"
+   ]
+  },
+  {
+   "source": "MegaPlaneVS.hlsl",
+   "defines": [
+    "CLIPPING",
+    "USE_NOISE",
+    "USE_FOG",
+    "USE_BUMP",
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "ObjectsDepthPassPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "ObjectsDepthPassPS.hlsl",
+   "defines": [
+    "USE_SKINNING"
+   ]
+  },
+  {
+   "source": "ObjectsDepthPassVS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "ObjectsDepthPassVS.hlsl",
+   "defines": [
+    "USE_SKINNING"
+   ]
+  },
+  {
+   "source": "ObjectsOnePassPS.hlsl",
+   "defines": [
+    "USE_SPECULAR",
+    "USE_SHADOWS"
+   ]
+  },
+  {
+   "source": "ObjectsOnePassPS.hlsl",
+   "defines": [
+    "USE_SPECULAR",
+    "USE_SHADOWS",
+    "USE_SKINNING"
+   ]
+  },
+  {
+   "source": "ObjectsOnePassVS.hlsl",
+   "defines": [
+    "USE_SPECULAR",
+    "USE_SHADOWS"
+   ]
+  },
+  {
+   "source": "ObjectsOnePassVS.hlsl",
+   "defines": [
+    "USE_SPECULAR",
+    "USE_SHADOWS",
+    "USE_SKINNING"
+   ]
+  },
+  {
+   "source": "ObjectsZPassFS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "ObjectsZPassFS.hlsl",
+   "defines": [
+    "USE_SKINNING"
+   ]
+  },
+  {
+   "source": "ObjectsZPassVS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "ObjectsZPassVS.hlsl",
+   "defines": [
+    "USE_SKINNING"
+   ]
+  },
+  {
+   "source": "PostBlurPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "PostVS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "RainPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "RainVS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "RoadFP.hlsl",
+   "defines": [
+    "SHADOW",
+    "SPECULAR",
+    "COMPAREZ",
+    "FOG"
+   ]
+  },
+  {
+   "source": "RoadFP.hlsl",
+   "defines": [
+    "SPECULAR",
+    "FOG"
+   ]
+  },
+  {
+   "source": "RoadFP.hlsl",
+   "defines": [
+    "SPECULAR",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "RoadVP.hlsl",
+   "defines": [
+    "SHADOW",
+    "SPECULAR",
+    "FOG"
+   ]
+  },
+  {
+   "source": "RoadVP.hlsl",
+   "defines": [
+    "SPECULAR",
+    "FOG"
+   ]
+  },
+  {
+   "source": "RoadVP.hlsl",
+   "defines": [
+    "SPECULAR",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "SMAA/SMAA_Passes.hlsl",
+   "defines": []
+  },
+  {
+   "source": "SSAO_Blur_PS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "SSAO_Blur_VS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "SSAO_Downsample_PS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "SSAO_Downsample_VS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "SSAO_PS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "SSAO_VS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "SSFogCopy_PS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "SSFog_PS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "SSFog_VS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "SSSBlur_PS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "SSSBlur_VS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "SSShadow_PS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "SSShadow_VS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "ShadowGrassFP.hlsl",
+   "defines": []
+  },
+  {
+   "source": "ShadowGrassFP2.hlsl",
+   "defines": []
+  },
+  {
+   "source": "ShadowGrassVP.hlsl",
+   "defines": []
+  },
+  {
+   "source": "ShadowGrassVP2.hlsl",
+   "defines": []
+  },
+  {
+   "source": "ShadowWaterFP.hlsl",
+   "defines": []
+  },
+  {
+   "source": "ShadowWaterVP.hlsl",
+   "defines": []
+  },
+  {
+   "source": "SkyCubePS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "SkyCubeVS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "SpeedTree/Billboards0PS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/Billboards0PS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/Billboards0PS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/Billboards0PS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/Billboards0VS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/Billboards0VS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/Billboards0VS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/Billboards0VS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/Billboards1PS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/Billboards1PS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/Billboards1PS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/Billboards1PS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/Billboards1VS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/Billboards1VS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/Billboards1VS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/Billboards1VS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/BillboardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/BillboardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/BillboardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/BillboardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/BillboardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/BillboardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/BillboardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/BillboardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/BranchesFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/BranchesFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/BranchesFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/BranchesFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/BranchesFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/BranchesFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/BranchesFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/BranchesFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/BranchesPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/BranchesPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/BranchesPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/BranchesPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/BranchesVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/BranchesVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/BranchesVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/BranchesVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBillboardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBillboardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBillboardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBillboardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBillboardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBillboardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBillboardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBillboardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBranchesFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBranchesFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBranchesFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBranchesFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBranchesFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBranchesFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBranchesFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBranchesFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBranchesPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBranchesPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBranchesPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBranchesPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBranchesVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBranchesVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBranchesVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthBranchesVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthFrondsFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthFrondsFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthFrondsFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthFrondsFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthFrondsFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthFrondsFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthFrondsFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthFrondsFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthFrondsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthFrondsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthFrondsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthFrondsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthFrondsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthFrondsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthFrondsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthFrondsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafCardsFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafCardsFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafCardsFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafCardsFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafCardsFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafCardsFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafCardsFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafCardsFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafCardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafCardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafCardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafCardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafCardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafCardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafCardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafCardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafMeshPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafMeshPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafMeshPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafMeshPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafMeshVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafMeshVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafMeshVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/DepthLeafMeshVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/FrondsFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/FrondsFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/FrondsFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/FrondsFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/FrondsFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/FrondsFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/FrondsFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/FrondsFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/FrondsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/FrondsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/FrondsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/FrondsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/FrondsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/FrondsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/FrondsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/FrondsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafCardsFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafCardsFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafCardsFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafCardsFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafCardsFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafCardsFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafCardsFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafCardsFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafCardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafCardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafCardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafCardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafCardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafCardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafCardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafCardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafMeshFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafMeshFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafMeshFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafMeshFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafMeshFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafMeshFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafMeshFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafMeshFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafMeshPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafMeshPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafMeshPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafMeshPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafMeshVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafMeshVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafMeshVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/LeafMeshVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBillboardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBillboardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBillboardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBillboardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBillboardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBillboardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBillboardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBillboardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBranchesFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBranchesFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBranchesFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBranchesFASTPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBranchesFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBranchesFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBranchesFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBranchesFASTVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBranchesPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBranchesPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBranchesPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBranchesPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBranchesVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBranchesVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBranchesVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassBranchesVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassFrondsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassFrondsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassFrondsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassFrondsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassFrondsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassFrondsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassFrondsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassFrondsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassLeafCardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassLeafCardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassLeafCardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassLeafCardsPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassLeafCardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassLeafCardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassLeafCardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassLeafCardsVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassLeafMeshPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassLeafMeshPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassLeafMeshPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassLeafMeshPS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassLeafMeshVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassLeafMeshVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassLeafMeshVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SpeedTree/ZPassLeafMeshVS.hlsl",
+   "defines": [
+    "USE_SHADOWS",
+    "SELF_SHADOW_LAYER",
+    "BILLBOARD_NORMAL_MAPPING",
+    "BRANCH_NORMAL_MAPPING",
+    "FROND_NORMAL_MAPPING",
+    "LEAF_NORMAL_MAPPING",
+    "NUM_WIND_MATRICES=7",
+    "MAX_NUM_LEAF_ANGLES=20",
+    "USE_FOG",
+    "SUPPORT_360_BILLBOARDS"
+   ]
+  },
+  {
+   "source": "SunPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "SunVS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "TestShaderFS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "TestShaderVS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "TreeFP.hlsl",
+   "defines": [
+    "SHADOW",
+    "COMPAREZ"
+   ]
+  },
+  {
+   "source": "TreeFP.hlsl",
+   "defines": [
+    "SHADOW",
+    "COMPAREZ",
+    "FOG"
+   ]
+  },
+  {
+   "source": "TreeFP.hlsl",
+   "defines": [
+    "FOG"
+   ]
+  },
+  {
+   "source": "TreeFP.hlsl",
+   "defines": [
+    "ZPASS"
+   ]
+  },
+  {
+   "source": "TreeTrunkPS.hlsl",
+   "defines": [
+    "ZPASS"
+   ]
+  },
+  {
+   "source": "TreeTrunkPS.hlsl",
+   "defines": [
+    "FOG"
+   ]
+  },
+  {
+   "source": "TreeTrunkPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "TreeTrunkVS.hlsl",
+   "defines": [
+    "ZPASS"
+   ]
+  },
+  {
+   "source": "TreeTrunkVS.hlsl",
+   "defines": [
+    "FOG"
+   ]
+  },
+  {
+   "source": "TreeTrunkVS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "TreeVP.hlsl",
+   "defines": [
+    "SHADOW"
+   ]
+  },
+  {
+   "source": "TreeVP.hlsl",
+   "defines": [
+    "SHADOW",
+    "FOG"
+   ]
+  },
+  {
+   "source": "TreeVP.hlsl",
+   "defines": [
+    "FOG"
+   ]
+  },
+  {
+   "source": "TreeVP.hlsl",
+   "defines": [
+    "ZPASS"
+   ]
+  },
+  {
+   "source": "WaterPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "WaterReflectionPS.hlsl",
+   "defines": []
+  },
+  {
+   "source": "WaterTexCoord.hlsl",
+   "defines": []
+  },
+  {
+   "source": "WaterVP.hlsl",
+   "defines": []
+  },
+  {
+   "source": "WaterVS.hlsl",
+   "defines": []
+  }
+ ]
+}

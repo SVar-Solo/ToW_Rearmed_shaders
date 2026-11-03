@@ -2,14 +2,15 @@
 # -*- coding: utf-8 -*-
 """Оффлайн-компиляция HLSL_D3D11 через fxc.exe без запуска игры.
 
-Скрипт проверяет те же исходники, которые лежат в HLSL_D3D11, но не подменяет
-рендерер: он не проверяет связывание VS/PS, раскладку constant buffer'ов,
-привязку SRV/sampler'ов и поведение на GPU.
+Скрипт проверяет исходники HLSL_D3D11 и не подменяет рендерер: он не проверяет
+связывание VS/PS, раскладку constant buffer'ов, привязку SRV/sampler'ов и
+поведение на GPU.
 
-По умолчанию используется Shaders.json из каталога порта. Это надёжнее, чем
-угадывать стадию по имени файла: в манифесте уже записаны stage, entry point и
-все точки входа SMAA. Профили по умолчанию — vs_4_0 / ps_4_0, как в примере
-движкового HAL. Для проверки SM5-порта можно передать --shader-model 5.
+По умолчанию используется Shaders.json из каталога порта. Если рядом лежит
+EngineDefines.json, скрипт дополнительно разворачивает варианты дефайнов, с
+которыми движок реально грузит шейдеры. Один набор дефайнов — отдельная сборка;
+наборы не склеиваются. Профили по умолчанию — vs_4_0 / ps_4_0. Для SM5 можно
+передать --shader-model 5.
 
 Файлы, которых нет в манифесте как отдельные цели компиляции, выводятся в отчёт
 как пропущенные библиотеки/заголовки. Например SMAA/SMAA.hlsl не собирается с
@@ -17,16 +18,17 @@
 
 Использование:
     python tools/compile_shaders.py HLSL_D3D11
-    python tools/compile_shaders.py HLSL_D3D11 --only MegaPlaneVS
+    python tools/compile_shaders.py HLSL_D3D11 --only MegaPlanePS
     python tools/compile_shaders.py HLSL_D3D11 --shader-model 5
     python tools/compile_shaders.py HLSL_D3D11 --define USE_FOG,USE_SHADOWS
     python tools/compile_shaders.py HLSL_D3D11 --list
+    python tools/compile_shaders.py HLSL_D3D11 --no-engine-defines
     python tools/compile_shaders.py HLSL_D3D11 --fxc "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.22621.0\\x64\\fxc.exe"
 
 Код возврата:
-    0 — все выбранные цели собрались;
+    0 — все выбранные сборки собрались;
     1 — есть ошибки компиляции;
-    2 — не найден fxc, каталог, манифест или выбранные цели.
+    2 — не найден fxc, каталог, манифест, выбранные цели или есть дрейф таблицы.
 """
 
 from __future__ import annotations
@@ -41,6 +43,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from collections import OrderedDict
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
@@ -56,11 +59,16 @@ class Target:
     rel_source: str
     stage: str
     entry: str
+    defines: tuple[str, ...] = ()
 
     def profile(self, shader_model: int, override: str = "") -> str:
         if override:
             return override
         return f"{self.stage}_{shader_model}_0"
+
+    @property
+    def variant_key(self) -> tuple[str, tuple[str, ...]]:
+        return (self.rel_source, self.defines)
 
 
 def version_key(name: str) -> tuple[int, ...]:
@@ -123,8 +131,6 @@ def is_under(path: Path, directory: Path) -> bool:
 def resolve_source(raw_source: str, repo_root: Path, port_root: Path) -> Path | None:
     raw = Path(raw_source)
     candidates = [repo_root / raw, port_root / raw]
-    # Манифест хранит пути вида HLSL_D3D11/File.hlsl. Если каталог порта был
-    # переименован при переносе в дерево игры, отбрасываем первый компонент.
     if len(raw.parts) > 1:
         candidates.append(port_root / Path(*raw.parts[1:]))
     for candidate in candidates:
@@ -133,7 +139,57 @@ def resolve_source(raw_source: str, repo_root: Path, port_root: Path) -> Path | 
     return None
 
 
-def load_targets(shader_dir: Path, only: str) -> tuple[list[Target], list[str], Path, Path]:
+def normalize_defines(values: Iterable[str]) -> list[str]:
+    result: list[str] = []
+    for value in values:
+        for part in str(value).split(","):
+            part = part.strip()
+            if not part:
+                continue
+            if not DEFINE_RE.match(part):
+                raise ValueError(f"некорректный define: {part!r}")
+            if part not in result:
+                result.append(part)
+    return result
+
+
+def defines_label(defines: Iterable[str]) -> str:
+    items = list(defines)
+    return " ".join(items) if items else "-"
+
+
+def load_engine_defines(port_root: Path, manifest: dict) -> tuple[list[str], dict[str, list[tuple[str, ...]]]]:
+    """EngineDefines.json — таблица вариантов движка. Отсутствие файла допустимо."""
+    always = normalize_defines(manifest.get("always_defines", []))
+    path = port_root / "EngineDefines.json"
+    if not path.is_file():
+        return always, {}
+
+    data = json.loads(path.read_text(encoding="utf-8-sig"))
+    always = normalize_defines(data.get("always", always))
+    records = data.get("targets")
+    if not isinstance(records, list):
+        raise ValueError(f"{path}: отсутствует массив targets")
+
+    variants: dict[str, list[tuple[str, ...]]] = {}
+    for record in records:
+        rel_source = record.get("source")
+        if not rel_source:
+            raise ValueError(f"{path}: запись без source: {record!r}")
+        source = port_root / rel_source
+        if not source.is_file():
+            raise FileNotFoundError(f"{path}: исходник из таблицы дефайнов не найден: {rel_source}")
+        defines = tuple(normalize_defines(record.get("defines", [])))
+        variants.setdefault(rel_source.replace("\\", "/"), []).append(defines)
+
+    return always, variants
+
+
+def load_targets(
+    shader_dir: Path,
+    only: str,
+    use_engine_defines: bool = True,
+) -> tuple[list[Target], list[str], Path, Path, list[str]]:
     manifest_path = find_manifest(shader_dir)
     if not manifest_path:
         raise FileNotFoundError(f"Shaders.json не найден рядом с {shader_dir}")
@@ -145,9 +201,13 @@ def load_targets(shader_dir: Path, only: str) -> tuple[list[Target], list[str], 
     if not isinstance(raw_targets, list):
         raise ValueError(f"{manifest_path}: отсутствует массив targets")
 
-    targets: list[Target] = []
+    always_defines, engine_variants = load_engine_defines(port_root, manifest)
+    if not use_engine_defines:
+        engine_variants = {}
+
+    base_targets = []
     manifest_sources: set[Path] = set()
-    needle = only.lower()
+    base_rel_sources: set[str] = set()
 
     for item in raw_targets:
         stage = item.get("stage")
@@ -162,12 +222,34 @@ def load_targets(shader_dir: Path, only: str) -> tuple[list[Target], list[str], 
         if not is_under(source, shader_dir):
             continue
 
-        manifest_sources.add(source)
         rel_source = source.relative_to(port_root).as_posix()
+        manifest_sources.add(source)
+        base_rel_sources.add(rel_source)
+        inline_defines = tuple(normalize_defines(item.get("defines", [])))
+        base_targets.append((source, rel_source, stage, entry, inline_defines))
+
+    if use_engine_defines and engine_variants:
+        relevant_engine_sources = {
+            rel for rel in engine_variants
+            if is_under((port_root / rel).resolve(), shader_dir)
+        }
+        missing = sorted(relevant_engine_sources - base_rel_sources)
+        if missing:
+            raise ValueError(
+                f"{port_root / 'EngineDefines.json'}: источники есть в таблице дефайнов, "
+                f"но отсутствуют в Shaders.json: {', '.join(missing)}"
+            )
+
+    needle = only.lower()
+    targets: list[Target] = []
+    for source, rel_source, stage, entry, inline_defines in base_targets:
         if needle and needle not in rel_source.lower() and needle not in entry.lower():
             continue
-
-        targets.append(Target(source=source, rel_source=rel_source, stage=stage, entry=entry))
+        define_sets = engine_variants.get(rel_source)
+        if define_sets is None:
+            define_sets = [inline_defines]
+        for defines in define_sets:
+            targets.append(Target(source=source, rel_source=rel_source, stage=stage, entry=entry, defines=defines))
 
     skipped: list[str] = []
     for path in sorted(shader_dir.rglob("*")):
@@ -178,20 +260,14 @@ def load_targets(shader_dir: Path, only: str) -> tuple[list[Target], list[str], 
             skipped.append(resolved.relative_to(port_root).as_posix()
                            if is_under(resolved, port_root) else str(resolved))
 
-    return targets, skipped, port_root, manifest_path
+    return targets, skipped, port_root, manifest_path, always_defines
 
 
-def normalize_defines(values: Iterable[str]) -> list[str]:
-    result: list[str] = []
-    for value in values:
-        for part in value.split(","):
-            part = part.strip()
-            if not part:
-                continue
-            if not DEFINE_RE.match(part):
-                raise ValueError(f"некорректный define: {part!r}")
-            result.append(part)
-    return result
+def group_variants(targets: list[Target]) -> "OrderedDict[tuple[str, tuple[str, ...]], list[Target]]":
+    groups: OrderedDict[tuple[str, tuple[str, ...]], list[Target]] = OrderedDict()
+    for target in targets:
+        groups.setdefault(target.variant_key, []).append(target)
+    return groups
 
 
 def decode_output(data: bytes) -> str:
@@ -231,27 +307,41 @@ def emit_github_error(message: str, file: str = "", title: str = "") -> None:
         props.append("file=" + github_escape(file))
     if title:
         props.append("title=" + github_escape(title))
-    prefix = "::error" + (",".join(props) and " " + ",".join(props) or "") + "::"
+    prefix = "::error" + (" " + ",".join(props) if props else "") + "::"
     print(prefix + github_escape(message), flush=True)
 
 
-def write_github_summary(ok: int, failed: list[dict], warnings_total: int, skipped: list[str]) -> None:
+def write_github_summary(
+    ok_builds: int,
+    failed: list[dict],
+    warnings_total: int,
+    skipped: list[str],
+    variant_count: int,
+    build_count: int,
+    unique_sources: int,
+    sources_with_defines: int,
+) -> None:
     summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
     if not summary_path:
         return
     lines = [
         "## Shader compile check",
         "",
-        f"- OK: {ok}",
-        f"- Failed: {len(failed)}",
+        f"- Variants: {variant_count}",
+        f"- Entry-point builds: {build_count}",
+        f"- OK builds: {ok_builds}",
+        f"- Failed builds: {len(failed)}",
+        f"- Unique sources: {unique_sources}",
+        f"- Sources with variant defines: {sources_with_defines}",
         f"- Warnings: {warnings_total}",
         f"- Skipped library files: {len(skipped)}",
     ]
     if failed:
-        lines += ["", "| Source | Entry | Profile | Error |", "|---|---|---|---|"]
+        lines += ["", "| Source | Entry | Profile | Defines | Error |", "|---|---|---|---|---|"]
         for result in failed[:100]:
             message = result["message"].replace("|", "\\|").replace("\n", " ")
-            lines.append(f"| {result['source']} | {result['entry']} | {result['profile']} | {message} |")
+            defines = defines_label(result.get("variant_defines", []))
+            lines.append(f"| {result['source']} | {result['entry']} | {result['profile']} | {defines} | {message} |")
     Path(summary_path).write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -259,8 +349,9 @@ def output_path(out_dir: Path, target: Target, profile: str, entry: str, defines
     base = out_dir / Path(target.rel_source).parent
     suffix = ""
     if defines:
-        digest = hashlib.sha1(",".join(defines).encode("utf-8")).hexdigest()[:8]
-        suffix = "_" + digest
+        digest = hashlib.sha1(",".join(defines).encode("utf-8")).hexdigest()[:10]
+        slug = re.sub(r"[^A-Za-z0-9_.=-]+", "_", "_".join(defines))[:80]
+        suffix = f"_{slug}_{digest}" if slug else "_" + digest
     safe_entry = re.sub(r"[^A-Za-z0-9_.-]+", "_", entry)
     return base / f"{Path(target.rel_source).stem}_{safe_entry}_{profile}{suffix}.cso"
 
@@ -271,12 +362,14 @@ def compile_one(
     profile: str,
     out_dir: Path,
     port_root: Path,
-    defines: list[str],
+    always_defines: list[str],
+    cli_defines: list[str],
     debug: bool,
     warnings_as_errors: bool,
     timeout: int,
 ) -> dict:
-    out_path = output_path(out_dir, target, profile, target.entry, defines)
+    effective_defines = normalize_defines([*always_defines, *target.defines, *cli_defines])
+    out_path = output_path(out_dir, target, profile, target.entry, effective_defines)
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     args = [fxc, "/nologo", "/T", profile, "/E", target.entry, "/Zpc"]
@@ -292,7 +385,7 @@ def compile_one(
         args += ["/O2"]
     if warnings_as_errors:
         args.append("/WX")
-    for define in defines:
+    for define in effective_defines:
         args += ["/D", define]
     args += ["/Fo", str(out_path), str(target.source)]
 
@@ -301,6 +394,9 @@ def compile_one(
         "entry": target.entry,
         "stage": target.stage,
         "profile": profile,
+        "defines": effective_defines,
+        "variant_defines": list(target.defines),
+        "always_defines": list(always_defines),
         "success": False,
         "output": str(out_path),
         "command": args,
@@ -327,7 +423,7 @@ def compile_one(
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Собрать цели HLSL_D3D11 из Shaders.json через fxc.exe без запуска игры."
+        description="Собрать цели HLSL_D3D11 из Shaders.json/EngineDefines.json через fxc.exe без запуска игры."
     )
     parser.add_argument("shader_dir", help="каталог HLSL_D3D11 или его подкаталог")
     parser.add_argument("--only", default="", help="компилировать только цели, где путь или entry содержит подстроку")
@@ -338,12 +434,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--profile", default="", choices=sorted(SUPPORTED_PROFILES),
                         help="переопределить профиль для всех выбранных целей")
     parser.add_argument("--define", action="append", default=[], metavar="NAME[=VALUE]",
-                        help="дефайн препроцессора; можно повторять или перечислять через запятую")
+                        help="дополнительный дефайн препроцессора; можно повторять или перечислять через запятую")
+    parser.add_argument("--no-engine-defines", action="store_true",
+                        help="игнорировать EngineDefines.json и собрать только базовые цели Shaders.json")
     parser.add_argument("--debug", action="store_true", help="/Od /Zi вместо /O2")
     parser.add_argument("--warnings-as-errors", action="store_true", help="добавить /WX")
-    parser.add_argument("--timeout", type=int, default=120, help="таймаут одной цели в секундах")
+    parser.add_argument("--timeout", type=int, default=120, help="таймаут одной сборки в секундах")
     parser.add_argument("--report", default="", help="записать JSON-отчёт в указанный файл")
-    parser.add_argument("--list", action="store_true", help="только показать выбранные цели, без поиска fxc")
+    parser.add_argument("--list", action="store_true", help="только показать выбранные варианты, без поиска fxc")
     parser.add_argument("--verbose", action="store_true", help="печатать успешные сборки")
     return parser
 
@@ -363,8 +461,10 @@ def main(argv: list[str]) -> int:
         return 2
 
     try:
-        targets, skipped, port_root, manifest_path = load_targets(shader_dir, args.only)
-        defines = normalize_defines(args.define)
+        targets, skipped, port_root, manifest_path, always_defines = load_targets(
+            shader_dir, args.only, use_engine_defines=not args.no_engine_defines
+        )
+        cli_defines = normalize_defines(args.define)
     except (OSError, ValueError, FileNotFoundError) as exc:
         print(str(exc), file=sys.stderr)
         return 2
@@ -373,16 +473,30 @@ def main(argv: list[str]) -> int:
         print(f"Нет целей компиляции в {shader_dir} (filter={args.only!r}).", file=sys.stderr)
         return 2
 
+    groups = group_variants(targets)
+    unique_sources = len({target.rel_source for target in targets})
+    sources_with_defines = len({target.rel_source for target in targets if target.defines})
+
     print(f"манифест: {manifest_path}")
     print(f"шейдеры:  {shader_dir}")
-    print(f"целей:    {len(targets)}")
+    print(f"целей (вариантов): {len(groups)}")
+    print(f"entry-point builds: {len(targets)}")
+    print(f"уникальных исходников: {unique_sources}; из них с дефайнами: {sources_with_defines}")
     print(f"профиль:  {args.profile or f'*_{args.shader_model}_0'}")
-    if defines:
-        print(f"defines:  {', '.join(defines)}")
+    print(f"always:   {defines_label(always_defines)}")
+    if cli_defines:
+        print(f"extra:    {defines_label(cli_defines)}")
 
     if args.list:
-        for target in targets:
-            print(f"  {target.profile(args.shader_model, args.profile):8s} {target.rel_source} :: {target.entry}")
+        for (rel_source, defines), group in groups.items():
+            if len(group) == 1:
+                target = group[0]
+                detail = f"{target.profile(args.shader_model, args.profile)} :: {target.entry}"
+            else:
+                stages = "/".join(sorted({target.stage for target in group}))
+                entries = ", ".join(target.entry for target in group)
+                detail = f"{stages} :: {len(group)} entries ({entries})"
+            print(f"  {rel_source} [{detail}] defines: {defines_label(defines)}")
         if skipped:
             print("Пропущено (нет отдельной цели в манифесте — библиотеки/заголовки):")
             for item in skipped:
@@ -403,9 +517,10 @@ def main(argv: list[str]) -> int:
     print("")
 
     results: list[dict] = []
-    ok = 0
+    ok_builds = 0
     failed: list[dict] = []
     warnings_total = 0
+    failed_groups: set[tuple[str, tuple[str, ...]]] = set()
 
     for target in targets:
         profile = target.profile(args.shader_model, args.profile)
@@ -415,7 +530,8 @@ def main(argv: list[str]) -> int:
             profile=profile,
             out_dir=out_dir,
             port_root=port_root,
-            defines=defines,
+            always_defines=always_defines,
+            cli_defines=cli_defines,
             debug=args.debug,
             warnings_as_errors=args.warnings_as_errors,
             timeout=args.timeout,
@@ -423,33 +539,44 @@ def main(argv: list[str]) -> int:
         results.append(result)
         warnings_total += result["warnings"]
 
+        label = defines_label(result["defines"])
         if result["success"]:
-            ok += 1
+            ok_builds += 1
             if args.verbose:
-                print(f"  ok    {target.rel_source} :: {target.entry} [{profile}]")
+                print(f"  ok    {target.rel_source} :: {target.entry} [{profile}] defines: {label}")
             continue
 
         failed.append(result)
+        failed_groups.add(target.variant_key)
         workspace = Path(os.environ.get("GITHUB_WORKSPACE", str(port_root.parent)))
         try:
             annotation_file = target.source.relative_to(workspace).as_posix()
         except ValueError:
             annotation_file = target.rel_source
-        emit_github_error(result["message"], annotation_file, f"{profile} {target.entry}")
-        print(f"ОШИБКА  {target.rel_source} :: {target.entry} [{profile}]")
+        emit_github_error(result["message"], annotation_file, f"{profile} {target.entry} [{label}]")
+        print(f"ОШИБКА  {target.rel_source} :: {target.entry} [{profile}] defines: {label}")
         for line in result["log"].splitlines():
             if line.strip():
                 print("        " + line.strip())
 
+    ok_groups = len(groups) - len(failed_groups)
     print("")
-    print(f"Собрано: {ok} успешно, {len(failed)} с ошибками; целей: {len(targets)}; предупреждений: {warnings_total}")
+    print(
+        f"Собрано: {ok_builds} успешно, {len(failed)} с ошибками; "
+        f"целей (вариантов): {len(groups)} (успешно {ok_groups}, с ошибками {len(failed_groups)}); "
+        f"entry-point builds: {len(targets)}; уникальных исходников: {unique_sources}; "
+        f"из них с дефайнами: {sources_with_defines}; предупреждений: {warnings_total}"
+    )
 
     if skipped:
         print("Пропущено (нет отдельной цели в манифесте — библиотеки/заголовки):")
         for item in skipped:
             print(f"  {item}")
 
-    write_github_summary(ok, failed, warnings_total, skipped)
+    write_github_summary(
+        ok_builds, failed, warnings_total, skipped,
+        len(groups), len(targets), unique_sources, sources_with_defines,
+    )
 
     if args.report:
         report_path = Path(args.report).expanduser().resolve()
@@ -457,12 +584,20 @@ def main(argv: list[str]) -> int:
         report = {
             "shader_dir": str(shader_dir),
             "manifest": str(manifest_path),
+            "engine_defines": str(port_root / "EngineDefines.json") if (port_root / "EngineDefines.json").is_file() else "",
             "fxc": fxc,
             "shader_model": args.shader_model,
             "profile_override": args.profile,
-            "defines": defines,
-            "ok": ok,
+            "always_defines": always_defines,
+            "extra_defines": cli_defines,
+            "variant_count": len(groups),
+            "build_count": len(targets),
+            "unique_sources": unique_sources,
+            "sources_with_variant_defines": sources_with_defines,
+            "ok": ok_builds,
             "failed": len(failed),
+            "ok_variants": ok_groups,
+            "failed_variants": len(failed_groups),
             "warnings": warnings_total,
             "skipped": skipped,
             "results": results,
@@ -474,7 +609,7 @@ def main(argv: list[str]) -> int:
         print("")
         print("Сводка ошибок:")
         for result in failed:
-            print(f"  {result['source']} :: {result['entry']} [{result['profile']}]")
+            print(f"  {result['source']} :: {result['entry']} [{result['profile']}] defines: {defines_label(result['defines'])}")
             print(f"      {result['message']}")
         return 1
 
