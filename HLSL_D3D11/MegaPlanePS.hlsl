@@ -302,7 +302,6 @@ float4 main(in VertexOUT IN) : SV_Target0
 	float4 gbuffer = GBufferTex.Sample(GBufferTex_Sampler, screen_uv.xy);
 	
 #ifdef SHADOW
-#error COVERAGE_TEST_MEGAPLANE_SHADOW
 	float shadow_factor = gbuffer.r;
 	ndl *= shadow_factor;
 #endif  //SHADOW

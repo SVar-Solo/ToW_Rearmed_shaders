@@ -1,4 +1,7 @@
 // D3D11 port of SpeedTree/BillboardsPS.hlsl. Generated from the legacy HLSL source; see README.md.
+#ifdef USE_SHADOWS
+#error COVERAGE_TEST_SPEEDTREE_BILLBOARDS_USE_SHADOWS
+#endif
 #include "../SpeedTreeDefaults.hlsli"
 ///////////////////////////////////////////////////////////////////////  
 //  Leaf Shaders
