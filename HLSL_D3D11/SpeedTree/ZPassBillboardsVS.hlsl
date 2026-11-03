@@ -80,6 +80,13 @@ static const float4 g_mBBUnitSquare[4] =                        // unit billboar
                 float4(0.0f, 0.5f, 0.0f, 0.0f) 
             };
 
+#ifdef USE_FOG
+cbuffer ZPassBillboardsVS_CB2 : register(b2)
+{
+    float3 g_vFogParams; // .x = fog start, .y = fog end, .z = end - start
+};
+#endif
+
 static const float4 g_afTexCoordScales[4] =                     // used to compress & optimize the g_v360TexCoord lookups (x = s scale, y = t scale)
             { 
                 float4(0.0f, 0.0f, 0.0f, 0.0f), 

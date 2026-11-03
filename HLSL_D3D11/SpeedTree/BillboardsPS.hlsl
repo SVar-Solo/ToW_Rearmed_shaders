@@ -86,11 +86,11 @@ float4 main(SBillboardOutput In) : SV_Target0
 	float2 dsdy = float2(0, 0);
 
     // look up the diffuse and normal-map layers
-    float4 texDiffuse = samBillboardDiffuseMap.Sample(samBillboardDiffuseMap_Sampler, In.vDiffuseTexCoords.xy, dsdx, dsdy);
-    float4 texNormal = samBillboardNormalMap.Sample(samBillboardNormalMap_Sampler, In.vNormalTexCoords.xy, dsdx, dsdy);
+    float4 texDiffuse = samBillboardDiffuseMap.SampleGrad(samBillboardDiffuseMap_Sampler, In.vDiffuseTexCoords.xy, dsdx, dsdy);
+    float4 texNormal = samBillboardNormalMap.SampleGrad(samBillboardNormalMap_Sampler, In.vNormalTexCoords.xy, dsdx, dsdy);
 
-	float4 texDiffuse1 = samBillboardDiffuseMap.Sample(samBillboardDiffuseMap_Sampler, In.vDiffuseTexCoords.zw, dsdx, dsdy);
-    float4 texNormal1 = samBillboardNormalMap.Sample(samBillboardNormalMap_Sampler, In.vNormalTexCoords.zw, dsdx, dsdy);
+	float4 texDiffuse1 = samBillboardDiffuseMap.SampleGrad(samBillboardDiffuseMap_Sampler, In.vDiffuseTexCoords.zw, dsdx, dsdy);
+    float4 texNormal1 = samBillboardNormalMap.SampleGrad(samBillboardNormalMap_Sampler, In.vNormalTexCoords.zw, dsdx, dsdy);
 
 	texDiffuse = lerp(texDiffuse, texDiffuse1, In.vNormal.w);
 	texNormal  = lerp(texNormal, texNormal1, In.vNormal.w);

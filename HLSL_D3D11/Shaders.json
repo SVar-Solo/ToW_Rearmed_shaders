@@ -5571,6 +5571,16 @@
               "type": "float4[4]"
             }
           ]
+        },
+        {
+          "name": "ZPassBillboardsVS_CB2",
+          "slot": 2,
+          "fields": [
+            {
+              "name": "g_vFogParams",
+              "type": "float3"
+            }
+          ]
         }
       ]
     },
