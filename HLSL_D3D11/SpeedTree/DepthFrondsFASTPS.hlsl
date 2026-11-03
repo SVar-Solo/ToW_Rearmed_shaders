@@ -37,11 +37,7 @@ main(SFrondOutput In) : SV_Target0
     // look up the diffuse layer
     float4 texDiffuse = samCompositeDiffuseLeafMap.Sample(samCompositeDiffuseLeafMap_Sampler, float2(In.vDiffuseTexCoords.x, 1.0 - In.vDiffuseTexCoords.y)); // ,
 
-	float fade = 1.0;
-
-#ifdef INTERMEDIATE_FRONDBRANCH_FADING
-    fade = In.vNormal.w;
-#endif
+	// Legacy fade read removed: the depth-pass struct has no vNormal and fade was unused.
 
     if (texDiffuse.a <= 85.0/255.0)
 	{

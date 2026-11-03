@@ -67,6 +67,35 @@ cd HLSL_D3D11
 python3 Tools/validate_d3d11.py
 ```
 
+### Оффлайн-проверка всех целей через `fxc`
+
+Из корня репозитория:
+
+```bash
+# профили движка: vs_4_0 / ps_4_0
+python tools/compile_shaders.py HLSL_D3D11
+
+# только один шейдер / группа
+python tools/compile_shaders.py HLSL_D3D11 --only MegaPlaneVS
+
+# SM5-вариант порта
+python tools/compile_shaders.py HLSL_D3D11 --shader-model 5
+
+# дополнительные дефайны и JSON-отчёт
+python tools/compile_shaders.py HLSL_D3D11 --define USE_FOG,USE_SHADOWS --report artifacts/report.json
+
+# сухой список целей без запуска fxc
+python tools/compile_shaders.py HLSL_D3D11 --list
+```
+
+Скрипт берёт стадии и точки входа из `Shaders.json`, поэтому корректно собирает
+все проходы `SMAA/SMAA_Passes.hlsl` и не пытается компилировать библиотеку
+`SMAA/SMAA.hlsl` с `/E main`. Он проверяет только компиляцию отдельных целей;
+linkage VS/PS, cbuffer layout и GPU-поведение нужно проверять в движке/RenderDoc.
+
+В GitHub Actions добавлен workflow `.github/workflows/shader-check.yml`:
+Windows + `fxc`, матрица SM4/SM5, артефакты `.cso` и JSON-отчёт.
+
 ## Интеграция в рендерер
 
 Одни шейдеры не переводят приложение на D3D11. Необходимо также:
@@ -87,11 +116,20 @@ python3 Tools/validate_d3d11.py
 константных буферов. Это карта соответствия, но точные смещения внутри cbuffer
 следует брать из reflection скомпилированного шейдера.
 
+## Диагностика тумана и чёрных текстур
+
+Отдельный отчёт по симптомам «вместо текстур цвет тумана или чернота»:
+[`D3D11_FOG_TEXTURE_AUDIT.md`](D3D11_FOG_TEXTURE_AUDIT.md). В нём перечислены
+критические слоты `tN/sN/bN`, fog-дефайны, исправленные ошибки вариантов и
+порядок проверки привязок ресурсов в D3D11-рендере.
+
 ## Ограничения
 
 - Перенос сохраняет математическую логику исходников, но не является
   автоматической заменой всего D3D9-рендера.
-- В среде подготовки не было Windows SDK / GPU, поэтому полноценная компиляция
-  `fxc` и визуальное сравнение кадров должны быть выполнены на целевой машине.
+- Локальная среда без GPU не заменяет визуальную проверку. Полная компиляция
+  `fxc` настроена в CI `.github/workflows/shader-check.yml` на `windows-latest`
+  для SM4 и SM5; linkage VS/PS, cbuffer layout и поведение на GPU нужно
+  проверять в движке / RenderDoc.
 - Фильтрация, address mode, sRGB и сравнение глубины задаются на CPU; старые
   HLSL-файлы не содержали полного описания этих состояний.

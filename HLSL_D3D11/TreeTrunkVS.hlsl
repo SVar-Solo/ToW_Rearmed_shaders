@@ -111,6 +111,8 @@ VertexOUT main(in VertexIN IN)
 #else
 	OUT.zcoord = OUT.HPOS;
 #endif // ZPASS
+#ifndef ZPASS
     OUT.color = saturate(OUT.color); // D3D9 COLOR interpolator clamp
+#endif
 	return OUT;
 } 

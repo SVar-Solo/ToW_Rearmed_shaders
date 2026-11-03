@@ -559,7 +559,6 @@ cbuffer SMAA_Metrics : register(b0)
 #if defined(SMAA_HLSL_4) || defined(SMAA_HLSL_4_1)
 SamplerState LinearSampler : register(s0); // linear, clamp; create on the CPU
 SamplerState PointSampler : register(s1); // point, clamp; create on the CPU
-SamplerState PointSampler { Filter = MIN_MAG_MIP_POINT; AddressU = Clamp; AddressV = Clamp; };
 #define SMAATexture2D(tex) Texture2D tex
 #define SMAATexturePass2D(tex) tex
 #define SMAASampleLevelZero(tex, coord) tex.SampleLevel(LinearSampler, coord, 0)

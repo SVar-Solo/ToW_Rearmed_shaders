@@ -1,0 +1,61 @@
+name: Shader compile check
+
+on:
+  push:
+    branches:
+      - main
+      - 'arena/**'
+    paths:
+      - 'HLSL_D3D11/**'
+      - 'tools/compile_shaders.py'
+      - '.github/workflows/shader-check.yml'
+  pull_request:
+    paths:
+      - 'HLSL_D3D11/**'
+      - 'tools/compile_shaders.py'
+      - '.github/workflows/shader-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fxc:
+    name: fxc SM${{ matrix.shader_model }}
+    runs-on: windows-latest
+    env:
+      PYTHONIOENCODING: utf-8
+    strategy:
+      fail-fast: false
+      matrix:
+        shader_model: [4, 5]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Compile HLSL_D3D11 targets
+        shell: pwsh
+        run: |
+          python tools/compile_shaders.py HLSL_D3D11 `
+            --shader-model ${{ matrix.shader_model }} `
+            --out artifacts/sm${{ matrix.shader_model }} `
+            --report artifacts/sm${{ matrix.shader_model }}/report.json `
+            --verbose
+
+      - name: Upload compiler artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shader-cso-sm${{ matrix.shader_model }}
+          path: artifacts/sm${{ matrix.shader_model }}
+          if-no-files-found: warn

@@ -1,4 +1,8 @@
 // D3D11 port of RoadFP.hlsl. Generated from the legacy HLSL source; see README.md.
+// Legacy fog variant alias: FOG1 must see the same resources/interpolators as FOG.
+#if defined(FOG1) && !defined(FOG)
+#define FOG
+#endif
 //Road pixel shader.
 //This is ARB version of shader (also used as fp20 version in case of SPECULAR macros not defined)
 //So on GeForce3,4 will be used truncated version without specular

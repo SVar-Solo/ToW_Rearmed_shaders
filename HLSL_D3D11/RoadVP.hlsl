@@ -1,4 +1,8 @@
 // D3D11 port of RoadVP.hlsl. Generated from the legacy HLSL source; see README.md.
+// Legacy fog variant alias: FOG1 must see the same resources/interpolators as FOG.
+#if defined(FOG1) && !defined(FOG)
+#define FOG
+#endif
 //****************************************************
 //Road vertex shader.
 //****************************************************
@@ -112,7 +116,7 @@ VertexOut main(VertexIn IN)
 	//OUT.LightDirOut = (LocalLight);
 	OUT.LightDirOut = LightDir;
   
-	OUT.tex1 = OUT.tex0; //IN.RoadTexCoord;  //really duplicate TexCoord0 - need for fp20 profile only
+	OUT.tex1 = OUT.tex0.xy; //IN.RoadTexCoord;  //really duplicate TexCoord0 - need for fp20 profile only
 	OUT.Color = IN.Color;
 
 #ifdef SPECULAR
