@@ -43,7 +43,7 @@ struct VertexOut
 //#endif  //SHADOW
 #endif // ZPASS
 
-#ifdef PSSM
+#if defined(PSSM) && !defined(ZPASS)
 // PSSM implemetation
 // matrix array
 cbuffer TreeFP_CB0 : register(b0)
@@ -147,7 +147,7 @@ float getPSSMPixel3 (float4 world_coords)
 	return shadow_factor; //  + sm_k_none;
 }
 
-#endif // PSSM
+#endif // PSSM && !ZPASS
 
 #ifndef ZPASS
 	Texture2D BumpTex : register(t0);
