@@ -67,6 +67,35 @@ cd HLSL_D3D11
 python3 Tools/validate_d3d11.py
 ```
 
+### Оффлайн-проверка всех целей через `fxc`
+
+Из корня репозитория:
+
+```bash
+# профили движка: vs_4_0 / ps_4_0
+python tools/compile_shaders.py HLSL_D3D11
+
+# только один шейдер / группа
+python tools/compile_shaders.py HLSL_D3D11 --only MegaPlaneVS
+
+# SM5-вариант порта
+python tools/compile_shaders.py HLSL_D3D11 --shader-model 5
+
+# дополнительные дефайны и JSON-отчёт
+python tools/compile_shaders.py HLSL_D3D11 --define USE_FOG,USE_SHADOWS --report artifacts/report.json
+
+# сухой список целей без запуска fxc
+python tools/compile_shaders.py HLSL_D3D11 --list
+```
+
+Скрипт берёт стадии и точки входа из `Shaders.json`, поэтому корректно собирает
+все проходы `SMAA/SMAA_Passes.hlsl` и не пытается компилировать библиотеку
+`SMAA/SMAA.hlsl` с `/E main`. Он проверяет только компиляцию отдельных целей;
+linkage VS/PS, cbuffer layout и GPU-поведение нужно проверять в движке/RenderDoc.
+
+В GitHub Actions добавлен workflow `.github/workflows/shader-check.yml`:
+Windows + `fxc`, матрица SM4/SM5, артефакты `.cso` и JSON-отчёт.
+
 ## Интеграция в рендерер
 
 Одни шейдеры не переводят приложение на D3D11. Необходимо также:

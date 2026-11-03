@@ -15,3 +15,7 @@ Desktop.ini
 
 # Компилятор Cg — скачивается отдельно, см. README
 cgc.exe
+
+# Python / CI shader artifacts
+__pycache__/
+artifacts/
