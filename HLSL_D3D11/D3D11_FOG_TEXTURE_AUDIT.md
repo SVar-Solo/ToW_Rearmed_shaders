@@ -35,6 +35,9 @@
 | `SpeedTree/DepthFrondsPS.hlsl`, `SpeedTree/DepthFrondsFASTPS.hlsl` | При дефолтном `INTERMEDIATE_FRONDBRANCH_FADING` читался несуществующий `In.vNormal.w` в неиспользуемую переменную `fade`. | Мёртвое чтение удалено; результат depth-pass не изменился. |
 | `ObjectsOnePassVS/PS.hlsl`, `RoadVP/FP.hlsl`, `MegaPlaneVS/PS.hlsl` | Legacy-варианты `USE_FOG1`/`FOG1` могли включать расчёт тумана без объявления ресурсов/интерполяторов, которые объявлены под `USE_FOG`/`FOG`. | Добавлены совместимые alias: `USE_FOG1 -> USE_FOG`, `FOG1 -> FOG`. |
 | `MegaPlanePS.hlsl`, `RoadVP.hlsl` | Неявные усечения векторов, допустимые старым HLSL, но неоднозначные для строгих фронтендов. | Явные `.xy` без изменения математики. |
+| `SMAA/SMAA.hlsl` | `fxc` error X3003: redefinition of `PointSampler` — рядом с новым `SamplerState : register(s1)` остался legacy sampler-state block. | Legacy-блок удалён; остаются CPU-создаваемые `LinearSampler s0` и `PointSampler s1`. |
+| `SpeedTree/Billboards0PS.hlsl`, `Billboards1PS.hlsl`, `BillboardsPS.hlsl`, `DepthBillboardsPS.hlsl` | Legacy `tex2D(..., dsdx, dsdy)` был перенесён как `Texture2D.Sample(..., dsdx, dsdy)`. На SM4 это ошибка X3535, а семантически это gradient sampling. | Заменено на `Texture2D.SampleGrad(..., dsdx, dsdy)`. |
+| `SpeedTree/ZPassBillboardsVS.hlsl` | При `USE_FOG` функция `FogValue` использовала необъявленный `g_vFogParams` (`fxc` X3004). | Добавлен условный cbuffer `ZPassBillboardsVS_CB2 : register(b2)` с `float3 g_vFogParams`; манифест обновлён. |
 
 Эти правки устраняют реальные ошибки вариантов и согласуют fog-дефайны. Они **не заменяют** проверку привязок ресурсов в движке.
 
@@ -137,11 +140,15 @@ cd HLSL_D3D11
 
 ## Что проверено в этой сессии
 
-- Diff PR #2: только перенос `SV_Position` и пустые строки;ресурсы/константы/формулы не менялись.
+- Diff PR #2: только перенос `SV_Position` и пустые строки; ресурсы/константы/формулы не менялись.
 - Статический валидатор: `OK: 149 HLSL/HLSLI files passed static checks`.
 - Повторная проверка conditional `saturate`: отсутствующих полей больше нет.
-- Точечная компиляция затронутых вариантов через Slang HLSL frontend: перечисленные выше исправленные шейдеры проходят.
-- Полный `fxc`/GPU-тест в этой среде не выполнялся: нет Windows SDK и GPU. Slang не является заменой `fxc` для всего legacy-кода.
+- Добавлен оффлайн-компилятор `tools/compile_shaders.py`: цели берутся из `Shaders.json`, профили по умолчанию `vs_4_0/ps_4_0`, есть `--shader-model 5`, `--only`, `--define`, `--report`, `--list`.
+- GitHub Actions `Shader compile check`, запуск [41603427488](https://github.com/SVar-Solo/ToW_Rearmed_shaders/actions/runs/41603427488): **success** на `windows-latest` для обеих матриц:
+  - `fxc SM4` — `vs_4_0/ps_4_0`;
+  - `fxc SM5` — `vs_5_0/ps_5_0`.
+- Артефакты CI: `shader-cso-sm4`, `shader-cso-sm5` (`.cso` + JSON-отчёты).
+- GPU-тест и визуальное сравнение кадров в этой среде не выполнялись; linkage VS/PS, cbuffer layout и привязки SRV/sampler нужно проверять в движке / RenderDoc.
 
 ## Минимальный порядок диагностики на целевой машине
 
