@@ -136,7 +136,12 @@ cd HLSL_D3D11
 .\Compile-D3D11.ps1 -Define ZPASS
 ```
 
-Для SpeedTree дефолты уже заданы в `SpeedTreeDefaults.hlsli`.
+Для SpeedTree числовые константы и always-on material/layer флаги заданы в
+`SpeedTreeDefaults.hlsli`, а feature-варианты (`USE_FOG`,
+`SUPPORT_360_BILLBOARDS` и т.п.) приходят из `EngineDefines.json`. Безусловно
+включать `INTERMEDIATE_FRONDBRANCH_FADING`, `HORZ_BILLBOARDS`,
+`BRANCH_DETAIL_LAYER`, `UPVECTOR_POS_Y` в `.hlsli` нельзя: в движке они
+выключены/опциональны.
 
 ## Что проверено в этой сессии
 
@@ -149,6 +154,35 @@ cd HLSL_D3D11
   - `fxc SM5` — `vs_5_0/ps_5_0`.
 - Артефакты CI: `shader-cso-sm4`, `shader-cso-sm5` (`.cso` + JSON-отчёты).
 - GPU-тест и визуальное сравнение кадров в этой среде не выполнялись; linkage VS/PS, cbuffer layout и привязки SRV/sampler нужно проверять в движке / RenderDoc.
+
+## Проверка вариантов с дефайнами движка
+
+Добавлен `HLSL_D3D11/EngineDefines.json` (381 запись, `always: ["SM40=1"]`) и
+генератор `tools/gen_engine_defines.py`. `tools/compile_shaders.py` теперь по
+умолчанию собирает варианты из этой таблицы: один набор дефайнов — одна сборка.
+Ориентиры: 381 вариант, 147 уникальных исходников, 72 исходника с дефайнами;
+из-за 8 точек входа `SMAA/SMAA_Passes.hlsl` фактических `fxc`-сборок — 388.
+
+Исправление, найденное variant CI: `TreeFP.hlsl` в варианте `ZPASS` пытался
+компилировать неиспользуемую PSSM-функцию с `ShadowMap`, хотя `ShadowMap`
+объявляется только вне `ZPASS`. Блок PSSM теперь guarded как
+`#if defined(PSSM) && !defined(ZPASS)`; активный `ZPASS`-путь не изменён.
+
+GitHub Actions `Shader compile check`, запуск
+[41693867643](https://github.com/SVar-Solo/ToW_Rearmed_shaders/actions/runs/41693867643):
+**success** на `windows-latest`, матрица SM4/SM5, job блокирующий.
+Время шага компиляции: SM4 ≈ 11 с, SM5 ≈ 13 с; артефакты
+`shader-cso-sm4` / `shader-cso-sm5` содержат `.cso` и `report.json` с `defines`.
+
+Тесты покрытия вариантов:
+- временный `#error` внутри `#ifdef SHADOW` в `MegaPlanePS.hlsl` —
+  [41694232696](https://github.com/SVar-Solo/ToW_Rearmed_shaders/actions/runs/41694232696)
+  упал на вариантах `MegaPlanePS` с `SHADOW COMPAREZ`;
+- временный `#error` внутри `#ifdef USE_SHADOWS` в
+  `SpeedTree/BillboardsPS.hlsl` —
+  [41694543878](https://github.com/SVar-Solo/ToW_Rearmed_shaders/actions/runs/41694543878)
+  упал на вариантах `BillboardsPS` с `USE_SHADOWS`.
+После проверки тестовые строки откачены.
 
 ## Минимальный порядок диагностики на целевой машине
 
