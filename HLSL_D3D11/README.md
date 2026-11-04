@@ -5,13 +5,15 @@
 
 ## Состав
 
-- `*.hlsl`, `SpeedTree/*.hlsl` — перенос всех 146 шейдеров из `HLSL/`.
+- `*.hlsl`, `SpeedTree/*.hlsl` — перенос шейдеров из `HLSL/`.
 - `SMAA/SMAA.hlsl` — библиотека SMAA с включённым путём `SMAA_HLSL_4`.
 - `SMAA/SMAA_Passes.hlsl` — точки входа VS/PS вместо старых technique/pass из `SMAA.fx`.
 - `SpeedTreeDefaults.hlsli` — единые настройки SpeedTree вместо `defines.cg`.
 - `Shaders.json` — карта ресурсов, константных буферов и целей компиляции.
+- `EngineDefines.json` — наборы дефайнов, с которыми движок грузит варианты шейдеров.
 - `Compile-D3D11.ps1` / `.bat` — пакетная компиляция через `fxc.exe`.
 - `Tools/validate_d3d11.py` — статическая проверка переноса.
+- `../tools/gen_engine_defines.py` — генератор `EngineDefines.json` из `Shaders.json` и правил движка.
 
 ## Что изменено
 
@@ -35,8 +37,14 @@
    - Инициализированные `uniform`-массивы SpeedTree стали `static const`.
 4. **SpeedTree.**
    - Все файлы включают `SpeedTreeDefaults.hlsli`.
-   - Значения по умолчанию соответствуют `defines.cg`:
-     `NUM_WIND_MATRICES=7`, `MAX_NUM_LEAF_ANGLES=20`, `NUM_360_IMAGES=32`.
+   - В `.hlsli` оставлены только числовые константы и always-on material/layer
+     флаги: `NUM_WIND_MATRICES=7`, `MAX_NUM_LEAF_ANGLES=20`, `NUM_360_IMAGES=32`,
+     normal mapping / self-shadow layer.
+   - Feature-варианты (`USE_FOG`, `SUPPORT_360_BILLBOARDS`,
+     `INTERMEDIATE_FRONDBRANCH_FADING`, `HORZ_BILLBOARDS`, `BRANCH_DETAIL_LAYER`,
+     `UPVECTOR_POS_Y` и т.п.) не включаются в `.hlsli` безусловно: они приходят
+     из `EngineDefines.json` только для тех вариантов, которые реально просит
+     движок.
    - Для своей конфигурации определите `SPEEDTREE_CUSTOM_CONFIG` и задайте
      макросы до включения файла.
 5. **SMAA.**
@@ -93,8 +101,46 @@ python tools/compile_shaders.py HLSL_D3D11 --list
 `SMAA/SMAA.hlsl` с `/E main`. Он проверяет только компиляцию отдельных целей;
 linkage VS/PS, cbuffer layout и GPU-поведение нужно проверять в движке/RenderDoc.
 
-В GitHub Actions добавлен workflow `.github/workflows/shader-check.yml`:
-Windows + `fxc`, матрица SM4/SM5, артефакты `.cso` и JSON-отчёт.
+### Варианты с дефайнами движка
+
+По умолчанию `tools/compile_shaders.py` читает `HLSL_D3D11/EngineDefines.json`
+и собирает не только базовые цели, но и варианты, которые движок реально
+загружает через `D3DCompile`:
+
+```bash
+# полный прогон: 381 вариант из EngineDefines.json
+python tools/compile_shaders.py HLSL_D3D11
+
+# только базовые цели из Shaders.json, без EngineDefines.json
+python tools/compile_shaders.py HLSL_D3D11 --no-engine-defines
+
+# список вариантов с дефайнами
+python tools/compile_shaders.py HLSL_D3D11 --list
+```
+
+Ориентиры текущего манифеста:
+
+- `EngineDefines.json`: **381** запись-вариант, **147** уникальных исходников,
+  из них **72** получают дефайны; `always: ["SM40=1"]`.
+- Из-за `SMAA/SMAA_Passes.hlsl` (8 точек входа в `Shaders.json`, одна запись в
+  таблице вариантов) фактических запусков `fxc` — **388** (`entry-point builds`).
+- Один набор дефайнов = одна сборка. Наборы не объединяются.
+- В `report.json` у каждой цели есть `defines`; имена `.cso` различаются по
+  набору дефайнов (slug + SHA-1), чтобы варианты не перезаписывали друг друга.
+
+Перегенерация таблицы после изменения правил движка:
+
+```bash
+python tools/gen_engine_defines.py HLSL_D3D11 --out HLSL_D3D11/EngineDefines.json
+```
+
+В GitHub Actions workflow `.github/workflows/shader-check.yml` запускает этот
+же прогон на `windows-latest` в матрице SM4/SM5. Job блокирующий
+(`continue-on-error` не используется), артефакты — `.cso` и `report.json`.
+Покрытие вариантов проверено временными `#error` внутри `#ifdef SHADOW` в
+`MegaPlanePS.hlsl` и внутри `#ifdef USE_SHADOWS` в
+`SpeedTree/BillboardsPS.hlsl`: CI краснел именно на вариантах с этими
+дефайнами, после чего тестовые строки были откачены.
 
 ## Интеграция в рендерер
 

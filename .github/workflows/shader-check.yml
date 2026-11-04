@@ -8,11 +8,13 @@ on:
     paths:
       - 'HLSL_D3D11/**'
       - 'tools/compile_shaders.py'
+      - 'tools/gen_engine_defines.py'
       - '.github/workflows/shader-check.yml'
   pull_request:
     paths:
       - 'HLSL_D3D11/**'
       - 'tools/compile_shaders.py'
+      - 'tools/gen_engine_defines.py'
       - '.github/workflows/shader-check.yml'
   workflow_dispatch:
 
@@ -25,7 +27,7 @@ concurrency:
 
 jobs:
   fxc:
-    name: fxc SM${{ matrix.shader_model }}
+    name: fxc SM${{ matrix.shader_model }} (engine variants)
     runs-on: windows-latest
     env:
       PYTHONIOENCODING: utf-8
@@ -43,9 +45,10 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Compile HLSL_D3D11 targets
+      - name: Compile HLSL_D3D11 engine variants
         shell: pwsh
         run: |
+          # Default run reads HLSL_D3D11/EngineDefines.json: one define set = one fxc build.
           python tools/compile_shaders.py HLSL_D3D11 `
             --shader-model ${{ matrix.shader_model }} `
             --out artifacts/sm${{ matrix.shader_model }} `
